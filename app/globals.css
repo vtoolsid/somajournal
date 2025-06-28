@@ -354,6 +354,30 @@
     background-color: rgb(var(--chakra-crown));
   }
   
+  /* Chakra Container Hover Effects */
+  .chakra-container {
+    transition: transform 0.5s ease-in-out;
+  }
+  
+  .chakra-container.chakra-hovered {
+    transform: translateY(5rem);
+  }
+  
+  .chakra-item > div:hover ~ .chakra-tooltip,
+  .chakra-item:hover .chakra-tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-0.5rem);
+  }
+  
+  .chakra-item > div:hover {
+    transform: scale(1.1);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+  
+  .chakra-item > div:hover > div:last-child {
+    opacity: 0.4;
+  }
+
   /* Utility classes */
   .animate-spin-slow {
     animation: animate-spin-slow 8s linear infinite;
@@ -556,5 +580,12 @@
   
   .wellness-button:hover {
     transform: none;
+  }
+  
+  /* Disable Framer Motion animations for accessibility */
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

@@ -23,9 +23,53 @@ import {
   Eye,
   Target
 } from 'lucide-react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Home() {
   const router = useRouter();
+  const [isChakraHovered, setIsChakraHovered] = useState(false);
+  const [hoveredChakra, setHoveredChakra] = useState<string | null>(null);
+
+  // Horizontal Human Body Silhouette (lying down)
+  const HorizontalBodySilhouette = () => (
+    <svg 
+      width="300" 
+      height="120" 
+      viewBox="0 0 300 120" 
+      className="mx-auto opacity-30"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <linearGradient id="horizontalBodyGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#E5E5E5" stopOpacity="0.2"/>
+          <stop offset="50%" stopColor="#E5E5E5" stopOpacity="0.4"/>
+          <stop offset="100%" stopColor="#E5E5E5" stopOpacity="0.2"/>
+        </linearGradient>
+      </defs>
+      
+      {/* Head */}
+      <ellipse cx="270" cy="60" rx="20" ry="25" fill="url(#horizontalBodyGradient)" stroke="#E5E5E5" strokeWidth="1"/>
+      
+      {/* Neck */}
+      <rect x="245" y="55" width="15" height="10" fill="url(#horizontalBodyGradient)" stroke="#E5E5E5" strokeWidth="1"/>
+      
+      {/* Torso */}
+      <ellipse cx="170" cy="60" rx="60" ry="30" fill="url(#horizontalBodyGradient)" stroke="#E5E5E5" strokeWidth="1"/>
+      
+      {/* Arms */}
+      <ellipse cx="150" cy="35" rx="30" ry="8" fill="url(#horizontalBodyGradient)" stroke="#E5E5E5" strokeWidth="1"/>
+      <ellipse cx="150" cy="85" rx="30" ry="8" fill="url(#horizontalBodyGradient)" stroke="#E5E5E5" strokeWidth="1"/>
+      
+      {/* Pelvis */}
+      <ellipse cx="100" cy="60" rx="20" ry="25" fill="url(#horizontalBodyGradient)" stroke="#E5E5E5" strokeWidth="1"/>
+      
+      {/* Legs */}
+      <ellipse cx="50" cy="50" rx="40" ry="12" fill="url(#horizontalBodyGradient)" stroke="#E5E5E5" strokeWidth="1"/>
+      <ellipse cx="50" cy="70" rx="40" ry="12" fill="url(#horizontalBodyGradient)" stroke="#E5E5E5" strokeWidth="1"/>
+    </svg>
+  );
 
   const features = [
     {
@@ -57,7 +101,7 @@ export default function Home() {
       icon: Circle, 
       color: 'bg-red-500', 
       description: 'Foundation & Security',
-      emotion: 'Feeling grounded, secure, and stable in life',
+      emotion: 'Feeling grounded, secure, and connected to earth',
       location: 'Base of spine'
     },
     { 
@@ -195,23 +239,43 @@ export default function Home() {
           </div>
           
           {/* Chakra Energy Bar */}
-          <div className="flex justify-center items-center space-x-6 py-12 fade-enter">
+          <div 
+            className={`chakra-container flex justify-center items-center space-x-6 py-12 mb-16 fade-enter ${isChakraHovered ? 'chakra-hovered' : ''}`}
+            onMouseEnter={() => setIsChakraHovered(true)}
+            onMouseLeave={() => {
+              setIsChakraHovered(false);
+              setHoveredChakra(null);
+            }}
+          >
             {chakraElements.map((chakra, index) => {
               const Icon = chakra.icon;
               return (
                 <div
                   key={chakra.name}
-                  className="group relative"
+                  className={`chakra-item relative transition-opacity duration-300 ${
+                    hoveredChakra && hoveredChakra !== chakra.name ? 'opacity-30' : 'opacity-100'
+                  }`}
                   style={{ animationDelay: `${index * 0.1}s` }}
+                  onMouseEnter={() => {
+                    setHoveredChakra(chakra.name);
+                  }}
+                  onMouseLeave={() => {
+                    setHoveredChakra(null);
+                  }}
                 >
-                  <div className={`w-10 h-10 ${chakra.color} rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 group-hover:scale-110 shadow-md group-hover:shadow-xl relative overflow-hidden`}>
+                  {/* Extended hover area above chakra - only active for this specific chakra when hovered */}
+                  <div className={`absolute -top-20 left-1/2 transform -translate-x-1/2 w-20 h-20 cursor-pointer opacity-0 ${hoveredChakra === chakra.name ? 'pointer-events-auto' : 'pointer-events-none'}`}></div>
+                  
+                  <div 
+                    className={`w-10 h-10 ${chakra.color} rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 shadow-md relative overflow-hidden`}
+                  >
                     <Icon className="w-5 h-5 text-white relative z-10" />
-                    <div className={`absolute inset-0 ${chakra.color} opacity-20 group-hover:opacity-40 transition-opacity duration-300`}></div>
+                    <div className={`absolute inset-0 ${chakra.color} opacity-20 transition-opacity duration-300`}></div>
                   </div>
                   
                   {/* Simple Tooltip */}
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-50">
-                    <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-4 min-w-[280px]">
+                  <div className="chakra-tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 opacity-0 transition-all duration-300 pointer-events-none z-50">
+                    <div className={`bg-white rounded-xl shadow-xl border border-gray-200 p-4 min-w-[320px] flex flex-col justify-between ${isChakraHovered ? 'h-[150px]' : ''}`}>
                       {/* Tooltip Arrow */}
                       <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[8px] border-r-[8px] border-t-[8px] border-l-transparent border-r-transparent border-t-white"></div>
                       
