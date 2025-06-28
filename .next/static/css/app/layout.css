@@ -667,16 +667,19 @@ p{
     background: linear-gradient(
       90deg,
       #4f46e5 0%,
-      #7c3aed 25%,
-      #db2777 50%,
-      #7c3aed 75%,
+      #6366f1 15%,
+      #8b5cf6 30%,
+      #a855f7 45%,
+      #db2777 60%,
+      #a855f7 75%,
+      #8b5cf6 85%,
       #4f46e5 100%
     );
-    background-size: 200% 100%;
+    background-size: 300% 100%;
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: gradient-shine 3s ease-in-out infinite;
+    animation: gradient-shine 4s ease-in-out infinite;
     position: relative;
   }
 .gradient-text-shine::before {
@@ -1311,6 +1314,9 @@ p{
 .h-96{
   height: 24rem;
 }
+.h-\[150px\]{
+  height: 150px;
+}
 .h-\[1px\]{
   height: 1px;
 }
@@ -1331,15 +1337,6 @@ p{
 }
 .h-screen{
   height: 100vh;
-}
-.h-\[140px\]{
-  height: 140px;
-}
-.h-\[180px\]{
-  height: 180px;
-}
-.h-\[150px\]{
-  height: 150px;
 }
 .max-h-96{
   max-height: 24rem;
@@ -1450,26 +1447,20 @@ p{
 .w-px{
   width: 1px;
 }
-.w-80{
-  width: 20rem;
-}
 .min-w-0{
   min-width: 0px;
 }
 .min-w-\[12rem\]{
   min-width: 12rem;
 }
-.min-w-\[280px\]{
-  min-width: 280px;
+.min-w-\[320px\]{
+  min-width: 320px;
 }
 .min-w-\[8rem\]{
   min-width: 8rem;
 }
 .min-w-\[var\(--radix-select-trigger-width\)\]{
   min-width: var(--radix-select-trigger-width);
-}
-.min-w-\[320px\]{
-  min-width: 320px;
 }
 .max-w-2xl{
   max-width: 42rem;
@@ -2701,6 +2692,9 @@ p{
 .opacity-0{
   opacity: 0;
 }
+.opacity-100{
+  opacity: 1;
+}
 .opacity-20{
   opacity: 0.2;
 }
@@ -2727,9 +2721,6 @@ p{
 }
 .opacity-90{
   opacity: 0.9;
-}
-.opacity-100{
-  opacity: 1;
 }
 .shadow-2xl{
   --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);

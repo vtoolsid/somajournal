@@ -139,16 +139,19 @@
     background: linear-gradient(
       90deg,
       #4f46e5 0%,
-      #7c3aed 25%,
-      #db2777 50%,
-      #7c3aed 75%,
+      #6366f1 15%,
+      #8b5cf6 30%,
+      #a855f7 45%,
+      #db2777 60%,
+      #a855f7 75%,
+      #8b5cf6 85%,
       #4f46e5 100%
     );
-    background-size: 200% 100%;
+    background-size: 300% 100%;
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: gradient-shine 3s ease-in-out infinite;
+    animation: gradient-shine 4s ease-in-out infinite;
     position: relative;
   }
   

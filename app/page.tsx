@@ -225,15 +225,16 @@ export default function Home() {
               </Badge>
               
               <h1 className="text-7xl font-semibold text-slate-800 leading-tight">
-                Your wellness journey,{' '}
+                Bridge the gap between{' '}
                 <span className="gradient-text-shine">
-                  beautifully illuminated
+                  mental and physical
                 </span>
+                {' '}health
               </h1>
               
               <p className="text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-                A digital sanctuary where your thoughts transform into wisdom, 
-                your emotions find harmony, and your spirit discovers its true patterns.
+                A comprehensive wellness platform that connects your mind and body, 
+                helping you achieve holistic health through integrated mental and physical well-being practices.
               </p>
             </div>
           </div>
