@@ -325,13 +325,39 @@
   }
   
   /* Chakra Colors */
-  .chakra-root { color: rgb(var(--chakra-root)); }
-  .chakra-sacral { color: rgb(var(--chakra-sacral)); }
-  .chakra-solar { color: rgb(var(--chakra-solar)); }
-  .chakra-heart { color: rgb(var(--chakra-heart)); }
-  .chakra-throat { color: rgb(var(--chakra-throat)); }
-  .chakra-third-eye { color: rgb(var(--chakra-third-eye)); }
-  .chakra-crown { color: rgb(var(--chakra-crown)); }
+  .chakra-root { 
+    color: rgb(var(--chakra-root)); 
+    background-color: rgb(var(--chakra-root));
+  }
+  .chakra-sacral { 
+    color: rgb(var(--chakra-sacral)); 
+    background-color: rgb(var(--chakra-sacral));
+  }
+  .chakra-solar { 
+    color: rgb(var(--chakra-solar)); 
+    background-color: rgb(var(--chakra-solar));
+  }
+  .chakra-heart { 
+    color: rgb(var(--chakra-heart)); 
+    background-color: rgb(var(--chakra-heart));
+  }
+  .chakra-throat { 
+    color: rgb(var(--chakra-throat)); 
+    background-color: rgb(var(--chakra-throat));
+  }
+  .chakra-third-eye { 
+    color: rgb(var(--chakra-third-eye)); 
+    background-color: rgb(var(--chakra-third-eye));
+  }
+  .chakra-crown { 
+    color: rgb(var(--chakra-crown)); 
+    background-color: rgb(var(--chakra-crown));
+  }
+  
+  /* Utility classes */
+  .animate-spin-slow {
+    animation: animate-spin-slow 8s linear infinite;
+  }
   
   /* Karma States */
   .karma-positive { color: rgb(var(--karma-positive)); }
@@ -385,6 +411,15 @@
   }
   50% {
     background-position: 100% 50%;
+  }
+}
+
+@keyframes animate-spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 

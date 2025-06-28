@@ -2,29 +2,63 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { FloatingParticles } from '@/components/ui/floating-particles';
+import { KarmicAura } from '@/components/ui/karmic-aura';
 import { useRouter } from 'next/navigation';
-import { Heart, BookOpen, Sparkles, ArrowRight, TrendingUp, Brain, Bot as Lotus } from 'lucide-react';
+import { 
+  Heart, 
+  BookOpen, 
+  Sparkles, 
+  ArrowRight, 
+  Brain, 
+  Zap, 
+  Compass, 
+  Waves, 
+  Sun, 
+  Moon, 
+  Star, 
+  Flower2,
+  Circle,
+  Eye,
+  Target
+} from 'lucide-react';
 
 export default function Home() {
   const router = useRouter();
 
   const features = [
     {
-      icon: Lotus,
-      title: 'Mindful Journaling',
-      description: 'Transform your thoughts into insights in a space designed for deep self-discovery.',
+      icon: Heart,
+      title: 'Sacred Journaling',
+      description: 'Transform your innermost thoughts into profound wisdom through mindful digital storytelling.',
+      chakra: 'heart',
+      color: 'from-green-400 to-emerald-500'
     },
     {
       icon: Brain,
-      title: 'Karmic Insights',
-      description: 'Discover the hidden patterns in your emotional and spiritual journey with AI guidance.',
+      title: 'Karmic Intelligence',
+      description: 'Unlock the mystical patterns in your emotional journey with AI-guided spiritual insights.',
+      chakra: 'third-eye',
+      color: 'from-indigo-400 to-purple-500'
     },
     {
-      icon: Heart,
-      title: 'Mind-Body Harmony',
-      description: 'Understand the beautiful connections between your thoughts, emotions, and physical wellbeing.',
+      icon: Zap,
+      title: 'Energy Alignment',
+      description: 'Harmonize your mind, body, and spirit through personalized wellness tracking and guidance.',
+      chakra: 'solar',
+      color: 'from-yellow-400 to-orange-500'
     },
+  ];
+
+  const chakraElements = [
+    { name: 'Root', icon: Circle, color: 'bg-red-500', description: 'Grounding & Stability' },
+    { name: 'Sacral', icon: Waves, color: 'bg-orange-500', description: 'Creativity & Emotion' },
+    { name: 'Solar', icon: Sun, color: 'bg-yellow-500', description: 'Personal Power' },
+    { name: 'Heart', icon: Heart, color: 'bg-green-500', description: 'Love & Connection' },
+    { name: 'Throat', icon: Compass, color: 'bg-blue-500', description: 'Truth & Expression' },
+    { name: 'Third Eye', icon: Eye, color: 'bg-indigo-500', description: 'Intuition & Wisdom' },
+    { name: 'Crown', icon: Star, color: 'bg-purple-500', description: 'Spiritual Connection' },
   ];
 
   return (
@@ -33,30 +67,40 @@ export default function Home() {
       
       {/* Header */}
       <header className="relative z-10 border-b border-white/20 bg-white/20 backdrop-blur-sm">
-        <div className="max-w-6xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-6">
           <div className="flex justify-between items-center py-6">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center breathing-element">
-                <Heart className="w-6 h-6 text-white" />
-              </div>
+            <div className="flex items-center space-x-4">
+              <KarmicAura karma={0.8} intensity="medium">
+                <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 rounded-2xl flex items-center justify-center breathing-element">
+                  <Flower2 className="w-7 h-7 text-white" />
+                </div>
+              </KarmicAura>
               <div>
-                <h1 className="text-xl font-semibold text-slate-800">Karmic Wellness</h1>
-                <p className="text-xs text-slate-500">Digital wellness sanctuary</p>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                  Karmic Wellness
+                </h1>
+                <p className="text-sm text-slate-500 font-medium">✨ Digital Enlightenment Sanctuary</p>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
+              <Badge variant="secondary" className="hidden sm:flex bg-white/60 text-slate-600 border-white/40">
+                <Sparkles className="w-3 h-3 mr-1" />
+                Beta
+              </Badge>
               <Button
                 variant="ghost"
                 onClick={() => router.push('/auth/login')}
-                className="text-slate-600 hover:text-slate-800 hover:bg-white/50 rounded-2xl px-6 py-3"
+                className="text-slate-600 hover:text-slate-800 hover:bg-white/60 rounded-2xl px-6 py-3 font-medium"
               >
+                <Moon className="w-4 h-4 mr-2" />
                 Sign In
               </Button>
               <Button
                 onClick={() => router.push('/auth/signup')}
                 className="wellness-button"
               >
-                Get Started
+                <Star className="w-4 h-4 mr-2" />
+                Begin Journey
               </Button>
             </div>
           </div>
@@ -64,80 +108,146 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative z-10 py-24 px-6">
-        <div className="max-w-5xl mx-auto text-center space-y-12">
+      <section className="relative z-10 py-32 px-6">
+        <div className="max-w-6xl mx-auto text-center space-y-16">
           <div className="fade-enter">
-            <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full mb-8 breathing-element">
-              <Sparkles className="w-12 h-12 text-indigo-600" />
+            {/* Chakra Mandala */}
+            <div className="relative inline-flex items-center justify-center mb-12">
+              <div className="absolute inset-0 animate-spin-slow">
+                <div className="w-32 h-32 rounded-full border-2 border-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 opacity-30"></div>
+              </div>
+              <KarmicAura karma={0.9} intensity="strong">
+                <div className="w-28 h-28 bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 rounded-full flex items-center justify-center breathing-element shadow-2xl">
+                  <div className="w-20 h-20 bg-gradient-to-br from-white/20 to-white/5 rounded-full flex items-center justify-center">
+                    <Sparkles className="w-10 h-10 text-white" />
+                  </div>
+                </div>
+              </KarmicAura>
             </div>
             
-            <h1 className="text-7xl font-semibold text-slate-800 leading-tight mb-8">
-              Your wellness journey,{' '}
-              <span className="gradient-text-shine">
-                beautifully illuminated
-              </span>
-            </h1>
-            
-            <p className="text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-              A digital sanctuary where your thoughts transform into wisdom, 
-              your emotions find harmony, and your spirit discovers its true patterns.
-            </p>
+            <div className="space-y-8">
+              <Badge className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 text-indigo-700 border-indigo-200 px-6 py-2 text-base font-medium">
+                <Eye className="w-4 h-4 mr-2" />
+                Awaken Your Inner Wisdom
+              </Badge>
+              
+              <h1 className="text-7xl font-semibold text-slate-800 leading-tight">
+                Your wellness journey,{' '}
+                <span className="gradient-text-shine">
+                  beautifully illuminated
+                </span>
+              </h1>
+              
+              <p className="text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+                A digital sanctuary where your thoughts transform into wisdom, 
+                your emotions find harmony, and your spirit discovers its true patterns.
+              </p>
+            </div>
+          </div>
+          
+          {/* Chakra Energy Bar */}
+          <div className="flex justify-center items-center space-x-3 py-8 fade-enter">
+            {chakraElements.map((chakra, index) => (
+              <div
+                key={chakra.name}
+                className="group relative"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className={`w-8 h-8 ${chakra.color} rounded-full breathing-element flex items-center justify-center cursor-pointer transition-all duration-300 group-hover:scale-125 group-hover:shadow-lg`}>
+                  <chakra.icon className="w-4 h-4 text-white" />
+                </div>
+                <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-black/80 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap">
+                    <div className="font-semibold">{chakra.name}</div>
+                    <div className="text-gray-300">{chakra.description}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
           
           <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8 fade-enter">
             <Button
               size="lg"
               onClick={() => router.push('/auth/signup')}
-              className="wellness-button text-xl px-12 py-6"
+              className="wellness-button text-xl px-16 py-8 text-lg font-semibold"
             >
-              <Heart className="w-6 h-6 mr-3" />
-              Begin Your Journey
+              <Target className="w-6 h-6 mr-3" />
+              Begin Sacred Journey
               <ArrowRight className="w-6 h-6 ml-3" />
             </Button>
             <Button
               size="lg"
               variant="outline"
               onClick={() => router.push('/auth/login')}
-              className="text-xl px-12 py-6 border-slate-200 text-slate-700 hover:bg-white/50 rounded-2xl"
+              className="text-xl px-16 py-8 border-2 border-slate-200 text-slate-700 hover:bg-white/60 rounded-2xl font-semibold"
             >
               <BookOpen className="w-6 h-6 mr-3" />
-              Continue Writing
+              Continue Practice
             </Button>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="relative z-10 py-24 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-20 space-y-6 fade-enter">
-            <h2 className="text-5xl font-semibold text-slate-800">
-              Nurture your inner wisdom
+      <section className="relative z-10 py-32 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-24 space-y-8 fade-enter">
+            <Badge className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 text-purple-700 border-purple-200 px-8 py-3 text-lg font-medium">
+              <Compass className="w-5 h-5 mr-2" />
+              Sacred Features
+            </Badge>
+            <h2 className="text-6xl font-bold text-slate-800">
+              Illuminate your{' '}
+              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                spiritual essence
+              </span>
             </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-              Ancient wisdom meets modern technology to create a space where your inner world 
-              can flourish and find its natural rhythm.
+            <p className="text-2xl text-slate-600 max-w-4xl mx-auto leading-relaxed font-light">
+              Discover the divine technology that bridges ancient wisdom with modern consciousness, 
+              creating a harmonious space for your soul&apos;s evolution.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-12">
+          <div className="grid lg:grid-cols-3 gap-8">
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
                 <div
                   key={index}
-                  className="fade-enter"
-                  style={{ animationDelay: `${index * 0.3}s` }}
+                  className="fade-enter group"
+                  style={{ animationDelay: `${index * 0.2}s` }}
                 >
-                  <Card className="wellness-card h-full">
-                    <CardContent className="p-10 text-center space-y-6 h-full flex flex-col">
-                      <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full breathing-element">
-                        <Icon className="w-10 h-10 text-indigo-600" />
+                  <Card className="wellness-card h-full group-hover:scale-105 transition-all duration-500 overflow-hidden">
+                    <CardContent className="p-12 text-center space-y-8 h-full flex flex-col relative">
+                      {/* Chakra background glow */}
+                      <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${feature.color} opacity-5 rounded-full blur-3xl`}></div>
+                      
+                      <KarmicAura karma={0.7 + index * 0.1} intensity="medium">
+                        <div className={`inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br ${feature.color} rounded-2xl breathing-element shadow-xl group-hover:shadow-2xl transition-all duration-500`}>
+                          <Icon className="w-12 h-12 text-white" />
+                        </div>
+                      </KarmicAura>
+                      
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-center space-x-2">
+                          <div className={`w-3 h-3 chakra-${feature.chakra} rounded-full animate-pulse`}></div>
+                          <Badge variant="outline" className="text-xs font-medium border-slate-200">
+                            {feature.chakra.charAt(0).toUpperCase() + feature.chakra.slice(1)} Chakra
+                          </Badge>
+                        </div>
+                        <h3 className="text-3xl font-bold text-slate-800">{feature.title}</h3>
+                        <p className="text-slate-600 leading-relaxed text-lg flex-1 font-light">
+                          {feature.description}
+                        </p>
                       </div>
-                      <h3 className="text-2xl font-semibold text-slate-800">{feature.title}</h3>
-                      <p className="text-slate-600 leading-relaxed text-lg flex-1">
-                        {feature.description}
-                      </p>
+                      
+                      <div className="pt-4">
+                        <Button variant="ghost" className="text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 rounded-xl font-medium">
+                          Explore Path
+                          <ArrowRight className="w-4 h-4 ml-2" />
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 </div>
@@ -147,40 +257,113 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Chakra Alignment Section */}
       <section className="relative z-10 py-24 px-6">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16 fade-enter">
+            <h2 className="text-5xl font-bold text-slate-800 mb-6">
+              Align your{' '}
+              <span className="bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 via-indigo-500 to-purple-500 bg-clip-text text-transparent">
+                seven chakras
+              </span>
+            </h2>
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+              Experience the harmony of perfectly balanced energy centers
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-7 gap-6 mb-16">
+            {chakraElements.map((chakra, index) => (
+              <div key={chakra.name} className="text-center group fade-enter" style={{ animationDelay: `${index * 0.1}s` }}>
+                <div className="relative mb-4">
+                  <div className={`w-16 h-16 ${chakra.color} rounded-full mx-auto breathing-element flex items-center justify-center group-hover:scale-110 transition-all duration-300 shadow-lg`}>
+                    <chakra.icon className="w-8 h-8 text-white" />
+                  </div>
+                  <div className={`absolute inset-0 ${chakra.color} rounded-full mx-auto opacity-20 animate-ping`}></div>
+                </div>
+                <h3 className="font-semibold text-slate-800 text-sm">{chakra.name}</h3>
+                <p className="text-xs text-slate-500 mt-1">{chakra.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="relative z-10 py-32 px-6">
+        <div className="max-w-6xl mx-auto">
           <div className="fade-enter">
-            <Card className="wellness-card energy-pulse">
-              <CardContent className="p-16 text-center space-y-8">
-                <div className="space-y-6">
-                  <h2 className="text-4xl font-semibold text-slate-800">
-                    Ready to begin your wellness journey?
-                  </h2>
-                  <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-                    Take the first step towards deeper self-understanding, 
-                    inner peace, and the beautiful discovery of your personal patterns.
-                  </p>
+            <Card className="wellness-card energy-pulse relative overflow-hidden">
+              {/* Background mandala pattern */}
+              <div className="absolute inset-0 opacity-5">
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 border-2 border-indigo-300 rounded-full animate-spin-slow"></div>
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 border-2 border-purple-300 rounded-full animate-spin-slow" style={{ animationDirection: 'reverse' }}></div>
+              </div>
+              
+              <CardContent className="p-20 text-center space-y-12 relative z-10">
+                <div className="space-y-8">
+                  <KarmicAura karma={0.95} intensity="strong">
+                    <div className="w-32 h-32 bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 rounded-full mx-auto flex items-center justify-center breathing-element shadow-2xl">
+                      <div className="w-24 h-24 bg-gradient-to-br from-white/20 to-white/5 rounded-full flex items-center justify-center">
+                        <Star className="w-12 h-12 text-white" />
+                      </div>
+                    </div>
+                  </KarmicAura>
+                  
+                  <div className="space-y-6">
+                    <Badge className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 text-indigo-700 border-indigo-200 px-8 py-3 text-lg font-medium">
+                      <Sparkles className="w-5 h-5 mr-2" />
+                      Begin Your Transformation
+                    </Badge>
+                    
+                    <h2 className="text-5xl font-bold text-slate-800">
+                      Ready to awaken your{' '}
+                      <span className="gradient-text-shine">
+                        highest self
+                      </span>?
+                    </h2>
+                    
+                    <p className="text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-light">
+                      Embark on a sacred journey of self-discovery, where every thought becomes wisdom, 
+                      every emotion finds balance, and your spirit awakens to its infinite potential.
+                    </p>
+                  </div>
                 </div>
                 
-                <div className="flex justify-center space-x-2 mb-8">
-                  {['root', 'sacral', 'solar', 'heart', 'throat', 'third-eye', 'crown'].map((chakra, index) => (
-                    <div
-                      key={chakra}
-                      className={`w-4 h-4 rounded-full chakra-${chakra} breathing-element`}
-                      style={{ animationDelay: `${index * 0.2}s` }}
-                    />
+                {/* Enhanced chakra visualization */}
+                <div className="flex justify-center items-center space-x-4 py-8">
+                  {chakraElements.map((chakra, index) => (
+                    <div key={chakra.name} className="relative group">
+                      <div
+                        className={`w-6 h-6 ${chakra.color} rounded-full breathing-element group-hover:scale-150 transition-all duration-300 cursor-pointer shadow-lg`}
+                        style={{ animationDelay: `${index * 0.15}s` }}
+                      >
+                        <div className={`absolute inset-0 ${chakra.color} rounded-full opacity-30 animate-ping`}></div>
+                      </div>
+                    </div>
                   ))}
                 </div>
                 
-                <Button
-                  size="lg"
-                  onClick={() => router.push('/auth/signup')}
-                  className="wellness-button text-xl px-16 py-6"
-                >
-                  <Sparkles className="w-6 h-6 mr-3" />
-                  Start Your Journey
-                </Button>
+                <div className="flex flex-col sm:flex-row gap-6 justify-center pt-4">
+                  <Button
+                    size="lg"
+                    onClick={() => router.push('/auth/signup')}
+                    className="wellness-button text-2xl px-20 py-8 font-bold"
+                  >
+                    <Target className="w-7 h-7 mr-4" />
+                    Ascend to Enlightenment
+                    <Sparkles className="w-7 h-7 ml-4" />
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    onClick={() => router.push('/auth/login')}
+                    className="text-xl px-16 py-8 border-2 border-slate-200 text-slate-700 hover:bg-white/60 rounded-2xl font-semibold"
+                  >
+                    <Eye className="w-6 h-6 mr-3" />
+                    Continue Meditation
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </div>
