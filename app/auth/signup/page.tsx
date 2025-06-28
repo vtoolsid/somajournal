@@ -142,7 +142,7 @@ export default function SignUpPage() {
                 required
                 value={formData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                 placeholder="Enter your full name"
               />
             </div>
@@ -159,7 +159,7 @@ export default function SignUpPage() {
                 required
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                 placeholder="Enter your email"
               />
             </div>
@@ -176,7 +176,7 @@ export default function SignUpPage() {
                 required
                 value={formData.location}
                 onChange={(e) => handleInputChange('location', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                 placeholder="City, Country"
               />
             </div>
@@ -188,14 +188,14 @@ export default function SignUpPage() {
                   Gender
                 </label>
                 <Select value={formData.gender} onValueChange={(value) => handleInputChange('gender', value)}>
-                  <SelectTrigger className="w-full border-gray-300 focus:ring-2 focus:ring-purple-500">
+                  <SelectTrigger className="w-full border-gray-300 text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
                     <SelectValue placeholder="Select" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="female">Female</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                    <SelectItem value="prefer-not-to-disclose">Prefer not to disclose</SelectItem>
+                  <SelectContent className="bg-white border border-gray-200 shadow-lg">
+                    <SelectItem value="male" className="text-gray-900 hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 data-[highlighted]:bg-gray-100 data-[highlighted]:text-gray-900 cursor-pointer">Male</SelectItem>
+                    <SelectItem value="female" className="text-gray-900 hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 data-[highlighted]:bg-gray-100 data-[highlighted]:text-gray-900 cursor-pointer">Female</SelectItem>
+                    <SelectItem value="other" className="text-gray-900 hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 data-[highlighted]:bg-gray-100 data-[highlighted]:text-gray-900 cursor-pointer">Other</SelectItem>
+                    <SelectItem value="prefer-not-to-disclose" className="text-gray-900 hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 data-[highlighted]:bg-gray-100 data-[highlighted]:text-gray-900 cursor-pointer">Prefer not to disclose</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -213,7 +213,7 @@ export default function SignUpPage() {
                   required
                   value={formData.age}
                   onChange={(e) => handleInputChange('age', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                   placeholder="Age"
                 />
               </div>
@@ -232,7 +232,7 @@ export default function SignUpPage() {
                   required
                   value={formData.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
-                  className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                   placeholder="Create a strong password"
                 />
                 <button
@@ -250,17 +250,16 @@ export default function SignUpPage() {
               
               {/* Password Requirements */}
               {formData.password && (
-                <div className="mt-3 space-y-2 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-100">
-                  <p className="text-sm font-medium text-gray-700 flex items-center">
-                    <Circle className="w-4 h-4 mr-2 text-purple-400" />
-                    Create a strong energetic foundation:
+                <div className="mt-3 space-y-2 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                  <p className="text-sm font-medium text-gray-700">
+                    Password must contain:
                   </p>
                   <div className="space-y-1">
-                    <PasswordCheck isValid={passwordChecks.length} text="At least 8 characters (like 8 sacred breaths)" />
-                    <PasswordCheck isValid={passwordChecks.uppercase} text="One uppercase letter (reach higher)" />
-                    <PasswordCheck isValid={passwordChecks.lowercase} text="One lowercase letter (stay grounded)" />
-                    <PasswordCheck isValid={passwordChecks.number} text="One number (cosmic vibration)" />
-                    <PasswordCheck isValid={passwordChecks.special} text="One special character (unique energy)" />
+                    <PasswordCheck isValid={passwordChecks.length} text="At least 8 characters" />
+                    <PasswordCheck isValid={passwordChecks.uppercase} text="One uppercase letter" />
+                    <PasswordCheck isValid={passwordChecks.lowercase} text="One lowercase letter" />
+                    <PasswordCheck isValid={passwordChecks.number} text="One number" />
+                    <PasswordCheck isValid={passwordChecks.special} text="One special character" />
                   </div>
                 </div>
               )}
@@ -272,34 +271,14 @@ export default function SignUpPage() {
               disabled={isLoading || !isPasswordValid || !formData.name || !formData.email || !formData.location || !formData.gender || !formData.age}
               className="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium rounded-lg shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group"
             >
-              {isLoading ? (
-                <div className="flex items-center justify-center">
-                  <Sparkles className="w-4 h-4 mr-2 animate-spin" />
-                  Awakening your journey...
-                </div>
-              ) : (
-                <div className="flex items-center justify-center">
-                  <Heart className="w-4 h-4 mr-2 group-hover:animate-pulse" />
-                  Begin your transformation
-                  <Sparkles className="w-4 h-4 ml-2 group-hover:animate-pulse" />
-                </div>
-              )}
+              {isLoading ? 'Creating account...' : 'Begin your journey'}
             </Button>
           </form>
-
-          {/* Inspirational note */}
-          <div className="mt-6 text-center p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-100">
-            <p className="text-sm text-gray-600 flex items-center justify-center">
-              <Brain className="w-4 h-4 mr-2 text-indigo-400" />
-              <span className="italic">"The journey of a thousand miles begins with a single step"</span>
-              <Heart className="w-4 h-4 ml-2 text-pink-400" />
-            </p>
-          </div>
 
           {/* Footer */}
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
-              Already have an account?{' '}
+              Already Awakened?{' '}
               <Link href="/auth/login" className="text-purple-600 hover:text-purple-700 font-medium">
                 Sign in now.
               </Link>

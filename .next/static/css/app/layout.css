@@ -2840,6 +2840,14 @@ p{
   --tw-placeholder-opacity: 1;
   color: rgb(156 163 175 / var(--tw-placeholder-opacity));
 }
+.placeholder-gray-500::-moz-placeholder{
+  --tw-placeholder-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-placeholder-opacity));
+}
+.placeholder-gray-500::placeholder{
+  --tw-placeholder-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-placeholder-opacity));
+}
 .opacity-0{
   opacity: 0;
 }
@@ -3376,6 +3384,10 @@ p{
   --tw-bg-opacity: 1;
   background-color: rgb(67 56 202 / var(--tw-bg-opacity));
 }
+.hover\:bg-gray-100:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+}
 .hover\:from-purple-700:hover{
   --tw-gradient-from: #7e22ce var(--tw-gradient-from-position);
   --tw-gradient-to: rgb(126 34 206 / 0) var(--tw-gradient-to-position);
@@ -3441,17 +3453,29 @@ p{
 .focus\:border-transparent:focus{
   border-color: transparent;
 }
+.focus\:border-purple-500:focus{
+  --tw-border-opacity: 1;
+  border-color: rgb(168 85 247 / var(--tw-border-opacity));
+}
 .focus\:bg-accent:focus{
   background-color: hsl(var(--accent));
 }
 .focus\:bg-primary:focus{
   background-color: hsl(var(--primary));
 }
+.focus\:bg-gray-100:focus{
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+}
 .focus\:text-accent-foreground:focus{
   color: hsl(var(--accent-foreground));
 }
 .focus\:text-primary-foreground:focus{
   color: hsl(var(--primary-foreground));
+}
+.focus\:text-gray-900:focus{
+  --tw-text-opacity: 1;
+  color: rgb(17 24 39 / var(--tw-text-opacity));
 }
 .focus\:opacity-100:focus{
   opacity: 1;
@@ -3746,6 +3770,10 @@ p{
 .data-\[state\=unchecked\]\:bg-input[data-state=unchecked]{
   background-color: hsl(var(--input));
 }
+.data-\[highlighted\]\:bg-gray-100[data-highlighted]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+}
 .data-\[selected\=true\]\:text-accent-foreground[data-selected=true]{
   color: hsl(var(--accent-foreground));
 }
@@ -3763,6 +3791,10 @@ p{
 }
 .data-\[state\=open\]\:text-muted-foreground[data-state=open]{
   color: hsl(var(--muted-foreground));
+}
+.data-\[highlighted\]\:text-gray-900[data-highlighted]{
+  --tw-text-opacity: 1;
+  color: rgb(17 24 39 / var(--tw-text-opacity));
 }
 .data-\[disabled\=true\]\:opacity-50[data-disabled=true]{
   opacity: 0.5;
