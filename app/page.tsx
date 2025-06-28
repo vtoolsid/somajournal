@@ -52,13 +52,62 @@ export default function Home() {
   ];
 
   const chakraElements = [
-    { name: 'Root', icon: Circle, color: 'bg-red-500', description: 'Grounding & Stability' },
-    { name: 'Sacral', icon: Waves, color: 'bg-orange-500', description: 'Creativity & Emotion' },
-    { name: 'Solar', icon: Sun, color: 'bg-yellow-500', description: 'Personal Power' },
-    { name: 'Heart', icon: Heart, color: 'bg-green-500', description: 'Love & Connection' },
-    { name: 'Throat', icon: Compass, color: 'bg-blue-500', description: 'Truth & Expression' },
-    { name: 'Third Eye', icon: Eye, color: 'bg-indigo-500', description: 'Intuition & Wisdom' },
-    { name: 'Crown', icon: Star, color: 'bg-purple-500', description: 'Spiritual Connection' },
+    { 
+      name: 'Root', 
+      icon: Circle, 
+      color: 'bg-red-500', 
+      description: 'Foundation & Security',
+      emotion: 'Feeling grounded, secure, and stable in life',
+      location: 'Base of spine'
+    },
+    { 
+      name: 'Sacral', 
+      icon: Waves, 
+      color: 'bg-orange-500', 
+      description: 'Creativity & Passion',
+      emotion: 'Expressing creativity, sexuality, and emotional flow',
+      location: 'Lower abdomen'
+    },
+    { 
+      name: 'Solar', 
+      icon: Sun, 
+      color: 'bg-yellow-500', 
+      description: 'Personal Power',
+      emotion: 'Confidence, self-esteem, and inner strength',
+      location: 'Upper abdomen'
+    },
+    { 
+      name: 'Heart', 
+      icon: Heart, 
+      color: 'bg-green-500', 
+      description: 'Love & Compassion',
+      emotion: 'Unconditional love, empathy, and connection',
+      location: 'Center of chest'
+    },
+    { 
+      name: 'Throat', 
+      icon: Compass, 
+      color: 'bg-blue-500', 
+      description: 'Communication & Truth',
+      emotion: 'Authentic expression and speaking your truth',
+      location: 'Throat area'
+    },
+    { 
+      name: 'Third Eye', 
+      icon: Eye, 
+      color: 'bg-indigo-500', 
+      description: 'Intuition & Insight',
+      emotion: 'Inner wisdom, clarity, and spiritual awareness',
+      location: 'Between eyebrows'
+    },
+    { 
+      name: 'Crown', 
+      icon: Star, 
+      color: 'bg-purple-500', 
+      description: 'Divine Connection',
+      emotion: 'Spiritual enlightenment and universal consciousness',
+      location: 'Top of head'
+    },
   ];
 
   return (
@@ -146,24 +195,43 @@ export default function Home() {
           </div>
           
           {/* Chakra Energy Bar */}
-          <div className="flex justify-center items-center space-x-3 py-8 fade-enter">
-            {chakraElements.map((chakra, index) => (
-              <div
-                key={chakra.name}
-                className="group relative"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className={`w-8 h-8 ${chakra.color} rounded-full breathing-element flex items-center justify-center cursor-pointer transition-all duration-300 group-hover:scale-125 group-hover:shadow-lg`}>
-                  <chakra.icon className="w-4 h-4 text-white" />
-                </div>
-                <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="bg-black/80 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap">
-                    <div className="font-semibold">{chakra.name}</div>
-                    <div className="text-gray-300">{chakra.description}</div>
+          <div className="flex justify-center items-center space-x-6 py-12 fade-enter">
+            {chakraElements.map((chakra, index) => {
+              const Icon = chakra.icon;
+              return (
+                <div
+                  key={chakra.name}
+                  className="group relative"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className={`w-10 h-10 ${chakra.color} rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 group-hover:scale-110 shadow-md group-hover:shadow-xl relative overflow-hidden`}>
+                    <Icon className="w-5 h-5 text-white relative z-10" />
+                    <div className={`absolute inset-0 ${chakra.color} opacity-20 group-hover:opacity-40 transition-opacity duration-300`}></div>
+                  </div>
+                  
+                  {/* Simple Tooltip */}
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-50">
+                    <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-4 min-w-[280px]">
+                      {/* Tooltip Arrow */}
+                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[8px] border-r-[8px] border-t-[8px] border-l-transparent border-r-transparent border-t-white"></div>
+                      
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <div className={`w-4 h-4 ${chakra.color} rounded-full`}></div>
+                          <h3 className="font-semibold text-gray-900">{chakra.name} Chakra</h3>
+                        </div>
+                        <p className="text-sm text-gray-600 font-medium">{chakra.description}</p>
+                        <p className="text-xs text-gray-500 italic">{chakra.emotion}</p>
+                        <div className="flex items-center text-xs text-gray-400 pt-1 border-t border-gray-100">
+                          <Target className="w-3 h-3 mr-1" />
+                          {chakra.location}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
           
           <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8 fade-enter">
