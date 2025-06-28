@@ -6,13 +6,13 @@ import { useAppStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { FloatingParticles } from '@/components/ui/floating-particles';
-import { Heart, Sparkles, ArrowRight, CheckCircle, Users, TrendingUp } from 'lucide-react';
+import { ArrowLeft, Flower2, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   
   const { login } = useAppStore();
@@ -37,184 +37,113 @@ export default function LoginPage() {
     }, 1000);
   };
 
-  const benefits = [
-    { icon: Heart, text: "Track your emotional wellness journey" },
-    { icon: TrendingUp, text: "Discover patterns in your thoughts" },
-    { icon: Sparkles, text: "AI-powered insights for growth" }
-  ];
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
-      <FloatingParticles count={15} />
-      
-      <div className="relative z-10 min-h-screen flex">
-        {/* Left Side - Benefits & Social Proof */}
-        <div className="hidden lg:flex lg:w-1/2 flex-col justify-center p-12 space-y-12">
-          <div className="space-y-8">
-            <div className="space-y-4">
-              <div className="inline-flex items-center space-x-2 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                <span className="text-sm font-medium text-slate-700">Join 10,000+ wellness seekers</span>
-              </div>
-              
-              <h1 className="text-5xl font-semibold text-slate-800 leading-tight">
-                Welcome back to your{' '}
-                <span className="gradient-text-shine">wellness sanctuary</span>
-              </h1>
-              
-              <p className="text-xl text-slate-600 leading-relaxed max-w-lg">
-                Continue your journey of self-discovery and emotional growth with AI-powered insights.
-              </p>
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      {/* Header with back navigation */}
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <Link 
+          href="/" 
+          className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-8 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to home
+        </Link>
+        
+        <div className="flex justify-center">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 rounded-2xl flex items-center justify-center">
+              <Flower2 className="w-6 h-6 text-white" />
             </div>
-
-            <div className="space-y-6">
-              {benefits.map((benefit, index) => {
-                const Icon = benefit.icon;
-                return (
-                  <div 
-                    key={index} 
-                    className="flex items-center space-x-4 fade-enter"
-                    style={{ animationDelay: `${index * 0.2}s` }}
-                  >
-                    <div className="w-12 h-12 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-xl flex items-center justify-center breathing-element">
-                      <Icon className="w-6 h-6 text-indigo-600" />
-                    </div>
-                    <span className="text-lg text-slate-700">{benefit.text}</span>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Social Proof */}
-            <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 space-y-4">
-              <div className="flex items-center space-x-2">
-                <Users className="w-5 h-5 text-indigo-600" />
-                <span className="font-medium text-slate-800">Trusted by wellness enthusiasts</span>
-              </div>
-              <div className="flex items-center space-x-4">
-                <div className="flex -space-x-2">
-                  {[...Array(4)].map((_, i) => (
-                    <div key={i} className="w-8 h-8 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full border-2 border-white" />
-                  ))}
-                </div>
-                <div className="text-sm text-slate-600">
-                  <span className="font-semibold text-slate-800">Sarah, Mike, Emma</span> and 9,997+ others are on their wellness journey
-                </div>
-              </div>
+            <div>
+              <h1 className="text-xl font-semibold text-gray-900">Karmic Wellness</h1>
             </div>
           </div>
         </div>
+        
+        <h2 className="mt-6 text-center text-3xl font-medium text-gray-900">
+          Sign in to your account
+        </h2>
+        <p className="mt-2 text-center text-sm text-gray-600">
+          Or{' '}
+          <Link href="/auth/signup" className="font-medium text-indigo-600 hover:text-indigo-500">
+            create a new account
+          </Link>
+        </p>
+      </div>
 
-        {/* Right Side - Login Form */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-6">
-          <div className="w-full max-w-md">
-            {/* Mobile Header */}
-            <div className="lg:hidden text-center space-y-4 mb-8">
-              <Link href="/" className="inline-block text-slate-600 hover:text-slate-800 transition-colors">
-                Back to home
-              </Link>
-              
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <Card className="bg-white py-8 px-4 shadow-sm border border-gray-200 sm:rounded-lg sm:px-10">
+          <CardContent className="p-0">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <h1 className="text-3xl font-semibold text-slate-800">Welcome back</h1>
-                <p className="text-slate-600">Continue your wellness journey</p>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                  Email address
+                </label>
+                <div className="mt-1">
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="Enter your email"
+                  />
+                </div>
               </div>
-            </div>
 
-            {/* Desktop Header */}
-            <div className="hidden lg:block text-center space-y-4 mb-8">
-              <Link href="/" className="inline-block text-slate-600 hover:text-slate-800 transition-colors mb-6">
-                Back to home
-              </Link>
-              
               <div>
-                <h2 className="text-3xl font-semibold text-slate-800 mb-2">Sign in to continue</h2>
-                <p className="text-slate-600">Your wellness journey awaits</p>
-              </div>
-            </div>
-
-            {/* Login Form */}
-            <Card className="wellness-card energy-pulse min-h-[580px]">
-              <CardContent className="p-8 h-full flex flex-col justify-center">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="space-y-4">
-                    <div>
-                      <Input
-                        type="email"
-                        placeholder="Your email address"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="wellness-input h-14 text-lg text-slate-800 placeholder:text-slate-500"
-                        required
-                      />
-                    </div>
-                    
-                    <div>
-                      <Input
-                        type="password"
-                        placeholder="Your password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="wellness-input h-14 text-lg text-slate-800 placeholder:text-slate-500"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="text-center">
-                    <Link href="#" className="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
-                      Forgot your password?
-                    </Link>
-                  </div>
-
-                  <Button
-                    type="submit"
-                    className="w-full wellness-button h-14 text-lg text-white"
-                    disabled={isLoading}
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                  Password
+                </label>
+                <div className="mt-1 relative">
+                  <Input
+                    id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="current-password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="appearance-none block w-full px-3 py-2 pr-10 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="Enter your password"
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    onClick={() => setShowPassword(!showPassword)}
                   >
-                    {isLoading ? (
-                      <>
-                        <Sparkles className="w-5 h-5 mr-3 animate-spin" />
-                        Signing you in...
-                      </>
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4 text-gray-400" />
                     ) : (
-                      <>
-                        Continue Your Journey
-                        <ArrowRight className="w-5 h-5 ml-3" />
-                      </>
+                      <Eye className="h-4 w-4 text-gray-400" />
                     )}
-                  </Button>
-                </form>
-
-                <div className="mt-8 text-center">
-                  <p className="text-sm text-slate-600">
-                    New to Karmic Wellness?{' '}
-                    <Link href="/auth/signup" className="text-indigo-600 hover:text-indigo-700 font-semibold">
-                      Start your free journey
-                    </Link>
-                  </p>
+                  </button>
                 </div>
+              </div>
 
-                {/* Trust Indicators */}
-                <div className="mt-6 pt-6 border-t border-slate-100">
-                  <div className="flex items-center justify-center space-x-6 text-xs text-slate-500">
-                    <div className="flex items-center space-x-1">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                      <span>Secure & Private</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                      <span>Free to Start</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                      <span>No Spam</span>
-                    </div>
-                  </div>
+              <div className="flex items-center justify-between">
+                <div className="text-sm">
+                  <Link href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+                    Forgot your password?
+                  </Link>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+              </div>
+
+              <div>
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                >
+                  {isLoading ? 'Signing in...' : 'Sign in'}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

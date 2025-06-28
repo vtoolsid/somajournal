@@ -323,7 +323,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="relative z-10 py-32 px-6">
+      <section className="relative z-10 py-8 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-24 space-y-8 fade-enter">
             <Badge className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 text-purple-700 border-purple-200 px-8 py-3 text-lg font-medium">
@@ -390,37 +390,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Chakra Alignment Section */}
-      <section className="relative z-10 py-24 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16 fade-enter">
-            <h2 className="text-5xl font-bold text-slate-800 mb-6">
-              Align your{' '}
-              <span className="bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 via-indigo-500 to-purple-500 bg-clip-text text-transparent">
-                seven chakras
-              </span>
-            </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              Experience the harmony of perfectly balanced energy centers
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-7 gap-6 mb-16">
-            {chakraElements.map((chakra, index) => (
-              <div key={chakra.name} className="text-center group fade-enter" style={{ animationDelay: `${index * 0.1}s` }}>
-                <div className="relative mb-4">
-                  <div className={`w-16 h-16 ${chakra.color} rounded-full mx-auto breathing-element flex items-center justify-center group-hover:scale-110 transition-all duration-300 shadow-lg`}>
-                    <chakra.icon className="w-8 h-8 text-white" />
-                  </div>
-                  <div className={`absolute inset-0 ${chakra.color} rounded-full mx-auto opacity-20 animate-ping`}></div>
-                </div>
-                <h3 className="font-semibold text-slate-800 text-sm">{chakra.name}</h3>
-                <p className="text-xs text-slate-500 mt-1">{chakra.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* CTA Section */}
       <section className="relative z-10 py-32 px-6">
