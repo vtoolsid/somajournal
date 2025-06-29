@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { ArrowLeft, Eye, EyeOff, Check, X, Circle, Sparkles, Heart, Brain } from 'lucide-react';
 import Link from 'next/link';
+import { ChakraRing } from '@/components/ui/chakra-ring';
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({
@@ -81,25 +82,10 @@ export default function SignUpPage() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left Side - Gradient Orb */}
+      {/* Left Side - Chakra System */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="relative">
-            {/* Main gradient orb */}
-            <div 
-              className="w-96 h-96 rounded-full opacity-80"
-              style={{
-                background: 'radial-gradient(circle at 30% 30%, #22c55e 0%, #10b981 25%, #14b8a6 50%, #0ea5e9 75%, #059669 100%)'
-              }}
-            />
-            {/* Overlay for softer effect */}
-            <div 
-              className="absolute inset-0 w-96 h-96 rounded-full opacity-60"
-              style={{
-                background: 'radial-gradient(circle at 70% 70%, rgba(255,255,255,0.3) 0%, transparent 50%)'
-              }}
-            />
-          </div>
+          <ChakraRing className="w-full h-full max-w-4xl max-h-4xl" />
         </div>
       </div>
 
