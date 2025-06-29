@@ -520,26 +520,185 @@
     animation: fade-exit 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
-  /* Calendar Styling */
-  .rdp-day_today {
-    background-color: rgb(224 231 255) !important;
-    color: rgb(67 56 202) !important;
-    font-weight: 500 !important;
+  /* Old Calendar Styling - Removed to prevent conflicts with Day One style */
+  
+  /* Day One Style Calendar */
+  .dayone-calendar {
+    width: 100%;
+    font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
   }
   
-  .rdp-day_selected {
-    background-color: rgb(79 70 229) !important;
+  .dayone-calendar .rdp {
+    margin: 0;
+    width: 100%;
+  }
+  
+  .dayone-calendar .rdp-months {
+    width: 100%;
+  }
+  
+  .dayone-calendar .rdp-month {
+    width: 100%;
+    margin: 0;
+  }
+  
+  .dayone-calendar .rdp-caption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0 16px 0;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 18px;
+    color: rgb(17 24 39);
+  }
+  
+  .dayone-calendar .rdp-caption_label {
+    font-size: 18px;
+    font-weight: 600;
+    color: rgb(17 24 39);
+  }
+  
+  .dayone-calendar .rdp-nav {
+    display: none; /* Hide navigation arrows for multi-month view */
+  }
+  
+  .dayone-calendar .rdp-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  
+  .dayone-calendar .rdp-head {
+    border-bottom: 1px solid rgb(229 231 235);
+  }
+  
+  .dayone-calendar .rdp-head_cell {
+    font-weight: 500;
+    font-size: 11px;
+    color: rgb(107 114 128);
+    text-align: center;
+    padding: 8px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .dayone-calendar .rdp-tbody .rdp-row {
+    border-bottom: 1px solid rgb(243 244 246);
+  }
+  
+  .dayone-calendar .rdp-cell {
+    text-align: center;
+    padding: 0;
+    width: 14.28%;
+    height: 40px;
+    border-right: 1px solid rgb(243 244 246);
+    position: relative;
+  }
+  
+  .dayone-calendar .rdp-cell:last-child {
+    border-right: none;
+  }
+  
+  .dayone-calendar .rdp-day {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgb(55 65 81);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+  }
+  
+  .dayone-calendar .rdp-day:hover {
+    background-color: rgb(249 250 251);
+  }
+  
+  .dayone-calendar .rdp-day_outside {
+    color: rgb(156 163 175);
+  }
+  
+  .dayone-calendar .rdp-day_today {
+    background-color: transparent !important;
+    color: rgb(55 65 81) !important;
+    font-weight: 600;
+    border: 2px solid rgb(99 102 241) !important;
+    box-sizing: border-box;
+  }
+  
+  .dayone-calendar .rdp-day_selected {
+    background-color: rgb(219 234 254) !important;
+    color: rgb(29 78 216) !important;
+    font-weight: 500;
+  }
+  
+  /* Force override any default calendar styles */
+  .dayone-calendar .rdp-day[aria-selected="true"] {
+    background-color: rgb(219 234 254) !important;
+    color: rgb(29 78 216) !important;
+    font-weight: 500;
+  }
+  
+  .dayone-calendar .rdp-day[data-selected] {
+    background-color: rgb(219 234 254) !important;
+    color: rgb(29 78 216) !important;
+    font-weight: 500;
+  }
+  
+  .dayone-calendar .rdp-day_today.rdp-day_selected {
+    background-color: rgb(219 234 254) !important;
+    color: rgb(29 78 216) !important;
+    border: 2px solid rgb(99 102 241) !important;
+  }
+  
+  /* Journal entry indicators */
+  .dayone-calendar .has-journal-entry::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background-color: rgb(99 102 241);
+    border-radius: 50%;
+  }
+  
+  .dayone-calendar .rdp-day_today.has-journal-entry::after {
+    background-color: rgb(99 102 241);
+  }
+  
+  /* Nuclear option - override ALL possible calendar text colors */
+  .dayone-calendar .rdp-day,
+  .dayone-calendar .rdp-day *,
+  .dayone-calendar button,
+  .dayone-calendar button * {
+    color: rgb(55 65 81) !important;
+  }
+  
+  .dayone-calendar .rdp-day_selected,
+  .dayone-calendar .rdp-day_selected *,
+  .dayone-calendar .rdp-day[aria-selected="true"],
+  .dayone-calendar .rdp-day[aria-selected="true"] *,
+  .dayone-calendar .rdp-day[data-selected],
+  .dayone-calendar .rdp-day[data-selected] * {
+    color: rgb(29 78 216) !important;
+    background-color: rgb(219 234 254) !important;
+  }
+  
+  .dayone-calendar .rdp-day_today,
+  .dayone-calendar .rdp-day_today *,
+  .dayone-calendar .rdp-day[data-today],
+  .dayone-calendar .rdp-day[data-today] * {
     color: white !important;
-    font-weight: 500 !important;
-  }
-  
-  .rdp-day_selected:hover {
-    background-color: rgb(67 56 202) !important;
-  }
-  
-  .rdp-day_today.rdp-day_selected {
-    background-color: rgb(79 70 229) !important;
-    color: white !important;
+    background-color: rgb(99 102 241) !important;
+    border: none !important;
   }
 
   /* Floating Particles */

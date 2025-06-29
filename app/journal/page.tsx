@@ -136,7 +136,7 @@ export default function JournalPage() {
         
         <div className="relative z-10 flex flex-col lg:flex-row h-screen">
           {/* Left Pane - History & Navigation */}
-          <div className="w-full lg:w-2/5 bg-white border-b lg:border-b-0 lg:border-r border-gray-200 flex flex-col max-h-96 lg:max-h-none">
+          <div className="w-full lg:w-[22%] bg-white border-b lg:border-b-0 lg:border-r border-gray-200 flex flex-col max-h-96 lg:max-h-none">
             {/* Header */}
             <div className="p-6 border-b border-gray-100">
               <div className="flex items-center space-x-3 mb-4">
@@ -247,46 +247,66 @@ export default function JournalPage() {
                   </div>
                 </ScrollArea>
               ) : (
-                <div className="p-4 h-full">
-                  <Calendar
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={setSelectedDate}
-                    className="w-full lg:w-auto [&_.rdp-day_today]:bg-indigo-100 [&_.rdp-day_today]:text-indigo-700 [&_.rdp-day_today]:font-medium [&_.rdp-day_selected]:bg-indigo-600 [&_.rdp-day_selected]:text-white [&_.rdp-day_selected]:font-medium"
-                    modifiers={{
-                      hasEntry: getDatesWithEntries(),
-                    }}
-                    modifiersClassNames={{
-                      hasEntry: "relative after:content-[''] after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:bg-blue-500 after:rounded-full"
-                    }}
-                  />
-                  {selectedDate && getEntriesForDate(selectedDate).length > 0 && (
-                    <div className="mt-4 space-y-2">
-                      <h3 className="text-sm font-medium text-gray-700">
-                        Entries for {selectedDate.toLocaleDateString()}
-                      </h3>
-                      {getEntriesForDate(selectedDate).map((entry) => (
-                        <Card 
-                          key={entry.id} 
-                          className="cursor-pointer hover:shadow-md"
-                          onClick={() => setSelectedEntry(entry)}
-                        >
-                          <CardContent className="p-3">
-                            <p className="text-sm text-gray-700 line-clamp-2">
-                              {entry.content}
-                            </p>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                <ScrollArea className="h-full">
+                  <div className="p-4 space-y-8">
+                    {/* Display 3 months: previous, current, next */}
+                    {[-1, 0, 1].map((monthOffset) => {
+                      const currentMonth = new Date();
+                      currentMonth.setMonth(currentMonth.getMonth() + monthOffset);
+                      const monthEntries = getEntriesForDate(currentMonth);
+                      
+                      return (
+                        <div key={monthOffset} className="space-y-4">
+                          <Calendar
+                            mode="single"
+                            selected={selectedDate}
+                            onSelect={setSelectedDate}
+                            month={currentMonth}
+                            className="w-full dayone-calendar"
+                            today={new Date()}
+                            modifiers={{
+                              hasEntry: getDatesWithEntries(),
+                            }}
+                            modifiersClassNames={{
+                              hasEntry: "has-journal-entry"
+                            }}
+                          />
+                          
+                          {/* Show entries for selected date if it's in this month */}
+                          {selectedDate && 
+                           selectedDate.getMonth() === currentMonth.getMonth() && 
+                           selectedDate.getFullYear() === currentMonth.getFullYear() && 
+                           getEntriesForDate(selectedDate).length > 0 && (
+                            <div className="space-y-2 px-2">
+                              <h3 className="text-sm font-medium text-gray-700">
+                                Entries for {selectedDate.toLocaleDateString()}
+                              </h3>
+                              {getEntriesForDate(selectedDate).map((entry) => (
+                                <Card 
+                                  key={entry.id} 
+                                  className="cursor-pointer hover:shadow-md transition-shadow"
+                                  onClick={() => setSelectedEntry(entry)}
+                                >
+                                  <CardContent className="p-3">
+                                    <p className="text-sm text-gray-700 line-clamp-2">
+                                      {entry.content}
+                                    </p>
+                                  </CardContent>
+                                </Card>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </ScrollArea>
               )}
             </div>
           </div>
 
           {/* Right Pane - Editor/Detail View */}
-          <div className="flex-1 bg-white flex flex-col">
+          <div className="w-full lg:w-[78%] bg-white flex flex-col">
             {selectedEntry ? (
               /* Entry Detail View */
               <div className="flex-1 p-8 overflow-y-auto">
