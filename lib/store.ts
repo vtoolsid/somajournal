@@ -19,6 +19,9 @@ export interface JournalEntry {
   emotions: Record<string, number>;
   symptoms: Record<string, boolean>;
   mediaUrl?: string;
+  location?: string;
+  weather?: string;
+  tags?: string[];
 }
 
 export interface Emotion {

@@ -3,20 +3,32 @@
 import { useState } from 'react';
 import { AppLayout } from '@/components/layout/app-layout';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Calendar } from '@/components/ui/calendar';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { KarmicAura } from '@/components/ui/karmic-aura';
 import { BreathingLoader } from '@/components/ui/breathing-loader';
 import { FloatingParticles } from '@/components/ui/floating-particles';
 import { useAppStore } from '@/lib/store';
 import { mockJournalEntries, analyzeJournalEntry } from '@/lib/mock-data';
-import { Badge } from '@/components/ui/badge';
 import { 
   BookOpen, 
   Heart,
   Sparkles,
-  Calendar,
-  Feather
+  Calendar as CalendarIcon,
+  List,
+  MapPin,
+  Cloud,
+  Tag,
+  Paperclip,
+  Clock,
+  Feather,
+  Star
 } from 'lucide-react';
 
 export default function JournalPage() {
@@ -24,6 +36,11 @@ export default function JournalPage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysis, setAnalysis] = useState<any>(null);
   const [showCeremony, setShowCeremony] = useState(false);
+  const [selectedEntry, setSelectedEntry] = useState<any>(null);
+  const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [newTag, setNewTag] = useState('');
+  const [tags, setTags] = useState<string[]>([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,24 +56,70 @@ export default function JournalPage() {
       addJournalEntry({
         content: currentEntry,
         userId: user?.id || '',
+        location: 'San Francisco, CA',
+        weather: '☀️ 72°F',
+        tags: tags,
         ...analysisResult,
       });
       
       setIsAnalyzing(false);
       setShowCeremony(false);
+      setSelectedEntry(null);
+      setTags([]);
     }, 3000);
   };
 
-  const getKarmaColor = (value: number) => {
-    if (value > 0.3) return 'karma-positive';
-    if (value < -0.3) return 'karma-negative';
-    return 'karma-neutral';
+  const handleAddTag = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && newTag.trim() && !tags.includes(newTag.trim())) {
+      setTags([...tags, newTag.trim()]);
+      setNewTag('');
+    }
   };
+
+  const removeTag = (tagToRemove: string) => {
+    setTags(tags.filter(tag => tag !== tagToRemove));
+  };
+
+  const getKarmaColor = (value: number) => {
+    if (value > 0.3) return 'text-emerald-600';
+    if (value < -0.3) return 'text-red-500';
+    return 'text-slate-500';
+  };
+
+  const getKarmaDotColor = (value: number) => {
+    if (value > 0.3) return 'bg-emerald-400';
+    if (value < -0.3) return 'bg-red-400';
+    return 'bg-blue-400';
+  };
+
+  const getOnThisDayEntry = () => {
+    const today = new Date();
+    const todayStr = `${today.getMonth() + 1}-${today.getDate()}`;
+    
+    return mockJournalEntries.find(entry => {
+      const entryDate = new Date(entry.createdAt);
+      const entryStr = `${entryDate.getMonth() + 1}-${entryDate.getDate()}`;
+      return entryStr === todayStr && entryDate.getFullYear() !== today.getFullYear();
+    });
+  };
+
+  const getEntriesForDate = (date: Date) => {
+    const dateStr = date.toDateString();
+    return mockJournalEntries.filter(entry => 
+      new Date(entry.createdAt).toDateString() === dateStr
+    );
+  };
+
+  const getDatesWithEntries = () => {
+    return mockJournalEntries.map(entry => new Date(entry.createdAt));
+  };
+
+  const onThisDayEntry = getOnThisDayEntry();
 
   if (showCeremony) {
     return (
       <AppLayout>
-        <div className="min-h-screen flex items-center justify-center wellness-container">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50">
           <FloatingParticles count={20} />
           <div className="relative z-10">
             <BreathingLoader message="Your words are being analyzed with care..." />
@@ -68,175 +131,357 @@ export default function JournalPage() {
 
   return (
     <AppLayout>
-      <div className="min-h-screen wellness-container">
-        <FloatingParticles count={8} />
+      <div className="min-h-screen bg-gray-50">
+        <FloatingParticles count={6} />
         
-        <div className="relative z-10 p-8">
-          <div className="max-w-5xl mx-auto space-y-12">
+        <div className="relative z-10 flex flex-col lg:flex-row h-screen">
+          {/* Left Pane - History & Navigation */}
+          <div className="w-full lg:w-2/5 bg-white border-b lg:border-b-0 lg:border-r border-gray-200 flex flex-col max-h-96 lg:max-h-none">
             {/* Header */}
-            <div className="text-center space-y-6 fade-enter">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full mb-6 breathing-element">
-                <Feather className="w-10 h-10 text-blue-600" />
+            <div className="p-6 border-b border-gray-100">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center">
+                  <Feather className="w-4 h-4 text-blue-600" />
+                </div>
+                <h1 className="text-xl font-semibold text-gray-800">Journal</h1>
               </div>
-              <div className="space-y-3">
-                <h1 className="text-5xl font-semibold text-slate-800">Your Journal</h1>
-                <p className="text-xl text-slate-600 max-w-lg mx-auto leading-relaxed">
-                  Let your thoughts flow like a gentle stream, carrying wisdom from your heart
-                </p>
+              
+              {/* View Toggle */}
+              <ToggleGroup type="single" value={viewMode} onValueChange={(value) => setViewMode(value as 'list' | 'calendar')} className="hidden lg:flex">
+                <ToggleGroupItem value="list" className="flex-1">
+                  <List className="w-4 h-4 mr-2" />
+                  List
+                </ToggleGroupItem>
+                <ToggleGroupItem value="calendar" className="flex-1">
+                  <CalendarIcon className="w-4 h-4 mr-2" />
+                  Calendar
+                </ToggleGroupItem>
+              </ToggleGroup>
+              
+              {/* Mobile View Toggle */}
+              <div className="flex lg:hidden space-x-2">
+                <Button 
+                  variant={viewMode === 'list' ? 'default' : 'outline'} 
+                  size="sm" 
+                  onClick={() => setViewMode('list')}
+                  className="flex-1"
+                >
+                  <List className="w-4 h-4 mr-2" />
+                  List
+                </Button>
+                <Button 
+                  variant={viewMode === 'calendar' ? 'default' : 'outline'} 
+                  size="sm" 
+                  onClick={() => setViewMode('calendar')}
+                  className="flex-1"
+                >
+                  <CalendarIcon className="w-4 h-4 mr-2" />
+                  Calendar
+                </Button>
               </div>
             </div>
 
-            {/* Writing Space */}
-            <KarmicAura karma={currentEntry.length > 0 ? 0.5 : 0} intensity="medium" className="fade-enter">
-              <Card className="wellness-card">
-                <CardContent className="p-12">
-                  <form onSubmit={handleSubmit} className="space-y-8">
-                    <div className="relative">
-                      <Textarea
-                        placeholder="In this space, let your thoughts flow freely... There are no judgments here, only understanding for your journey."
-                        value={currentEntry}
-                        onChange={(e) => updateCurrentEntry(e.target.value)}
-                        className="wellness-input min-h-[400px] text-lg leading-relaxed resize-none border-0 focus:ring-0 bg-transparent text-slate-700 placeholder:text-slate-400"
-                      />
-                      
-                      {/* Live karma indicator */}
-                      {currentEntry.length > 50 && (
-                        <div className="absolute top-4 right-4">
-                          <div className="w-4 h-4 rounded-full bg-gradient-to-r from-emerald-400 to-blue-500 breathing-element" />
+            {/* On This Day */}
+            {onThisDayEntry && (
+              <div className="p-4 border-b border-gray-100 hidden lg:block">
+                <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center space-x-2">
+                      <Star className="w-4 h-4 text-amber-600" />
+                      <CardTitle className="text-sm text-amber-800">On This Day</CardTitle>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <p className="text-xs text-amber-700 mb-2">
+                      {new Date(onThisDayEntry.createdAt).getFullYear()}
+                    </p>
+                    <p className="text-sm text-amber-800 line-clamp-2">
+                      {onThisDayEntry.content}
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
+            {/* Content Area */}
+            <div className="flex-1 overflow-hidden">
+              {viewMode === 'list' ? (
+                <ScrollArea className="h-full">
+                  <div className="p-4 space-y-3">
+                    {mockJournalEntries.map((entry) => (
+                      <KarmicAura key={entry.id} karma={entry.karmicValue} intensity="subtle">
+                        <Card 
+                          className={`cursor-pointer transition-all hover:shadow-md ${
+                            selectedEntry?.id === entry.id ? 'ring-2 ring-blue-500' : ''
+                          }`}
+                          onClick={() => setSelectedEntry(entry)}
+                        >
+                          <CardContent className="p-4">
+                            <div className="flex items-start justify-between mb-2">
+                              <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                                {new Date(entry.createdAt).toLocaleDateString()}
+                              </span>
+                              <div className={`w-3 h-3 rounded-full ${getKarmaDotColor(entry.karmicValue)}`} />
+                            </div>
+                            <p className="text-sm text-gray-700 line-clamp-3">
+                              {entry.content}
+                            </p>
+                            {entry.tags && entry.tags.length > 0 && (
+                              <div className="flex flex-wrap gap-1 mt-2">
+                                {entry.tags.slice(0, 2).map((tag) => (
+                                  <Badge key={tag} variant="secondary" className="text-xs">
+                                    {tag}
+                                  </Badge>
+                                ))}
+                                {entry.tags.length > 2 && (
+                                  <Badge variant="secondary" className="text-xs">
+                                    +{entry.tags.length - 2}
+                                  </Badge>
+                                )}
+                              </div>
+                            )}
+                          </CardContent>
+                        </Card>
+                      </KarmicAura>
+                    ))}
+                  </div>
+                </ScrollArea>
+              ) : (
+                <div className="p-4 h-full">
+                  <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={setSelectedDate}
+                    className="w-full lg:w-auto"
+                    modifiers={{
+                      hasEntry: getDatesWithEntries(),
+                    }}
+                    modifiersStyles={{
+                      hasEntry: { 
+                        position: 'relative',
+                        '&::after': {
+                          content: '""',
+                          position: 'absolute',
+                          bottom: '2px',
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          width: '4px',
+                          height: '4px',
+                          borderRadius: '50%',
+                          backgroundColor: '#3b82f6',
+                        }
+                      }
+                    }}
+                  />
+                  {selectedDate && getEntriesForDate(selectedDate).length > 0 && (
+                    <div className="mt-4 space-y-2">
+                      <h3 className="text-sm font-medium text-gray-700">
+                        Entries for {selectedDate.toLocaleDateString()}
+                      </h3>
+                      {getEntriesForDate(selectedDate).map((entry) => (
+                        <Card 
+                          key={entry.id} 
+                          className="cursor-pointer hover:shadow-md"
+                          onClick={() => setSelectedEntry(entry)}
+                        >
+                          <CardContent className="p-3">
+                            <p className="text-sm text-gray-700 line-clamp-2">
+                              {entry.content}
+                            </p>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Right Pane - Editor/Detail View */}
+          <div className="flex-1 bg-white flex flex-col">
+            {selectedEntry ? (
+              /* Entry Detail View */
+              <div className="flex-1 p-8 overflow-y-auto">
+                <div className="max-w-3xl mx-auto">
+                  <div className="flex items-center justify-between mb-6">
+                    <Button 
+                      variant="ghost" 
+                      onClick={() => setSelectedEntry(null)}
+                      className="text-gray-500 hover:text-gray-700"
+                    >
+                      ← Back to Editor
+                    </Button>
+                    <div className="flex items-center space-x-4 text-sm text-gray-500">
+                      <div className="flex items-center space-x-1">
+                        <Clock className="w-4 h-4" />
+                        <span>{new Date(selectedEntry.createdAt).toLocaleString()}</span>
+                      </div>
+                      {selectedEntry.location && (
+                        <div className="flex items-center space-x-1">
+                          <MapPin className="w-4 h-4" />
+                          <span>{selectedEntry.location}</span>
+                        </div>
+                      )}
+                      {selectedEntry.weather && (
+                        <div className="flex items-center space-x-1">
+                          <Cloud className="w-4 h-4" />
+                          <span>{selectedEntry.weather}</span>
                         </div>
                       )}
                     </div>
-                    
-                    <div className="flex items-center justify-between pt-6 border-t border-slate-100">
-                      <div className="flex items-center space-x-4">
-                        <p className="text-sm text-slate-500">
-                          {currentEntry.length} characters
-                        </p>
-                        {currentEntry.length > 0 && (
-                          <div className="flex space-x-1">
-                            {[...Array(Math.min(5, Math.floor(currentEntry.length / 100)))].map((_, i) => (
-                              <div key={i} className="w-2 h-2 rounded-full bg-indigo-300 breathing-element" style={{ animationDelay: `${i * 0.2}s` }} />
-                            ))}
+                  </div>
+
+                  <div className="prose max-w-none mb-8">
+                    <p className="text-lg leading-relaxed text-gray-700">
+                      {selectedEntry.content}
+                    </p>
+                  </div>
+
+                  {selectedEntry.tags && selectedEntry.tags.length > 0 && (
+                    <div className="mb-8">
+                      <h3 className="text-sm font-medium text-gray-700 mb-2">Tags</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedEntry.tags.map((tag) => (
+                          <Badge key={tag} variant="secondary">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <Accordion type="single" collapsible className="w-full">
+                    <AccordionItem value="analysis">
+                      <AccordionTrigger>
+                        <div className="flex items-center space-x-2">
+                          <Sparkles className="w-4 h-4" />
+                          <span>Karmic Analysis</span>
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <div className="space-y-4">
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="text-center">
+                              <p className="text-sm text-gray-600">Karmic Value</p>
+                              <div className={`text-2xl font-bold ${getKarmaColor(selectedEntry.karmicValue)}`}>
+                                {(selectedEntry.karmicValue * 100).toFixed(0)}%
+                              </div>
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-600 mb-2">Emotions</p>
+                              <div className="flex flex-wrap gap-1">
+                                {Object.keys(selectedEntry.emotions).map((emotion) => (
+                                  <Badge key={emotion} variant="outline" className="text-xs">
+                                    {emotion}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
                           </div>
-                        )}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                </div>
+              </div>
+            ) : (
+              /* Editor View */
+              <div className="flex-1 p-4 lg:p-8">
+                <div className="max-w-3xl mx-auto h-full flex flex-col">
+                  <div className="mb-4 lg:mb-6">
+                    <h2 className="text-xl lg:text-2xl font-semibold text-gray-800 mb-2">New Entry</h2>
+                    <p className="text-gray-600 text-sm lg:text-base">Let your thoughts flow freely...</p>
+                  </div>
+
+                  {/* Metadata Bar */}
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:space-x-6 space-y-2 lg:space-y-0 mb-4 lg:mb-6 p-3 lg:p-4 bg-gray-50 rounded-lg">
+                    <div className="flex items-center space-x-2 text-sm text-gray-600">
+                      <Clock className="w-4 h-4" />
+                      <span>{new Date().toLocaleString()}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm text-gray-600">
+                      <MapPin className="w-4 h-4" />
+                      <span>San Francisco, CA</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm text-gray-600">
+                      <Cloud className="w-4 h-4" />
+                      <span>☀️ 72°F</span>
+                    </div>
+                  </div>
+
+                  <form onSubmit={handleSubmit} className="flex-1 flex flex-col">
+                    <Textarea
+                      placeholder="Write your thoughts here..."
+                      value={currentEntry}
+                      onChange={(e) => updateCurrentEntry(e.target.value)}
+                      className="flex-1 resize-none border-0 text-base lg:text-lg leading-relaxed focus:ring-0 bg-transparent placeholder:text-gray-400 min-h-32 lg:min-h-0"
+                    />
+                    
+                    {/* Tagging System */}
+                    <div className="mt-6 space-y-3">
+                      <div className="flex items-center space-x-2">
+                        <Tag className="w-4 h-4 text-gray-500" />
+                        <Input
+                          placeholder="Add tags (press Enter)"
+                          value={newTag}
+                          onChange={(e) => setNewTag(e.target.value)}
+                          onKeyDown={handleAddTag}
+                          className="flex-1"
+                        />
+                      </div>
+                      
+                      {tags.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {tags.map((tag) => (
+                            <Badge key={tag} variant="secondary" className="cursor-pointer">
+                              {tag}
+                              <button
+                                type="button"
+                                onClick={() => removeTag(tag)}
+                                className="ml-1 text-gray-500 hover:text-gray-700"
+                              >
+                                ×
+                              </button>
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mt-4 lg:mt-6 flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-3 lg:space-y-0">
+                      <div className="flex items-center space-x-4">
+                        <Button type="button" variant="ghost" size="sm" className="hidden lg:flex">
+                          <Paperclip className="w-4 h-4 mr-2" />
+                          Attach
+                        </Button>
+                        <span className="text-sm text-gray-500">
+                          {currentEntry.length} characters
+                        </span>
                       </div>
                       
                       <Button 
                         type="submit" 
                         disabled={!currentEntry.trim() || isAnalyzing}
-                        className="wellness-button text-lg px-8 py-4"
+                        className="bg-blue-600 hover:bg-blue-700 w-full lg:w-auto"
                       >
                         {isAnalyzing ? (
                           <>
-                            <Sparkles className="w-5 h-5 mr-3 animate-spin" />
+                            <Sparkles className="w-4 h-4 mr-2 animate-spin" />
                             Analyzing...
                           </>
                         ) : (
                           <>
-                            <Heart className="w-5 h-5 mr-3" />
-                            Analyze & Save
+                            <Heart className="w-4 h-4 mr-2" />
+                            Reflect
                           </>
                         )}
                       </Button>
                     </div>
                   </form>
-
-                  {/* Analysis Results */}
-                  {analysis && (
-                    <div className="mt-12 fade-enter">
-                      <KarmicAura karma={analysis.karmicValue} intensity="strong">
-                        <div className="p-8 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 rounded-2xl border border-indigo-100">
-                          <div className="text-center space-y-6">
-                            <div className="flex items-center justify-center space-x-3">
-                              <Sparkles className="w-6 h-6 text-indigo-600 breathing-element" />
-                              <h3 className="text-2xl font-semibold text-slate-800">
-                                Reflection Insights
-                              </h3>
-                              <Sparkles className="w-6 h-6 text-indigo-600 breathing-element" />
-                            </div>
-                            
-                            <div className="grid md:grid-cols-2 gap-8">
-                              <div className="text-center space-y-4">
-                                <p className="text-sm text-slate-600 uppercase tracking-wide">Karmic Resonance</p>
-                                <div className="relative">
-                                  <div className={`text-4xl font-bold ${getKarmaColor(analysis.karmicValue)} breathing-element`}>
-                                    {(analysis.karmicValue * 100).toFixed(0)}%
-                                  </div>
-                                  <div className="mt-4 w-full bg-white/50 rounded-full h-3">
-                                    <div 
-                                      className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-3 rounded-full transition-all duration-2000 energy-pulse"
-                                      style={{ width: `${Math.max(10, (analysis.karmicValue + 1) * 50)}%` }}
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                              
-                              <div className="space-y-4">
-                                <p className="text-sm text-slate-600 uppercase tracking-wide">Emotional Essence</p>
-                                <div className="flex flex-wrap gap-2 justify-center">
-                                  {Object.entries(analysis.emotions).map(([emotion, intensity]) => (
-                                    <Badge 
-                                      key={emotion} 
-                                      variant="secondary" 
-                                      className="bg-white/70 text-slate-700 px-3 py-1 rounded-full breathing-element"
-                                    >
-                                      {emotion}
-                                    </Badge>
-                                  ))}
-                                </div>
-                              </div>
-                            </div>
-                            
-                            <div className="pt-6 border-t border-white/30">
-                              <p className="text-slate-600 italic">
-                                "Your words carry the wisdom of your journey. Honor this moment of self-reflection."
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </KarmicAura>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </KarmicAura>
-
-            {/* Recent Entries */}
-            <div className="space-y-8">
-              <div className="text-center">
-                <h3 className="text-3xl font-semibold text-slate-800 mb-2">Recent Reflections</h3>
-                <p className="text-slate-600">Your journey of words and wisdom</p>
+                </div>
               </div>
-              
-              <div className="space-y-6">
-                {mockJournalEntries.slice(0, 3).map((entry, index) => (
-                  <KarmicAura key={entry.id} karma={entry.karmicValue} className="fade-enter" style={{ animationDelay: `${index * 0.2}s` }}>
-                    <Card className="wellness-card">
-                      <CardContent className="p-8">
-                        <div className="flex items-start space-x-6">
-                          <div className="w-10 h-10 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full flex items-center justify-center flex-shrink-0 breathing-element">
-                            <Calendar className="w-5 h-5 text-emerald-600" />
-                          </div>
-                          <div className="flex-1 space-y-3">
-                            <div className="flex items-center justify-between">
-                              <span className="text-sm text-slate-500 bg-white/50 px-3 py-1 rounded-full">
-                                {entry.createdAt.toLocaleDateString()}
-                              </span>
-                              <span className={`text-sm font-medium ${getKarmaColor(entry.karmicValue)} bg-white/50 px-3 py-1 rounded-full`}>
-                                {(entry.karmicValue * 100).toFixed(0)}% energy
-                              </span>
-                            </div>
-                            <p className="text-slate-700 leading-relaxed text-lg">
-                              {entry.content}
-                            </p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </KarmicAura>
-                ))}
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
