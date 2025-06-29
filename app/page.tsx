@@ -300,7 +300,7 @@ export default function Home() {
             })}
           </div>
           
-          <div className="flex justify-center pt-8 fade-enter">
+          <div className="flex justify-center pt-0 fade-enter">
             <Button
               size="lg"
               onClick={() => router.push('/auth/signup')}
