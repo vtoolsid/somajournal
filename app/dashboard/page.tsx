@@ -100,8 +100,8 @@ export default function DashboardPage() {
               <Card className="wellness-card animate-fadeInUp">
                 <CardHeader className="pb-3">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center breathing-element">
-                      <Brain className="w-5 h-5 text-purple-600" />
+                    <div className="w-10 h-10 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center breathing-element">
+                      <Brain className="w-5 h-5 text-green-600" />
                     </div>
                     <CardTitle className="text-xl font-semibold text-slate-800">
                       Today's Mind-Body Connection
@@ -123,7 +123,7 @@ export default function DashboardPage() {
                 <CardFooter>
                   <Button 
                     variant="link" 
-                    className="p-0 h-auto text-indigo-600 hover:text-indigo-700 font-medium"
+                    className="p-0 h-auto text-green-600 hover:text-green-700 font-medium"
                     onClick={() => router.push('/karma')}
                   >
                     Explore in Body Map <ArrowRight className="w-4 h-4 ml-1" />
@@ -219,11 +219,11 @@ export default function DashboardPage() {
               </Card>
 
               {/* Card 4: Invitation to Reflect (Bottom-Right) */}
-              <Card className="wellness-card border-2 border-indigo-200 hover:border-indigo-300 animate-fadeInUp animate-delay-600">
+              <Card className="wellness-card border-2 border-green-200 hover:border-green-300 animate-fadeInUp animate-delay-600">
                 <CardContent className="flex flex-col items-center justify-center h-full p-8 text-center">
                   <div className="mb-6">
-                    <div className="w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mb-4 mx-auto breathing-element">
-                      <Edit3 className="w-8 h-8 text-indigo-600" />
+                    <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center mb-4 mx-auto breathing-element">
+                      <Edit3 className="w-8 h-8 text-green-600" />
                     </div>
                     <h3 className="text-2xl font-semibold text-slate-800 mb-3">
                       What's on your mind?

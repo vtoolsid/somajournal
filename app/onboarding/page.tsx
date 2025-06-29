@@ -46,18 +46,18 @@ export default function OnboardingPage() {
   const progress = (step / 3) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 flex items-center justify-center p-6">
       <div className="w-full max-w-2xl space-y-8">
         {/* Header */}
         <div className="text-center space-y-6">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full mb-6">
-            <Heart className="w-8 h-8 text-indigo-600" />
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full mb-6">
+            <Heart className="w-8 h-8 text-green-600" />
           </div>
           
           <div>
             <div className="w-64 mx-auto bg-slate-200 rounded-full h-2 mb-4">
               <div 
-                className="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full transition-all duration-500"
+                className="bg-gradient-to-r from-green-500 to-emerald-600 h-2 rounded-full transition-all duration-500"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -82,8 +82,8 @@ export default function OnboardingPage() {
                 
                 <div className="grid md:grid-cols-3 gap-6 text-sm">
                   <div className="text-center space-y-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center mx-auto">
-                      <Brain className="w-6 h-6 text-blue-600" />
+                    <div className="w-12 h-12 bg-gradient-to-br from-teal-100 to-cyan-100 rounded-xl flex items-center justify-center mx-auto">
+                      <Brain className="w-6 h-6 text-teal-600" />
                     </div>
                     <div>
                       <p className="font-medium text-slate-800">Gentle Analysis</p>
@@ -91,8 +91,8 @@ export default function OnboardingPage() {
                     </div>
                   </div>
                   <div className="text-center space-y-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl flex items-center justify-center mx-auto">
-                      <Heart className="w-6 h-6 text-purple-600" />
+                    <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl flex items-center justify-center mx-auto">
+                      <Heart className="w-6 h-6 text-green-600" />
                     </div>
                     <div>
                       <p className="font-medium text-slate-800">Emotion Awareness</p>
@@ -196,14 +196,14 @@ export default function OnboardingPage() {
                         key={goal.id}
                         className={`p-6 border rounded-xl cursor-pointer transition-all ${
                           isSelected 
-                            ? 'border-indigo-200 bg-gradient-to-br from-indigo-50 to-purple-50' 
-                            : 'border-slate-200 hover:border-indigo-200 hover:bg-slate-50'
+                            ? 'border-green-200 bg-gradient-to-br from-green-50 to-emerald-50' 
+                            : 'border-slate-200 hover:border-green-200 hover:bg-slate-50'
                         }`}
                         onClick={() => handleGoalToggle(goal.id)}
                       >
                         <div className="flex items-center space-x-4">
-                          <Icon className={`w-6 h-6 ${isSelected ? 'text-indigo-600' : 'text-slate-500'}`} />
-                          <span className={`font-medium ${isSelected ? 'text-indigo-800' : 'text-slate-700'}`}>
+                          <Icon className={`w-6 h-6 ${isSelected ? 'text-green-600' : 'text-slate-500'}`} />
+                          <span className={`font-medium ${isSelected ? 'text-green-800' : 'text-slate-700'}`}>
                             {goal.label}
                           </span>
                         </div>

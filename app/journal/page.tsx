@@ -212,7 +212,7 @@ export default function JournalPage() {
                       <KarmicAura key={entry.id} karma={entry.karmicValue} intensity="subtle">
                         <Card 
                           className={`cursor-pointer transition-all hover:shadow-md ${
-                            selectedEntry?.id === entry.id ? 'ring-2 ring-blue-500' : ''
+                            selectedEntry?.id === entry.id ? 'ring-2 ring-green-500' : ''
                           }`}
                           onClick={() => setSelectedEntry(entry)}
                         >
@@ -470,7 +470,7 @@ export default function JournalPage() {
                       <Button 
                         type="submit" 
                         disabled={!currentEntry.trim() || isAnalyzing}
-                        className="bg-blue-600 hover:bg-blue-700 w-full lg:w-auto"
+                        className="bg-green-600 hover:bg-green-700 w-full lg:w-auto"
                       >
                         {isAnalyzing ? (
                           <>

@@ -76,14 +76,14 @@ export default function SignUpPage() {
   return (
     <div className="min-h-screen flex">
       {/* Left Side - Gradient Orb */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-gray-100 via-blue-50 to-purple-50">
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="relative">
             {/* Main gradient orb */}
             <div 
               className="w-96 h-96 rounded-full opacity-80"
               style={{
-                background: 'radial-gradient(circle at 30% 30%, #ff6b6b 0%, #feca57 25%, #ff9ff3 50%, #54a0ff 75%, #5f27cd 100%)'
+                background: 'radial-gradient(circle at 30% 30%, #22c55e 0%, #10b981 25%, #14b8a6 50%, #0ea5e9 75%, #059669 100%)'
               }}
             />
             {/* Overlay for softer effect */}
@@ -111,19 +111,15 @@ export default function SignUpPage() {
             </Link>
             
             <div className="flex items-center mb-6">
-              <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 rounded-2xl flex items-center justify-center mr-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-green-500 via-emerald-600 to-teal-500 rounded-2xl flex items-center justify-center mr-3">
                 <Flower2 className="w-6 h-6 text-white" />
               </div>
             </div>
             
             <h1 className="text-4xl font-medium text-gray-900 mb-2">
-              Begin your{' '}
-              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                inner journey
-              </span>
+              Begin your inner journey
             </h1>
-            <p className="text-gray-600 flex items-center">
-              <Sparkles className="w-4 h-4 mr-2 text-purple-400" />
+            <p className="text-gray-600">
               Bridge your mind and body through mindful wellness
             </p>
           </div>
@@ -269,7 +265,7 @@ export default function SignUpPage() {
             <Button
               type="submit"
               disabled={isLoading || !isPasswordValid || !formData.name || !formData.email || !formData.location || !formData.gender || !formData.age}
-              className="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium rounded-lg shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group"
+              className="w-full py-3 px-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium rounded-lg shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group"
             >
               {isLoading ? 'Creating account...' : 'Begin your journey'}
             </Button>
@@ -279,7 +275,7 @@ export default function SignUpPage() {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Already Awakened?{' '}
-              <Link href="/auth/login" className="text-purple-600 hover:text-purple-700 font-medium">
+              <Link href="/auth/login" className="text-green-600 hover:text-green-700 font-medium">
                 Sign in now.
               </Link>
             </p>
