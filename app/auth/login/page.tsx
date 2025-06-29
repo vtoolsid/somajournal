@@ -55,7 +55,7 @@ export default function LoginPage() {
               <Flower2 className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-semibold text-gray-900">Karmic Wellness</h1>
+              <h1 className="text-xl font-semibold text-gray-900">SomaJournal</h1>
             </div>
           </div>
         </div>

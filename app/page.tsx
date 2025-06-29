@@ -192,7 +192,7 @@ export default function Home() {
               </KarmicAura>
               <div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                  Karmic Wellness
+                  SomaJournal
                 </h1>
                 <p className="text-sm text-slate-500 font-medium">✨ Digital Enlightenment Sanctuary</p>
               </div>
@@ -432,8 +432,8 @@ export default function Home() {
                 <Flower2 className="w-5 h-5 text-white" />
               </div>
               <div>
-                <span className="text-lg font-semibold text-slate-800">Karmic Wellness</span>
-                <p className="text-xs text-slate-500">Digital wellness sanctuary</p>
+                <span className="text-lg font-semibold text-slate-800">SomaJournal</span>
+                <p className="text-xs text-slate-500">Mindful journaling companion</p>
               </div>
             </div>
             <div className="flex space-x-8 text-sm text-slate-500">
@@ -443,7 +443,7 @@ export default function Home() {
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-white/20 text-center text-sm text-slate-500">
-            © 2024 Karmic Wellness. Crafted with love and intention for your wellness journey.
+            © 2024 SomaJournal. Crafted with love and intention for your journaling journey.
           </div>
         </div>
       </footer>

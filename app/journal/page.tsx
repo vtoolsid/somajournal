@@ -215,50 +215,49 @@ export default function JournalPage() {
                 <ScrollArea className="h-full">
                   <div className="p-4 space-y-3">
                     {mockJournalEntries.map((entry) => (
-                      <KarmicAura key={entry.id} karma={entry.karmicValue} intensity="subtle">
-                        <Card 
-                          className={`cursor-pointer transition-all hover:shadow-md ${
-                            selectedEntry?.id === entry.id 
-                              ? 'ring-2 ring-green-500 bg-green-50 hover:bg-green-100' 
-                              : 'hover:bg-gray-50'
-                          }`}
-                          onClick={() => setSelectedEntry(entry)}
-                        >
-                          <CardContent className="p-4">
-                            <div className="flex items-start justify-between mb-2">
-                              <span className={`text-xs px-2 py-1 rounded-full ${
-                                selectedEntry?.id === entry.id 
-                                  ? '!text-green-700 bg-green-200 hover:!text-green-800' 
-                                  : 'text-gray-500 bg-gray-100 hover:text-gray-600'
-                              }`}>
-                                {new Date(entry.createdAt).toLocaleDateString()}
-                              </span>
-                              <div className={`w-3 h-3 rounded-full ${getKarmaDotColor(entry.karmicValue)}`} />
-                            </div>
-                            <p className={`text-sm line-clamp-3 ${
+                      <Card 
+                        key={entry.id}
+                        className={`cursor-pointer transition-all hover:shadow-md ${
+                          selectedEntry?.id === entry.id 
+                            ? 'ring-2 ring-green-500 bg-green-50 hover:bg-green-100' 
+                            : 'hover:bg-gray-50'
+                        }`}
+                        onClick={() => setSelectedEntry(entry)}
+                      >
+                        <CardContent className="p-4">
+                          <div className="flex items-start justify-between mb-2">
+                            <span className={`text-xs px-2 py-1 rounded-full ${
                               selectedEntry?.id === entry.id 
-                                ? '!text-green-800 hover:!text-green-900' 
-                                : 'text-gray-700 hover:text-gray-800'
+                                ? 'text-green-700 bg-green-200' 
+                                : 'text-gray-500 bg-gray-100'
                             }`}>
-                              {entry.content}
-                            </p>
-                            {entry.tags && entry.tags.length > 0 && (
-                              <div className="flex flex-wrap gap-1 mt-2">
-                                {entry.tags.slice(0, 2).map((tag) => (
-                                  <Badge key={tag} variant="secondary" className="text-xs">
-                                    {tag}
-                                  </Badge>
-                                ))}
-                                {entry.tags.length > 2 && (
-                                  <Badge variant="secondary" className="text-xs">
-                                    +{entry.tags.length - 2}
-                                  </Badge>
-                                )}
-                              </div>
-                            )}
-                          </CardContent>
-                        </Card>
-                      </KarmicAura>
+                              {new Date(entry.createdAt).toLocaleDateString()}
+                            </span>
+                            <div className={`w-3 h-3 rounded-full ${getKarmaDotColor(entry.karmicValue)}`} />
+                          </div>
+                          <p className={`text-sm line-clamp-3 ${
+                            selectedEntry?.id === entry.id 
+                              ? 'text-green-800' 
+                              : 'text-gray-700'
+                          }`}>
+                            {entry.content}
+                          </p>
+                          {entry.tags && entry.tags.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-2">
+                              {entry.tags.slice(0, 2).map((tag) => (
+                                <Badge key={tag} variant="secondary" className="text-xs">
+                                  {tag}
+                                </Badge>
+                              ))}
+                              {entry.tags.length > 2 && (
+                                <Badge variant="secondary" className="text-xs">
+                                  +{entry.tags.length - 2}
+                                </Badge>
+                              )}
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
                     ))}
                   </div>
                 </ScrollArea>

@@ -30,8 +30,8 @@ export function Sidebar() {
             <Heart className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-semibold text-gray-900">Karmic Wellness</h1>
-            <p className="text-xs text-gray-500">Digital wellness sanctuary</p>
+            <h1 className="text-xl font-semibold text-gray-900">SomaJournal</h1>
+            <p className="text-xs text-gray-500">Mindful journaling companion</p>
           </div>
         </div>
       </div>

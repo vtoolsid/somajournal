@@ -76,7 +76,7 @@ export default function OnboardingPage() {
                     Welcome to your wellness journey
                   </h2>
                   <p className="text-lg text-slate-600 leading-relaxed max-w-md mx-auto">
-                    Karmic Wellness helps you understand the beautiful connections between your thoughts, emotions, and wellbeing.
+                    SomaJournal helps you understand the beautiful connections between your thoughts, emotions, and wellbeing through mindful journaling.
                   </p>
                 </div>
                 

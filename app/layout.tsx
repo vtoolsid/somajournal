@@ -2,8 +2,8 @@ import './globals.css';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Karmic Wellness | Intelligent Journaling for Mind-Body Balance',
-  description: 'Transform your journaling experience with AI-powered karma analysis, emotional mapping, and psychosomatic insights for holistic wellness.',
+  title: 'SomaJournal | Mindful Journaling & Self-Reflection',
+  description: 'Transform your thoughts into meaningful insights with SomaJournal. AI-powered emotional analysis and mindful reflection for deeper self-understanding.',
 };
 
 export default function RootLayout({

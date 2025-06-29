@@ -8,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ArrowLeft, Flower2, Eye, EyeOff, Check, X, Circle, Sparkles, Heart, Brain } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, Check, X, Circle, Sparkles, Heart, Brain } from 'lucide-react';
 import Link from 'next/link';
 
 export default function SignUpPage() {
@@ -110,11 +110,6 @@ export default function SignUpPage() {
               Back to home
             </Link>
             
-            <div className="flex items-center mb-6">
-              <div className="w-10 h-10 bg-gradient-to-br from-green-500 via-emerald-600 to-teal-500 rounded-2xl flex items-center justify-center mr-3">
-                <Flower2 className="w-6 h-6 text-white" />
-              </div>
-            </div>
             
             <h1 className="text-4xl font-medium text-gray-900 mb-2">
               Begin your inner journey
