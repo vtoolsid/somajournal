@@ -65,7 +65,6 @@ export default function JournalPage() {
         location: 'San Francisco, CA',
         weather: '☀️ 72°F',
         tags: tags,
-        createdAt: entryDate, // Use selected date for the entry
         ...analysisResult,
       });
       

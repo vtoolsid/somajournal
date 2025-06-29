@@ -3,7 +3,7 @@
 import { useAppStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
 import { useRouter, usePathname } from 'next/navigation';
-import { Home, BookOpen, TrendingUp, Heart, LogOut, Bot as Lotus } from 'lucide-react';
+import { Home, BookOpen, TrendingUp, Heart, LogOut } from 'lucide-react';
 
 const navigation = [
   { name: 'Home', href: '/dashboard', icon: Home },
@@ -22,72 +22,69 @@ export function Sidebar() {
   };
 
   return (
-    <div className="w-72 h-full bg-white/20 backdrop-blur-sm border-r border-white/20 wellness-container">
-      <div className="flex flex-col h-full relative z-10">
-        {/* Logo */}
-        <div className="p-8 border-b border-white/20">
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center breathing-element">
-              <Heart className="w-7 h-7 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-semibold text-slate-800">Karmic Wellness</h1>
-              <p className="text-sm text-slate-500">Digital wellness sanctuary</p>
-            </div>
+    <div className="w-64 bg-white border-r border-gray-200 flex flex-col h-full">
+      {/* Logo */}
+      <div className="p-6 border-b border-gray-200">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
+            <Heart className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-xl font-semibold text-gray-900">Karmic Wellness</h1>
+            <p className="text-xs text-gray-500">Digital wellness sanctuary</p>
           </div>
         </div>
+      </div>
 
-        {/* User */}
-        <div className="p-8 border-b border-white/20">
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center breathing-element">
-              <span className="text-green-600 font-medium text-lg">
-                {user?.name.charAt(0).toUpperCase()}
-              </span>
-            </div>
-            <div>
-              <p className="font-medium text-slate-800">{user?.name}</p>
-              <p className="text-sm text-slate-500">Wellness explorer</p>
-            </div>
+      {/* User Profile */}
+      <div className="p-6 border-b border-gray-200">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center">
+            <span className="text-green-600 font-medium text-lg">
+              {user?.name.charAt(0).toUpperCase()}
+            </span>
+          </div>
+          <div>
+            <p className="font-medium text-gray-900">{user?.name}</p>
+            <p className="text-sm text-gray-500">Wellness explorer</p>
           </div>
         </div>
+      </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 p-8 space-y-3">
-          {navigation.map((item) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href;
-            
-            return (
-              <Button
-                key={item.name}
-                variant="ghost"
-                className={`w-full justify-start h-14 rounded-2xl transition-all duration-300 text-lg ${
-                  isActive 
-                    ? 'bg-gradient-to-r from-green-50 to-emerald-50 !text-green-700 hover:!text-green-800 hover:!bg-green-100 shadow-lg hover:shadow-xl' 
-                    : 'text-slate-600 hover:bg-white/40 hover:!text-slate-800 hover:scale-105'
-                }`}
-                style={isActive ? { color: 'rgb(21 128 61)' } : undefined}
-                onClick={() => router.push(item.href)}
-              >
-                <Icon className="w-6 h-6 mr-4" />
-                {item.name}
-              </Button>
-            );
-          })}
-        </nav>
+      {/* Navigation */}
+      <nav className="flex-1 p-4">
+        {navigation.map((item) => {
+          const Icon = item.icon;
+          const isActive = pathname === item.href;
+          
+          return (
+            <Button
+              key={item.name}
+              variant={isActive ? 'secondary' : 'ghost'}
+              className={`w-full justify-start mb-2 ${
+                isActive 
+                  ? 'bg-green-50 text-green-700 hover:text-green-700 hover:bg-green-100' 
+                  : 'text-gray-700 hover:text-gray-700 hover:bg-gray-50'
+              }`}
+              onClick={() => router.push(item.href)}
+            >
+              <Icon className="w-5 h-5 mr-3" />
+              <span className="font-medium">{item.name}</span>
+            </Button>
+          );
+        })}
+      </nav>
 
-        {/* Logout */}
-        <div className="p-8 border-t border-white/20">
-          <Button
-            variant="ghost"
-            className="w-full justify-start h-14 rounded-2xl text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-all duration-300 text-lg"
-            onClick={handleLogout}
-          >
-            <LogOut className="w-6 h-6 mr-4" />
-            Sign Out
-          </Button>
-        </div>
+      {/* Logout */}
+      <div className="p-4 border-t border-gray-200">
+        <Button
+          variant="ghost"
+          className="w-full justify-start text-red-600 hover:bg-red-50"
+          onClick={handleLogout}
+        >
+          <LogOut className="w-5 h-5 mr-3" />
+          <span className="font-medium">Sign Out</span>
+        </Button>
       </div>
     </div>
   );
