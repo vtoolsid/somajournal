@@ -27,13 +27,31 @@ import {
   MessageCircle,
   Crown
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Home() {
   const router = useRouter();
   const [isChakraHovered, setIsChakraHovered] = useState(false);
   const [hoveredChakra, setHoveredChakra] = useState<string | null>(null);
+  const [showSanskrit, setShowSanskrit] = useState(true);
+
+  // Meditative quotes for cycling
+  const quotes = [
+    {
+      id: "english-quote",
+      text: "Every mental knot has a corresponding physical, muscular knot.",
+      author: "",
+      isEnglish: true
+    },
+    {
+      id: "sanskrit-quote", 
+      text: "मानसिकं बन्धं शरीरिकं स्नायविकं बन्धं समं भवति",
+      author: "- Satyananda Saraswati",
+      isEnglish: false
+    }
+  ];
+
 
   // Horizontal Human Body Silhouette (lying down)
   const HorizontalBodySilhouette = () => (
@@ -209,7 +227,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto text-center space-y-16">
           <div className="fade-enter">
             {/* Chakra Mandala */}
-            <div className="relative inline-flex items-center justify-center mb-12">
+            <div className="relative inline-flex items-center justify-center mb-16">
               <div className="absolute inset-0 animate-spin-slow">
                 <div className="w-32 h-32 rounded-full border-2 border-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 opacity-30"></div>
               </div>
@@ -236,8 +254,7 @@ export default function Home() {
               </h1>
               
               <p className="text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-light">
-                A comprehensive wellness platform that connects your mind and body, 
-                helping you achieve holistic health through integrated mental and physical well-being practices.
+                Connect your daily actions to your physical well-being. Journal your experiences, receive evidence-based psychosomatic insights, and cultivate a life of conscious balance.
               </p>
             </div>
           </div>
@@ -359,6 +376,52 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Meditative Quote Cycle Section */}
+      <section className="relative z-10 py-24 px-6 pb-32">
+        <div className="max-w-6xl mx-auto text-center">
+          <div className="space-y-12 max-w-5xl mx-auto fade-enter">
+            <div className="relative min-h-40 flex items-center justify-center px-8">
+              {/* English Quote - On Hover */}
+              <div
+                className={`absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-1000 ease-in-out cursor-pointer ${
+                  !showSanskrit ? 'opacity-100' : 'opacity-0'
+                }`}
+                onMouseEnter={() => setShowSanskrit(false)}
+                onMouseLeave={() => setShowSanskrit(true)}
+              >
+                <blockquote 
+                  className="text-4xl leading-relaxed font-medium text-slate-800 max-w-4xl"
+                  style={{ fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif' }}
+                >
+                  {quotes[0].text}
+                </blockquote>
+              </div>
+
+              {/* Sanskrit Quote - Default */}
+              <div
+                className={`absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-1000 ease-in-out cursor-pointer ${
+                  showSanskrit ? 'opacity-100' : 'opacity-0'
+                }`}
+                onMouseEnter={() => setShowSanskrit(false)}
+                onMouseLeave={() => setShowSanskrit(true)}
+              >
+                <blockquote 
+                  className="text-4xl leading-relaxed mb-6 font-medium text-slate-800 max-w-4xl"
+                  style={{ fontFamily: '"Poppins", "Noto Sans Devanagari", sans-serif' }}
+                >
+                  {quotes[1].text}
+                </blockquote>
+                <cite 
+                  className="text-lg text-slate-600 font-normal"
+                  style={{ fontFamily: '"Poppins", "Noto Sans Devanagari", sans-serif' }}
+                >
+                  {quotes[1].author}
+                </cite>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Footer */}
       <footer className="relative z-10 border-t border-white/20 bg-white/20 backdrop-blur-sm">
