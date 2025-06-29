@@ -113,7 +113,7 @@ export default function Home() {
       title: 'Wellness Insights',
       description: 'Gain personalized insights into your mental and physical health patterns over time.',
       chakra: 'third-eye',
-      color: 'from-indigo-400 to-purple-500'
+      color: 'from-teal-400 to-cyan-500'
     },
   ];
 
@@ -186,12 +186,12 @@ export default function Home() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
               <KarmicAura karma={0.8} intensity="medium">
-                <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 rounded-2xl flex items-center justify-center breathing-element">
+                <div className="w-12 h-12 bg-gradient-to-br from-green-500 via-emerald-600 to-teal-500 rounded-2xl flex items-center justify-center breathing-element">
                   <Flower2 className="w-7 h-7 text-white" />
                 </div>
               </KarmicAura>
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                   Karmic Wellness
                 </h1>
                 <p className="text-sm text-slate-500 font-medium">✨ Digital Enlightenment Sanctuary</p>
@@ -212,7 +212,7 @@ export default function Home() {
                 </Button>
                 <Button
                   onClick={() => router.push('/auth/signup')}
-                  className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium px-5 py-2 rounded-lg text-sm transition-all duration-200 shadow-sm hover:shadow-md"
+                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium px-5 py-2 rounded-lg text-sm transition-all duration-200 shadow-sm hover:shadow-md"
                 >
                   Get Started
                 </Button>
@@ -229,10 +229,10 @@ export default function Home() {
             {/* Chakra Mandala */}
             <div className="relative inline-flex items-center justify-center mb-16">
               <div className="absolute inset-0 animate-spin-slow">
-                <div className="w-32 h-32 rounded-full border-2 border-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 opacity-30"></div>
+                <div className="w-32 h-32 rounded-full border-2 border-gradient-to-r from-green-200 via-emerald-200 to-teal-200 opacity-30"></div>
               </div>
               <KarmicAura karma={0.9} intensity="strong">
-                <div className="w-28 h-28 bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 rounded-full flex items-center justify-center breathing-element shadow-2xl">
+                <div className="w-28 h-28 bg-gradient-to-br from-green-500 via-emerald-600 to-teal-500 rounded-full flex items-center justify-center breathing-element shadow-2xl">
                   <div className="w-20 h-20 bg-gradient-to-br from-white/20 to-white/5 rounded-full flex items-center justify-center">
                     <Sparkles className="w-10 h-10 text-white" />
                   </div>
@@ -335,7 +335,7 @@ export default function Home() {
           <div className="text-center mb-12 space-y-8 fade-enter">
             <h2 className="text-6xl font-bold text-slate-800">
               Illuminate your{' '}
-              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
                 spiritual essence
               </span>
             </h2>
@@ -363,7 +363,7 @@ export default function Home() {
                     </div>
                     
                     <div className="text-left">
-                      <Button variant="ghost" size="sm" className="justify-start text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 p-0 h-auto font-medium text-left">
+                      <Button variant="ghost" size="sm" className="justify-start text-green-600 hover:text-green-700 hover:bg-green-50 p-0 h-auto font-medium text-left">
                         Learn more
                         <ArrowRight className="w-4 h-4 ml-1" />
                       </Button>
