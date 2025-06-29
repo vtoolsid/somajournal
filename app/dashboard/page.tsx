@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import { 
   mockJournalEntries, 
   analyzePsychosomaticConnection,
-  calculateKarmicBalance,
+  calculateWellnessMetrics,
   getTopEmotions,
   generateInsightMessage,
   chakraColors
@@ -23,7 +23,8 @@ import {
   ArrowRight,
   TrendingUp,
   TrendingDown,
-  Minus
+  Minus,
+  BookOpen
 } from 'lucide-react';
 import { RadialBarChart, RadialBar, AreaChart, Area, BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 
@@ -31,9 +32,9 @@ export default function DashboardPage() {
   const { user } = useAppStore();
   const router = useRouter();
 
-  // Data analysis
+  // Data analysis - objective wellness metrics
   const psychosomaticData = analyzePsychosomaticConnection(mockJournalEntries);
-  const karmicBalance = calculateKarmicBalance(mockJournalEntries);
+  const wellnessMetrics = calculateWellnessMetrics(mockJournalEntries);
   const topEmotions = getTopEmotions(mockJournalEntries, 4);
   const insightMessage = generateInsightMessage(psychosomaticData);
 
@@ -49,12 +50,17 @@ export default function DashboardPage() {
     );
   };
 
-  // Chart configurations
-  const karmicChartData = [
+  // Chart configurations - objective wellness metrics
+  const wellnessChartData = [
     {
-      name: 'Karmic Balance',
-      value: karmicBalance.percentage,
-      fill: karmicBalance.score > 0 ? '#10B981' : karmicBalance.score < 0 ? '#EF4444' : '#6B7280'
+      name: 'Writing Consistency',
+      value: wellnessMetrics.writingConsistency,
+      fill: '#10B981'
+    },
+    {
+      name: 'Emotion Balance',
+      value: Math.max(0, wellnessMetrics.emotionBalance + 10), // Normalize for display
+      fill: '#3B82F6'
     }
   ];
 
@@ -213,24 +219,23 @@ export default function DashboardPage() {
                   <Button 
                     variant="link" 
                     className="p-0 h-auto text-green-600 hover:text-green-700 font-medium"
-                    onClick={() => router.push('/karma')}
+                    onClick={() => router.push('/journal')}
                   >
                     Explore in Body Map <ArrowRight className="w-4 h-4 ml-1" />
                   </Button>
                 </CardFooter>
               </Card>
 
-              {/* Card 2: Karmic Balance Mandala (Top-Right) */}
+              {/* Card 2: Wellness Metrics (Top-Right) */}
               <Card className="wellness-card animate-fadeInUp animate-delay-200 relative overflow-hidden">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-xl font-semibold text-slate-800">
-                      Karmic Balance
+                      Wellness Patterns
                     </CardTitle>
                     <div className="flex items-center space-x-1 text-sm text-slate-500">
-                      {karmicBalance.trend === 'up' && <TrendingUp className="w-4 h-4 text-emerald-500" />}
-                      {karmicBalance.trend === 'down' && <TrendingDown className="w-4 h-4 text-red-500" />}
-                      {karmicBalance.trend === 'stable' && <Minus className="w-4 h-4 text-slate-500" />}
+                      <TrendingUp className="w-4 h-4 text-emerald-500" />
+                      <span>Objective tracking</span>
                     </div>
                   </div>
                 </CardHeader>
@@ -273,12 +278,12 @@ export default function DashboardPage() {
                           cy="50%" 
                           innerRadius="50%" 
                           outerRadius="70%" 
-                          data={karmicChartData}
+                          data={wellnessChartData}
                           startAngle={90}
                           endAngle={450}
                         >
                           <defs>
-                            <linearGradient id="karmicGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <linearGradient id="wellnessGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                               <stop offset="0%" stopColor="#10B981" stopOpacity="0.8"/>
                               <stop offset="50%" stopColor="#059669" stopOpacity="0.9"/>
                               <stop offset="100%" stopColor="#047857" stopOpacity="1"/>
@@ -294,7 +299,7 @@ export default function DashboardPage() {
                           <RadialBar 
                             dataKey="value" 
                             cornerRadius={8}
-                            fill="url(#karmicGradient)"
+                            fill="url(#wellnessGradient)"
                             className="drop-shadow-lg"
                             style={{filter: 'url(#glow)'}}
                           />
@@ -307,11 +312,11 @@ export default function DashboardPage() {
                           <div className="w-16 h-16 bg-gradient-to-br from-green-50 to-emerald-100 rounded-full flex items-center justify-center mb-3 mx-auto border-2 border-green-200 shadow-lg">
                             <Heart className="w-6 h-6 text-green-600" />
                           </div>
-                          <div className={`text-2xl font-bold ${karmicBalance.score > 0 ? 'text-emerald-600' : karmicBalance.score < 0 ? 'text-amber-600' : 'text-slate-600'}`}>
-                            {karmicBalance.score > 0 ? '+' : ''}{karmicBalance.score}
+                          <div className="text-2xl font-bold text-emerald-600">
+                            {wellnessMetrics.writingConsistency}
                           </div>
                           <div className="text-xs text-slate-500 mt-1 font-medium">
-                            {karmicBalance.percentage}% positive
+                            Writing consistency
                           </div>
                         </div>
                       </div>

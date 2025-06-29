@@ -67,10 +67,10 @@
     --chakra-third-eye: 99 102 241;
     --chakra-crown: 147 51 234;
     
-    /* Karmic Aura Colors */
-    --karma-positive: 16 185 129;
-    --karma-neutral: 148 163 184;
-    --karma-negative: 245 158 11;
+    /* Wellness Theme Colors */
+    --wellness-primary: 16 185 129;
+    --wellness-secondary: 148 163 184;
+    --wellness-accent: 245 158 11;
     
     /* Modern Sidebar Variables */
     --sidebar-width: 260px;

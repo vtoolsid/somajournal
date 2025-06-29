@@ -8,7 +8,7 @@ import { Home, BookOpen, TrendingUp, Heart, LogOut } from 'lucide-react';
 const navigation = [
   { name: 'Home', href: '/dashboard', icon: Home },
   { name: 'Journal', href: '/journal', icon: BookOpen },
-  { name: 'Insights', href: '/karma', icon: TrendingUp },
+  { name: 'Insights', href: '/dashboard', icon: TrendingUp },
 ];
 
 export function Sidebar() {

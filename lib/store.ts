@@ -15,7 +15,6 @@ export interface JournalEntry {
   updatedAt: Date;
   content: string;
   userId: string;
-  karmicValue: number; // -1.0 to 1.0
   emotions: Record<string, number>;
   symptoms: Record<string, boolean>;
   mediaUrl?: string;

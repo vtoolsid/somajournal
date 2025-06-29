@@ -11,7 +11,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Calendar } from '@/components/ui/calendar';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { KarmicAura } from '@/components/ui/karmic-aura';
 import { BreathingLoader } from '@/components/ui/breathing-loader';
 import { FloatingParticles } from '@/components/ui/floating-particles';
 import { useAppStore } from '@/lib/store';
@@ -86,16 +85,16 @@ export default function JournalPage() {
     setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
-  const getKarmaColor = (value: number) => {
-    if (value > 0.3) return 'text-emerald-600';
-    if (value < -0.3) return 'text-red-500';
-    return 'text-slate-500';
+  const getEmotionColor = (emotions: Record<string, number>) => {
+    const positiveEmotions = ['joy', 'gratitude', 'peace', 'love', 'contentment'];
+    const hasPositive = Object.keys(emotions).some(emotion => positiveEmotions.includes(emotion.toLowerCase()));
+    return hasPositive ? 'text-emerald-600' : 'text-slate-500';
   };
 
-  const getKarmaDotColor = (value: number) => {
-    if (value > 0.3) return 'bg-emerald-400';
-    if (value < -0.3) return 'bg-red-400';
-    return 'bg-blue-400';
+  const getEmotionDotColor = (emotions: Record<string, number>) => {
+    const positiveEmotions = ['joy', 'gratitude', 'peace', 'love', 'contentment'];
+    const hasPositive = Object.keys(emotions).some(emotion => positiveEmotions.includes(emotion.toLowerCase()));
+    return hasPositive ? 'bg-emerald-400' : 'bg-blue-400';
   };
 
   const getOnThisDayEntry = () => {
@@ -233,7 +232,7 @@ export default function JournalPage() {
                             }`}>
                               {new Date(entry.createdAt).toLocaleDateString()}
                             </span>
-                            <div className={`w-3 h-3 rounded-full ${getKarmaDotColor(entry.karmicValue)}`} />
+                            <div className={`w-3 h-3 rounded-full ${getEmotionDotColor(entry.emotions)}`} />
                           </div>
                           <p className={`text-sm line-clamp-3 ${
                             selectedEntry?.id === entry.id 
@@ -399,9 +398,9 @@ export default function JournalPage() {
                         <div className="space-y-4">
                           <div className="grid grid-cols-2 gap-4">
                             <div className="text-center">
-                              <p className="text-sm text-gray-600">Karmic Value</p>
-                              <div className={`text-2xl font-bold ${getKarmaColor(selectedEntry.karmicValue)}`}>
-                                {(selectedEntry.karmicValue * 100).toFixed(0)}%
+                              <p className="text-sm text-gray-600">Emotion Count</p>
+                              <div className={`text-2xl font-bold ${getEmotionColor(selectedEntry.emotions)}`}>
+                                {Object.keys(selectedEntry.emotions).length}
                               </div>
                             </div>
                             <div>

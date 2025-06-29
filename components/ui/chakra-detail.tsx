@@ -138,7 +138,7 @@ export const ChakraDetail = ({ chakra, isOpen, onClose }: ChakraDetailProps) => 
               className="italic text-lg font-medium leading-relaxed"
               style={{ color: chakra.color }}
             >
-              "{chakra.affirmation}"
+              &ldquo;{chakra.affirmation}&rdquo;
             </p>
           </div>
 

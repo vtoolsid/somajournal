@@ -4,36 +4,20 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { FloatingParticles } from '@/components/ui/floating-particles';
-import { KarmicAura } from '@/components/ui/karmic-aura';
 import { useRouter } from 'next/navigation';
 import { 
   Heart, 
   Sparkles, 
   ArrowRight, 
   Brain, 
-  Zap, 
-  Compass, 
-  Waves, 
-  Sun, 
-  Moon, 
-  Star, 
-  Flower2,
-  Circle,
-  Eye,
-  Target,
   Activity,
-  Mountain,
-  Flame,
-  MessageCircle,
-  Crown
+  Flower2
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Home() {
   const router = useRouter();
-  const [isChakraHovered, setIsChakraHovered] = useState(false);
-  const [hoveredChakra, setHoveredChakra] = useState<string | null>(null);
   const [showSanskrit, setShowSanskrit] = useState(true);
 
   // Meditative quotes for cycling
@@ -117,64 +101,6 @@ export default function Home() {
     },
   ];
 
-  const chakraElements = [
-    { 
-      name: 'Root', 
-      icon: Mountain, 
-      color: 'bg-red-500', 
-      description: 'Foundation & Security',
-      emotion: 'Feeling grounded, secure, and connected to earth',
-      location: 'Base of spine'
-    },
-    { 
-      name: 'Sacral', 
-      icon: Flame, 
-      color: 'bg-orange-500', 
-      description: 'Creativity & Passion',
-      emotion: 'Creative expression and sensuality',
-      location: 'Lower abdomen'
-    },
-    { 
-      name: 'Solar', 
-      icon: Sun, 
-      color: 'bg-yellow-500', 
-      description: 'Personal Power',
-      emotion: 'Confidence, self-esteem, and inner strength',
-      location: 'Upper abdomen'
-    },
-    { 
-      name: 'Heart', 
-      icon: Heart, 
-      color: 'bg-green-500', 
-      description: 'Love & Compassion',
-      emotion: 'Unconditional love, empathy, and connection',
-      location: 'Center of chest'
-    },
-    { 
-      name: 'Throat', 
-      icon: MessageCircle, 
-      color: 'bg-blue-500', 
-      description: 'Communication & Truth',
-      emotion: 'Authentic expression and speaking your truth',
-      location: 'Throat area'
-    },
-    { 
-      name: 'Third Eye', 
-      icon: Eye, 
-      color: 'bg-indigo-500', 
-      description: 'Intuition & Insight',
-      emotion: 'Inner wisdom, clarity, and spiritual awareness',
-      location: 'Between eyebrows'
-    },
-    { 
-      name: 'Crown', 
-      icon: Crown, 
-      color: 'bg-purple-500', 
-      description: 'Divine Connection',
-      emotion: 'Spiritual awareness and enlightenment',
-      location: 'Top of head'
-    },
-  ];
 
   return (
     <div className="min-h-screen wellness-container">
@@ -185,11 +111,9 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
-              <KarmicAura karma={0.8} intensity="medium">
-                <div className="w-12 h-12 bg-gradient-to-br from-green-500 via-emerald-600 to-teal-500 rounded-2xl flex items-center justify-center breathing-element">
-                  <Flower2 className="w-7 h-7 text-white" />
-                </div>
-              </KarmicAura>
+              <div className="w-12 h-12 bg-gradient-to-br from-green-500 via-emerald-600 to-teal-500 rounded-2xl flex items-center justify-center breathing-element">
+                <Flower2 className="w-7 h-7 text-white" />
+              </div>
               <div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                   SomaJournal
@@ -231,13 +155,11 @@ export default function Home() {
               <div className="absolute inset-0 animate-spin-slow">
                 <div className="w-32 h-32 rounded-full border-2 border-gradient-to-r from-green-200 via-emerald-200 to-teal-200 opacity-30"></div>
               </div>
-              <KarmicAura karma={0.9} intensity="strong">
-                <div className="w-28 h-28 bg-gradient-to-br from-green-500 via-emerald-600 to-teal-500 rounded-full flex items-center justify-center breathing-element shadow-2xl">
-                  <div className="w-20 h-20 bg-gradient-to-br from-white/20 to-white/5 rounded-full flex items-center justify-center">
-                    <Sparkles className="w-10 h-10 text-white" />
-                  </div>
+              <div className="w-28 h-28 bg-gradient-to-br from-green-500 via-emerald-600 to-teal-500 rounded-full flex items-center justify-center breathing-element shadow-2xl">
+                <div className="w-20 h-20 bg-gradient-to-br from-white/20 to-white/5 rounded-full flex items-center justify-center">
+                  <Sparkles className="w-10 h-10 text-white" />
                 </div>
-              </KarmicAura>
+              </div>
             </div>
             
             <div className="space-y-8">
@@ -259,63 +181,6 @@ export default function Home() {
             </div>
           </div>
           
-          {/* Chakra Energy Bar */}
-          <div 
-            className={`chakra-container flex justify-center items-center space-x-6 py-12 mb-16 fade-enter ${isChakraHovered ? 'chakra-hovered' : ''}`}
-            onMouseEnter={() => setIsChakraHovered(true)}
-            onMouseLeave={() => {
-              setIsChakraHovered(false);
-              setHoveredChakra(null);
-            }}
-          >
-            {chakraElements.map((chakra, index) => {
-              const Icon = chakra.icon;
-              return (
-                <div
-                  key={chakra.name}
-                  className={`chakra-item relative transition-opacity duration-300 ${
-                    hoveredChakra && hoveredChakra !== chakra.name ? 'opacity-30' : 'opacity-100'
-                  }`}
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                  onMouseEnter={() => {
-                    setHoveredChakra(chakra.name);
-                  }}
-                  onMouseLeave={() => {
-                    setHoveredChakra(null);
-                  }}
-                >
-                  
-                  <div 
-                    className={`w-10 h-10 ${chakra.color} rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 shadow-md relative overflow-hidden`}
-                  >
-                    <Icon className="w-5 h-5 text-white relative z-10" />
-                    <div className={`absolute inset-0 ${chakra.color} opacity-20 transition-opacity duration-300`}></div>
-                  </div>
-                  
-                  {/* Simple Tooltip */}
-                  <div className="chakra-tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 opacity-0 transition-all duration-300 pointer-events-none z-50">
-                    <div className={`bg-white rounded-xl shadow-xl border border-gray-200 p-4 w-80 flex flex-col justify-between ${isChakraHovered ? 'h-[150px]' : ''}`}>
-                      {/* Tooltip Arrow */}
-                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[8px] border-r-[8px] border-t-[8px] border-l-transparent border-r-transparent border-t-white"></div>
-                      
-                      <div className="space-y-2">
-                        <div className="flex items-center space-x-2">
-                          <div className={`w-4 h-4 ${chakra.color} rounded-full`}></div>
-                          <h3 className="font-semibold text-gray-900">{chakra.name} Chakra</h3>
-                        </div>
-                        <p className="text-sm text-gray-600 font-medium">{chakra.description}</p>
-                        <p className="text-xs text-gray-500 italic">{chakra.emotion}</p>
-                        <div className="flex items-center text-xs text-gray-400 pt-1 border-t border-gray-100">
-                          <Target className="w-3 h-3 mr-1" />
-                          {chakra.location}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
           
           <div className="flex justify-center pt-0 fade-enter">
             <Button

@@ -16,7 +16,7 @@ export function MandalaProgress({ value, size = 120, className }: MandalaProgres
     <div className={`mandala-progress ${className}`} style={{ width: size, height: size }}>
       <svg width={size} height={size}>
         <defs>
-          <linearGradient id="karma-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <linearGradient id="wellness-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="rgb(99 102 241)" />
             <stop offset="50%" stopColor="rgb(147 51 234)" />
             <stop offset="100%" stopColor="rgb(34 197 94)" />

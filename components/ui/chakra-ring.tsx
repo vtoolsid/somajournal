@@ -88,7 +88,6 @@ export const ChakraRing = ({ className = '' }: ChakraRingProps) => {
           return (
             <div key={chakra.id}>
               <button
-                style={getChakraStyle(position)}
                 className={`
                   absolute rounded-full border-2 border-white/30 cursor-pointer
                   transition-all duration-300 ease-out flex items-center justify-center

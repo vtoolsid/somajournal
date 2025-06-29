@@ -7,7 +7,6 @@ export const mockJournalEntries: JournalEntry[] = [
     updatedAt: new Date('2024-06-29T10:30:00'),
     content: 'Had a wonderful morning meditation today. Felt really connected to my breath and noticed how peaceful I felt afterward. The tension in my shoulders seemed to melt away.',
     userId: 'user-1',
-    karmicValue: 0.8,
     emotions: { 'peace': 0.9, 'gratitude': 0.7, 'calm': 0.8 },
     symptoms: { 'tension': false, 'headache': false, 'fatigue': false },
     location: 'San Francisco, CA',
@@ -20,7 +19,6 @@ export const mockJournalEntries: JournalEntry[] = [
     updatedAt: new Date('2024-06-28T16:45:00'),
     content: 'Feeling frustrated with work today. My manager dismissed my ideas again and I can feel the anger building up. Getting a headache from all the stress.',
     userId: 'user-1',
-    karmicValue: -0.6,
     emotions: { 'anger': 0.8, 'frustration': 0.9, 'stress': 0.7 },
     symptoms: { 'tension': true, 'headache': true, 'fatigue': true },
     location: 'San Francisco, CA',
@@ -33,7 +31,6 @@ export const mockJournalEntries: JournalEntry[] = [
     updatedAt: new Date('2024-06-27T20:15:00'),
     content: 'Spent quality time with my family tonight. We played board games and laughed so much. I feel grateful for these simple moments of joy.',
     userId: 'user-1',
-    karmicValue: 0.9,
     emotions: { 'joy': 0.9, 'love': 0.8, 'gratitude': 0.9 },
     symptoms: { 'tension': false, 'headache': false, 'fatigue': false },
     location: 'San Francisco, CA',
@@ -46,7 +43,6 @@ export const mockJournalEntries: JournalEntry[] = [
     updatedAt: new Date('2024-06-26T08:20:00'),
     content: 'Started my day with yoga and journaling. There\'s something magical about the quiet morning hours. I feel centered and ready to embrace whatever comes my way.',
     userId: 'user-1',
-    karmicValue: 0.7,
     emotions: { 'centered': 0.8, 'motivated': 0.7, 'peaceful': 0.9 },
     symptoms: { 'tension': false, 'headache': false, 'fatigue': false },
     location: 'San Francisco, CA',
@@ -59,7 +55,6 @@ export const mockJournalEntries: JournalEntry[] = [
     updatedAt: new Date('2024-06-25T22:30:00'),
     content: 'Difficult conversation with a friend today about boundaries. It was uncomfortable but necessary. I\'m learning that speaking my truth, even when it\'s hard, feels more authentic.',
     userId: 'user-1',
-    karmicValue: 0.3,
     emotions: { 'uncomfortable': 0.6, 'authentic': 0.8, 'growth': 0.7 },
     symptoms: { 'tension': true, 'headache': false, 'fatigue': false },
     location: 'San Francisco, CA',
@@ -72,7 +67,6 @@ export const mockJournalEntries: JournalEntry[] = [
     updatedAt: new Date('2024-06-24T15:10:00'),
     content: 'Took a long walk in the park today. Nature has this incredible way of putting things into perspective. The trees seem to whisper wisdom about patience and growth.',
     userId: 'user-1',
-    karmicValue: 0.6,
     emotions: { 'peaceful': 0.8, 'connected': 0.7, 'wise': 0.6 },
     symptoms: { 'tension': false, 'headache': false, 'fatigue': false },
     location: 'Golden Gate Park, SF',
@@ -85,7 +79,6 @@ export const mockJournalEntries: JournalEntry[] = [
     updatedAt: new Date('2024-06-23T19:45:00'),
     content: 'Cooked a new recipe today and it turned out terribly! But somehow I found myself laughing instead of getting upset. Maybe I\'m learning to find joy even in the small failures.',
     userId: 'user-1',
-    karmicValue: 0.4,
     emotions: { 'amused': 0.7, 'resilient': 0.6, 'learning': 0.8 },
     symptoms: { 'tension': false, 'headache': false, 'fatigue': false },
     location: 'San Francisco, CA',
@@ -98,7 +91,6 @@ export const mockJournalEntries: JournalEntry[] = [
     updatedAt: new Date('2024-06-22T11:20:00'),
     content: 'Had an argument with my partner this morning. We both said things we didn\'t mean. The silence afterward felt heavy. I hate how conflict creates this distance between us.',
     userId: 'user-1',
-    karmicValue: -0.7,
     emotions: { 'regret': 0.8, 'distant': 0.7, 'sad': 0.6 },
     symptoms: { 'tension': true, 'headache': true, 'fatigue': false },
     location: 'San Francisco, CA',
@@ -111,7 +103,6 @@ export const mockJournalEntries: JournalEntry[] = [
     updatedAt: new Date('2023-06-29T14:30:00'),
     content: 'One year ago today: Had my first meditation retreat experience. It was challenging but transformative. I remember feeling so resistant at first, but by the end, I didn\'t want to leave.',
     userId: 'user-1',
-    karmicValue: 0.8,
     emotions: { 'transformative': 0.9, 'grateful': 0.8, 'nostalgic': 0.6 },
     symptoms: { 'tension': false, 'headache': false, 'fatigue': false },
     location: 'Sonoma, CA',
@@ -124,7 +115,6 @@ export const mockJournalEntries: JournalEntry[] = [
     updatedAt: new Date('2024-06-21T07:15:00'),
     content: 'Summer solstice today. There\'s something powerful about marking the longest day of the year. I set intentions for the season ahead and feel hopeful about what\'s to come.',
     userId: 'user-1',
-    karmicValue: 0.7,
     emotions: { 'hopeful': 0.8, 'intentional': 0.7, 'connected': 0.6 },
     symptoms: { 'tension': false, 'headache': false, 'fatigue': false },
     location: 'San Francisco, CA',
@@ -189,30 +179,20 @@ export const physicalSymptoms = [
   'muscle_tension',
 ];
 
-// Mock NLP Analysis Function
+// Mock NLP Analysis Function - Objective wellness tracking
 export const analyzeJournalEntry = (content: string) => {
   // Simple keyword-based analysis for demo
   const words = content.toLowerCase().split(' ');
   
-  let karmicValue = 0;
   const emotions: Record<string, number> = {};
   const symptoms: Record<string, boolean> = {};
   
-  // Positive keywords
-  const positiveWords = ['happy', 'joy', 'love', 'peace', 'grateful', 'wonderful', 'amazing', 'beautiful', 'calm', 'serene', 'blissful'];
-  const negativeWords = ['angry', 'sad', 'frustrated', 'annoyed', 'upset', 'terrible', 'awful', 'stressed', 'anxious', 'worried'];
+  // Emotion detection (count-based, not intensity-based)
+  const emotionWords = ['happy', 'joy', 'love', 'peace', 'grateful', 'wonderful', 'amazing', 'beautiful', 'calm', 'serene', 'blissful', 'angry', 'sad', 'frustrated', 'annoyed', 'upset', 'terrible', 'awful', 'stressed', 'anxious', 'worried'];
   
-  positiveWords.forEach(word => {
+  emotionWords.forEach(word => {
     if (words.includes(word)) {
-      karmicValue += 0.2;
-      emotions[word] = Math.random() * 0.5 + 0.5; // 0.5-1.0
-    }
-  });
-  
-  negativeWords.forEach(word => {
-    if (words.includes(word)) {
-      karmicValue -= 0.2;
-      emotions[word] = Math.random() * 0.5 + 0.5; // 0.5-1.0
+      emotions[word] = 1; // Binary presence, not intensity
     }
   });
   
@@ -222,11 +202,7 @@ export const analyzeJournalEntry = (content: string) => {
     symptoms[symptom] = words.some(word => word.includes(symptom));
   });
   
-  // Normalize karmic value
-  karmicValue = Math.max(-1, Math.min(1, karmicValue));
-  
   return {
-    karmicValue,
     emotions,
     symptoms,
   };
@@ -272,17 +248,36 @@ export const analyzePsychosomaticConnection = (entries: JournalEntry[]) => {
   };
 };
 
-export const calculateKarmicBalance = (entries: JournalEntry[]) => {
-  if (entries.length === 0) return { score: 0, percentage: 50 };
+export const calculateWellnessMetrics = (entries: JournalEntry[]) => {
+  if (entries.length === 0) return { writingConsistency: 0, emotionBalance: 0, symptomFrequency: 0 };
   
-  const totalKarma = entries.reduce((sum, entry) => sum + entry.karmicValue, 0);
-  const averageKarma = totalKarma / entries.length;
-  const percentage = Math.round((averageKarma + 1) * 50); // Convert -1,1 to 0,100
+  // Calculate objective wellness metrics
+  const writingConsistency = entries.length; // Number of entries
+  
+  // Count positive vs challenging emotions (objective count, not subjective rating)
+  let positiveEmotions = 0;
+  let challengingEmotions = 0;
+  let totalSymptoms = 0;
+  
+  entries.forEach(entry => {
+    Object.keys(entry.emotions).forEach(emotion => {
+      if (['happy', 'joy', 'love', 'peace', 'grateful', 'wonderful', 'amazing', 'beautiful', 'calm', 'serene', 'blissful'].includes(emotion)) {
+        positiveEmotions++;
+      } else if (['angry', 'sad', 'frustrated', 'annoyed', 'upset', 'stressed', 'anxious', 'worried'].includes(emotion)) {
+        challengingEmotions++;
+      }
+    });
+    
+    Object.values(entry.symptoms).forEach(hasSymptom => {
+      if (hasSymptom) totalSymptoms++;
+    });
+  });
   
   return {
-    score: Math.round(averageKarma * 100),
-    percentage,
-    trend: entries.length > 1 ? (entries[0].karmicValue > entries[1].karmicValue ? 'up' : 'down') : 'stable'
+    writingConsistency,
+    emotionBalance: positiveEmotions - challengingEmotions,
+    symptomFrequency: totalSymptoms,
+    totalEmotions: positiveEmotions + challengingEmotions
   };
 };
 
