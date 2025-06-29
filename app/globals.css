@@ -261,6 +261,16 @@
     animation: energy-pulse 4s ease-in-out infinite;
   }
   
+  /* Floating Animation for Emotion Bubbles */
+  @keyframes float {
+    0%, 100% {
+      transform: translate(-50%, -50%) translateY(0px);
+    }
+    50% {
+      transform: translate(-50%, -50%) translateY(-8px);
+    }
+  }
+  
   /* Karmic Aura System */
   .karmic-aura {
     position: relative;

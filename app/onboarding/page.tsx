@@ -119,7 +119,7 @@ export default function OnboardingPage() {
                     How can we support you?
                   </h2>
                   <p className="text-lg text-slate-600">
-                    Choose the ways you'd like to stay connected with your practice.
+                    Choose the ways you&apos;d like to stay connected with your practice.
                   </p>
                 </div>
                 
@@ -135,7 +135,7 @@ export default function OnboardingPage() {
                     <div>
                       <p className="font-medium text-slate-800">Gentle Reminders</p>
                       <p className="text-sm text-slate-600">
-                        Soft nudges to check in with yourself when you're ready
+                        Soft nudges to check in with yourself when you&apos;re ready
                       </p>
                     </div>
                   </div>

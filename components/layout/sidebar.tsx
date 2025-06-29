@@ -27,7 +27,7 @@ export function Sidebar() {
         {/* Logo */}
         <div className="p-8 border-b border-white/20">
           <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center breathing-element">
+            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center breathing-element">
               <Heart className="w-7 h-7 text-white" />
             </div>
             <div>
@@ -40,8 +40,8 @@ export function Sidebar() {
         {/* User */}
         <div className="p-8 border-b border-white/20">
           <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center breathing-element">
-              <span className="text-indigo-600 font-medium text-lg">
+            <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center breathing-element">
+              <span className="text-green-600 font-medium text-lg">
                 {user?.name.charAt(0).toUpperCase()}
               </span>
             </div>
@@ -64,7 +64,7 @@ export function Sidebar() {
                 variant="ghost"
                 className={`w-full justify-start h-14 rounded-2xl transition-all duration-300 text-lg ${
                   isActive 
-                    ? 'bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 shadow-lg' 
+                    ? 'bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 shadow-lg' 
                     : 'text-slate-600 hover:bg-white/40 hover:text-slate-800 hover:scale-105'
                 }`}
                 onClick={() => router.push(item.href)}

@@ -119,7 +119,7 @@ export default function JournalPage() {
   if (showCeremony) {
     return (
       <AppLayout>
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-white to-emerald-50">
           <FloatingParticles count={20} />
           <div className="relative z-10">
             <BreathingLoader message="Your words are being analyzed with care..." />
@@ -140,19 +140,19 @@ export default function JournalPage() {
             {/* Header */}
             <div className="p-6 border-b border-gray-100">
               <div className="flex items-center space-x-3 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center">
-                  <Feather className="w-4 h-4 text-blue-600" />
+                <div className="w-8 h-8 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center">
+                  <Feather className="w-4 h-4 text-green-600" />
                 </div>
                 <h1 className="text-xl font-semibold text-gray-800">Journal</h1>
               </div>
               
               {/* View Toggle */}
               <ToggleGroup type="single" value={viewMode} onValueChange={(value) => setViewMode(value as 'list' | 'calendar')} className="hidden lg:flex">
-                <ToggleGroupItem value="list" className="flex-1 data-[state=on]:bg-indigo-100 data-[state=on]:text-indigo-700 data-[state=on]:border-indigo-300">
+                <ToggleGroupItem value="list" className="flex-1 data-[state=on]:bg-green-100 data-[state=on]:text-green-700 data-[state=on]:border-green-300">
                   <List className="w-4 h-4 mr-2" />
                   List
                 </ToggleGroupItem>
-                <ToggleGroupItem value="calendar" className="flex-1 data-[state=on]:bg-indigo-100 data-[state=on]:text-indigo-700 data-[state=on]:border-indigo-300">
+                <ToggleGroupItem value="calendar" className="flex-1 data-[state=on]:bg-green-100 data-[state=on]:text-green-700 data-[state=on]:border-green-300">
                   <CalendarIcon className="w-4 h-4 mr-2" />
                   Calendar
                 </ToggleGroupItem>
@@ -164,7 +164,7 @@ export default function JournalPage() {
                   variant={viewMode === 'list' ? 'default' : 'outline'} 
                   size="sm" 
                   onClick={() => setViewMode('list')}
-                  className={`flex-1 ${viewMode === 'list' ? 'bg-indigo-600 hover:bg-indigo-700 text-white' : 'border-gray-300 text-gray-700 hover:bg-gray-50'}`}
+                  className={`flex-1 ${viewMode === 'list' ? 'bg-green-600 hover:bg-green-700 text-white' : 'border-gray-300 text-gray-700 hover:bg-gray-50'}`}
                 >
                   <List className="w-4 h-4 mr-2" />
                   List
@@ -173,7 +173,7 @@ export default function JournalPage() {
                   variant={viewMode === 'calendar' ? 'default' : 'outline'} 
                   size="sm" 
                   onClick={() => setViewMode('calendar')}
-                  className={`flex-1 ${viewMode === 'calendar' ? 'bg-indigo-600 hover:bg-indigo-700 text-white' : 'border-gray-300 text-gray-700 hover:bg-gray-50'}`}
+                  className={`flex-1 ${viewMode === 'calendar' ? 'bg-green-600 hover:bg-green-700 text-white' : 'border-gray-300 text-gray-700 hover:bg-gray-50'}`}
                 >
                   <CalendarIcon className="w-4 h-4 mr-2" />
                   Calendar
@@ -349,7 +349,7 @@ export default function JournalPage() {
                     <div className="mb-8">
                       <h3 className="text-sm font-medium text-gray-700 mb-2">Tags</h3>
                       <div className="flex flex-wrap gap-2">
-                        {selectedEntry.tags.map((tag) => (
+                        {selectedEntry.tags.map((tag: string) => (
                           <Badge key={tag} variant="secondary">
                             {tag}
                           </Badge>
