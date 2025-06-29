@@ -43,6 +43,12 @@ export default function SignUpPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Check required fields
+    if (!formData.name.trim() || !formData.email.trim() || !formData.password.trim()) {
+      return;
+    }
+    
     if (!isPasswordValid) return;
     
     setIsLoading(true);
@@ -104,18 +110,21 @@ export default function SignUpPage() {
           <div className="mb-8">
             <Link 
               href="/" 
-              className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-8 transition-colors"
+              className="inline-flex items-center text-sm text-gray-600 hover:text-slate-800 mb-8 transition-colors"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to home
             </Link>
             
             
-            <h1 className="text-4xl font-medium text-gray-900 mb-2">
+            <h1 className="text-4xl font-medium text-slate-800 mb-2">
               Begin your inner journey
             </h1>
             <p className="text-gray-600">
               Bridge your mind and body through mindful wellness
+            </p>
+            <p className="text-sm text-gray-500 mt-2">
+              Fields marked with <span className="text-red-500">*</span> are required
             </p>
           </div>
 
@@ -124,7 +133,7 @@ export default function SignUpPage() {
             {/* Full Name */}
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                Full Name
+                Full Name <span className="text-red-500">*</span>
               </label>
               <Input
                 id="name"
@@ -133,7 +142,7 @@ export default function SignUpPage() {
                 required
                 value={formData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                className="signup-input w-full px-3 py-2 border border-gray-300 rounded-lg text-slate-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 placeholder="Enter your full name"
               />
             </div>
@@ -141,7 +150,7 @@ export default function SignUpPage() {
             {/* Email */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                Email
+                Email <span className="text-red-500">*</span>
               </label>
               <Input
                 id="email"
@@ -150,7 +159,7 @@ export default function SignUpPage() {
                 required
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                className="signup-input w-full px-3 py-2 border border-gray-300 rounded-lg text-slate-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 placeholder="Enter your email"
               />
             </div>
@@ -167,7 +176,7 @@ export default function SignUpPage() {
                 required
                 value={formData.location}
                 onChange={(e) => handleInputChange('location', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                className="signup-input w-full px-3 py-2 border border-gray-300 rounded-lg text-slate-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 placeholder="City, Country"
               />
             </div>
@@ -179,14 +188,14 @@ export default function SignUpPage() {
                   Gender
                 </label>
                 <Select value={formData.gender} onValueChange={(value) => handleInputChange('gender', value)}>
-                  <SelectTrigger className="w-full border-gray-300 text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                  <SelectTrigger className="w-full border-gray-300 text-slate-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
                     <SelectValue placeholder="Select" />
                   </SelectTrigger>
                   <SelectContent className="bg-white border border-gray-200 shadow-lg">
-                    <SelectItem value="male" className="text-gray-900 hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 data-[highlighted]:bg-gray-100 data-[highlighted]:text-gray-900 cursor-pointer">Male</SelectItem>
-                    <SelectItem value="female" className="text-gray-900 hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 data-[highlighted]:bg-gray-100 data-[highlighted]:text-gray-900 cursor-pointer">Female</SelectItem>
-                    <SelectItem value="other" className="text-gray-900 hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 data-[highlighted]:bg-gray-100 data-[highlighted]:text-gray-900 cursor-pointer">Other</SelectItem>
-                    <SelectItem value="prefer-not-to-disclose" className="text-gray-900 hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 data-[highlighted]:bg-gray-100 data-[highlighted]:text-gray-900 cursor-pointer">Prefer not to disclose</SelectItem>
+                    <SelectItem value="male" className="text-slate-800 hover:bg-gray-100 hover:text-slate-800 focus:bg-gray-100 focus:text-slate-800 data-[highlighted]:bg-gray-100 data-[highlighted]:text-slate-800 cursor-pointer">Male</SelectItem>
+                    <SelectItem value="female" className="text-slate-800 hover:bg-gray-100 hover:text-slate-800 focus:bg-gray-100 focus:text-slate-800 data-[highlighted]:bg-gray-100 data-[highlighted]:text-slate-800 cursor-pointer">Female</SelectItem>
+                    <SelectItem value="other" className="text-slate-800 hover:bg-gray-100 hover:text-slate-800 focus:bg-gray-100 focus:text-slate-800 data-[highlighted]:bg-gray-100 data-[highlighted]:text-slate-800 cursor-pointer">Other</SelectItem>
+                    <SelectItem value="prefer-not-to-disclose" className="text-slate-800 hover:bg-gray-100 hover:text-slate-800 focus:bg-gray-100 focus:text-slate-800 data-[highlighted]:bg-gray-100 data-[highlighted]:text-slate-800 cursor-pointer">Prefer not to disclose</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -201,10 +210,9 @@ export default function SignUpPage() {
                   type="number"
                   min="13"
                   max="120"
-                  required
                   value={formData.age}
                   onChange={(e) => handleInputChange('age', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  className="signup-input w-full px-3 py-2 border border-gray-300 rounded-lg text-slate-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   placeholder="Age"
                 />
               </div>
@@ -213,7 +221,7 @@ export default function SignUpPage() {
             {/* Password */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                Password
+                Password <span className="text-red-500">*</span>
               </label>
               <div className="relative">
                 <Input
@@ -223,7 +231,7 @@ export default function SignUpPage() {
                   required
                   value={formData.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
-                  className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg text-slate-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   placeholder="Create a strong password"
                 />
                 <button
@@ -259,7 +267,7 @@ export default function SignUpPage() {
             {/* Submit Button */}
             <Button
               type="submit"
-              disabled={isLoading || !isPasswordValid || !formData.name || !formData.email || !formData.location || !formData.gender || !formData.age}
+              disabled={isLoading || !isPasswordValid || !formData.name.trim() || !formData.email.trim()}
               className="w-full py-3 px-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium rounded-lg shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group"
             >
               {isLoading ? 'Creating account...' : 'Begin your journey'}
