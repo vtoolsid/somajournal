@@ -1438,6 +1438,9 @@ p{
 .w-px{
   width: 1px;
 }
+.w-80{
+  width: 20rem;
+}
 .min-w-0{
   min-width: 0px;
 }
@@ -2329,6 +2332,10 @@ p{
 .py-8{
   padding-top: 2rem;
   padding-bottom: 2rem;
+}
+.py-24{
+  padding-top: 6rem;
+  padding-bottom: 6rem;
 }
 .pb-3{
   padding-bottom: 0.75rem;
