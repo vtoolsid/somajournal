@@ -185,6 +185,35 @@
   .chakra-glow:hover {
     filter: drop-shadow(0 0 10px currentColor);
   }
+
+  /* Enhanced chakra animations */
+  .chakra-pulse {
+    animation: chakraPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes chakraPulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.8;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 1;
+    }
+  }
+
+  .chakra-glow-cycle {
+    animation: chakraGlow 3s ease-in-out infinite;
+  }
+
+  @keyframes chakraGlow {
+    0%, 100% {
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+    }
+  }
   
   body {
     @apply text-slate-800;

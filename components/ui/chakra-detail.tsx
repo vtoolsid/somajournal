@@ -13,14 +13,24 @@ interface ChakraDetailProps {
 export const ChakraDetail = ({ chakra, isOpen, onClose }: ChakraDetailProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl border-none shadow-2xl">
+      <DialogContent 
+        className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl border-none shadow-2xl transition-all duration-300 ease-out"
+        style={{
+          boxShadow: `0 25px 50px -12px ${chakra.color}40, 0 0 0 1px ${chakra.color}20`
+        }}
+      >
         <DialogHeader className="space-y-4 pb-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div 
-                className="w-12 h-12 rounded-full border-2 border-white shadow-lg"
-                style={{ backgroundColor: chakra.color }}
-              />
+                className="w-12 h-12 rounded-full border-2 border-white shadow-lg flex items-center justify-center"
+                style={{ 
+                  backgroundColor: chakra.color,
+                  boxShadow: `0 0 20px ${chakra.color}40`
+                }}
+              >
+                {/* You can add chakra icon here if desired */}
+              </div>
               <div>
                 <DialogTitle className="text-2xl font-semibold text-slate-800">
                   {chakra.name}
