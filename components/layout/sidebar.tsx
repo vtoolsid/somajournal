@@ -64,9 +64,10 @@ export function Sidebar() {
                 variant="ghost"
                 className={`w-full justify-start h-14 rounded-2xl transition-all duration-300 text-lg ${
                   isActive 
-                    ? 'bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 shadow-lg' 
-                    : 'text-slate-600 hover:bg-white/40 hover:text-slate-800 hover:scale-105'
+                    ? 'bg-gradient-to-r from-green-50 to-emerald-50 !text-green-700 hover:!text-green-800 hover:!bg-green-100 shadow-lg hover:shadow-xl' 
+                    : 'text-slate-600 hover:bg-white/40 hover:!text-slate-800 hover:scale-105'
                 }`}
+                style={isActive ? { color: 'rgb(21 128 61)' } : undefined}
                 onClick={() => router.push(item.href)}
               >
                 <Icon className="w-6 h-6 mr-4" />

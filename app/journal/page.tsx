@@ -46,6 +46,12 @@ export default function JournalPage() {
     e.preventDefault();
     if (!currentEntry.trim()) return;
 
+    // Prevent submission for future dates
+    const entryDate = selectedDate || new Date();
+    if (entryDate > new Date()) {
+      return;
+    }
+
     setIsAnalyzing(true);
     setShowCeremony(true);
 
@@ -59,6 +65,7 @@ export default function JournalPage() {
         location: 'San Francisco, CA',
         weather: '☀️ 72°F',
         tags: tags,
+        createdAt: entryDate, // Use selected date for the entry
         ...analysisResult,
       });
       
@@ -212,18 +219,28 @@ export default function JournalPage() {
                       <KarmicAura key={entry.id} karma={entry.karmicValue} intensity="subtle">
                         <Card 
                           className={`cursor-pointer transition-all hover:shadow-md ${
-                            selectedEntry?.id === entry.id ? 'ring-2 ring-green-500' : ''
+                            selectedEntry?.id === entry.id 
+                              ? 'ring-2 ring-green-500 bg-green-50 hover:bg-green-100' 
+                              : 'hover:bg-gray-50'
                           }`}
                           onClick={() => setSelectedEntry(entry)}
                         >
                           <CardContent className="p-4">
                             <div className="flex items-start justify-between mb-2">
-                              <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                              <span className={`text-xs px-2 py-1 rounded-full ${
+                                selectedEntry?.id === entry.id 
+                                  ? '!text-green-700 bg-green-200 hover:!text-green-800' 
+                                  : 'text-gray-500 bg-gray-100 hover:text-gray-600'
+                              }`}>
                                 {new Date(entry.createdAt).toLocaleDateString()}
                               </span>
                               <div className={`w-3 h-3 rounded-full ${getKarmaDotColor(entry.karmicValue)}`} />
                             </div>
-                            <p className="text-sm text-gray-700 line-clamp-3">
+                            <p className={`text-sm line-clamp-3 ${
+                              selectedEntry?.id === entry.id 
+                                ? '!text-green-800 hover:!text-green-900' 
+                                : 'text-gray-700 hover:text-gray-800'
+                            }`}>
                               {entry.content}
                             </p>
                             {entry.tags && entry.tags.length > 0 && (
@@ -249,8 +266,8 @@ export default function JournalPage() {
               ) : (
                 <ScrollArea className="h-full">
                   <div className="p-4 space-y-8">
-                    {/* Display 3 months: previous, current, next */}
-                    {[-1, 0, 1].map((monthOffset) => {
+                    {/* Display 2 months: previous and current */}
+                    {[-1, 0].map((monthOffset) => {
                       const currentMonth = new Date();
                       currentMonth.setMonth(currentMonth.getMonth() + monthOffset);
                       const monthEntries = getEntriesForDate(currentMonth);
@@ -260,10 +277,16 @@ export default function JournalPage() {
                           <Calendar
                             mode="single"
                             selected={selectedDate}
-                            onSelect={setSelectedDate}
+                            onSelect={(date) => {
+                              // Only allow selection of dates up to today
+                              if (date && date <= new Date()) {
+                                setSelectedDate(date);
+                              }
+                            }}
                             month={currentMonth}
                             className="w-full dayone-calendar"
                             today={new Date()}
+                            disabled={(date) => date > new Date()} // Disable future dates
                             modifiers={{
                               hasEntry: getDatesWithEntries(),
                             }}
@@ -284,11 +307,19 @@ export default function JournalPage() {
                               {getEntriesForDate(selectedDate).map((entry) => (
                                 <Card 
                                   key={entry.id} 
-                                  className="cursor-pointer hover:shadow-md transition-shadow"
+                                  className={`cursor-pointer transition-all hover:shadow-md ${
+                                    selectedEntry?.id === entry.id 
+                                      ? 'ring-2 ring-green-500 bg-green-50 hover:bg-green-100' 
+                                      : 'hover:bg-gray-50'
+                                  }`}
                                   onClick={() => setSelectedEntry(entry)}
                                 >
                                   <CardContent className="p-3">
-                                    <p className="text-sm text-gray-700 line-clamp-2">
+                                    <p className={`text-sm line-clamp-2 ${
+                                      selectedEntry?.id === entry.id 
+                                        ? '!text-green-800 hover:!text-green-900' 
+                                        : 'text-gray-700 hover:text-gray-800'
+                                    }`}>
                                       {entry.content}
                                     </p>
                                   </CardContent>
@@ -398,14 +429,20 @@ export default function JournalPage() {
                 <div className="max-w-3xl mx-auto h-full flex flex-col">
                   <div className="mb-4 lg:mb-6">
                     <h2 className="text-xl lg:text-2xl font-semibold text-gray-800 mb-2">New Entry</h2>
-                    <p className="text-gray-600 text-sm lg:text-base">Let your thoughts flow freely...</p>
+                    {selectedDate && selectedDate > new Date() ? (
+                      <p className="text-amber-600 text-sm lg:text-base">
+                        You can only create journal entries for today or past dates. Please select a different date.
+                      </p>
+                    ) : (
+                      <p className="text-gray-600 text-sm lg:text-base">Let your thoughts flow freely...</p>
+                    )}
                   </div>
 
                   {/* Metadata Bar */}
                   <div className="flex flex-col lg:flex-row lg:items-center lg:space-x-6 space-y-2 lg:space-y-0 mb-4 lg:mb-6 p-3 lg:p-4 bg-gray-50 rounded-lg">
                     <div className="flex items-center space-x-2 text-sm text-gray-600">
                       <Clock className="w-4 h-4" />
-                      <span>{new Date().toLocaleString()}</span>
+                      <span>{(selectedDate || new Date()).toLocaleString()}</span>
                     </div>
                     <div className="flex items-center space-x-2 text-sm text-gray-600">
                       <MapPin className="w-4 h-4" />
@@ -469,7 +506,7 @@ export default function JournalPage() {
                       
                       <Button 
                         type="submit" 
-                        disabled={!currentEntry.trim() || isAnalyzing}
+                        disabled={!currentEntry.trim() || isAnalyzing || (selectedDate && selectedDate > new Date())}
                         className="bg-green-600 hover:bg-green-700 w-full lg:w-auto"
                       >
                         {isAnalyzing ? (
