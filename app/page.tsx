@@ -21,7 +21,11 @@ import {
   Circle,
   Eye,
   Target,
-  Activity
+  Activity,
+  Mountain,
+  Flame,
+  MessageCircle,
+  Crown
 } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -98,7 +102,7 @@ export default function Home() {
   const chakraElements = [
     { 
       name: 'Root', 
-      icon: Circle, 
+      icon: Mountain, 
       color: 'bg-red-500', 
       description: 'Foundation & Security',
       emotion: 'Feeling grounded, secure, and connected to earth',
@@ -106,10 +110,10 @@ export default function Home() {
     },
     { 
       name: 'Sacral', 
-      icon: Waves, 
+      icon: Flame, 
       color: 'bg-orange-500', 
       description: 'Creativity & Passion',
-      emotion: 'Expressing creativity, sexuality, and emotional flow',
+      emotion: 'Creative expression and sensuality',
       location: 'Lower abdomen'
     },
     { 
@@ -130,7 +134,7 @@ export default function Home() {
     },
     { 
       name: 'Throat', 
-      icon: Compass, 
+      icon: MessageCircle, 
       color: 'bg-blue-500', 
       description: 'Communication & Truth',
       emotion: 'Authentic expression and speaking your truth',
@@ -146,10 +150,10 @@ export default function Home() {
     },
     { 
       name: 'Crown', 
-      icon: Star, 
+      icon: Crown, 
       color: 'bg-purple-500', 
       description: 'Divine Connection',
-      emotion: 'Spiritual enlightenment and universal consciousness',
+      emotion: 'Spiritual awareness and enlightenment',
       location: 'Top of head'
     },
   ];
