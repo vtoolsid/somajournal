@@ -8,7 +8,6 @@ import { KarmicAura } from '@/components/ui/karmic-aura';
 import { useRouter } from 'next/navigation';
 import { 
   Heart, 
-  BookOpen, 
   Sparkles, 
   ArrowRight, 
   Brain, 
@@ -21,7 +20,8 @@ import {
   Flower2,
   Circle,
   Eye,
-  Target
+  Target,
+  Activity
 } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -74,24 +74,24 @@ export default function Home() {
   const features = [
     {
       icon: Heart,
-      title: 'Sacred Journaling',
-      description: 'Transform your innermost thoughts into profound wisdom through mindful digital storytelling.',
+      title: 'Emotional Awareness',
+      description: 'Track and understand your emotional patterns through mindful journaling and reflection.',
       chakra: 'heart',
       color: 'from-green-400 to-emerald-500'
     },
     {
-      icon: Brain,
-      title: 'Karmic Intelligence',
-      description: 'Unlock the mystical patterns in your emotional journey with AI-guided spiritual insights.',
-      chakra: 'third-eye',
-      color: 'from-indigo-400 to-purple-500'
-    },
-    {
-      icon: Zap,
-      title: 'Energy Alignment',
-      description: 'Harmonize your mind, body, and spirit through personalized wellness tracking and guidance.',
+      icon: Activity,
+      title: 'Mind-Body Connection',
+      description: 'Discover how your emotions manifest as physical symptoms and learn to heal holistically.',
       chakra: 'solar',
       color: 'from-yellow-400 to-orange-500'
+    },
+    {
+      icon: Brain,
+      title: 'Wellness Insights',
+      description: 'Gain personalized insights into your mental and physical health patterns over time.',
+      chakra: 'third-eye',
+      color: 'from-indigo-400 to-purple-500'
     },
   ];
 
@@ -175,26 +175,26 @@ export default function Home() {
                 <p className="text-sm text-slate-500 font-medium">✨ Digital Enlightenment Sanctuary</p>
               </div>
             </div>
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-4">
               <Badge variant="secondary" className="hidden sm:flex bg-white/60 text-slate-600 border-white/40">
                 <Sparkles className="w-3 h-3 mr-1" />
                 Beta
               </Badge>
-              <Button
-                variant="ghost"
-                onClick={() => router.push('/auth/login')}
-                className="text-slate-600 hover:text-slate-800 hover:bg-white/60 rounded-2xl px-6 py-3 font-medium"
-              >
-                <Moon className="w-4 h-4 mr-2" />
-                Sign In
-              </Button>
-              <Button
-                onClick={() => router.push('/auth/signup')}
-                className="wellness-button"
-              >
-                <Star className="w-4 h-4 mr-2" />
-                Begin Journey
-              </Button>
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="ghost"
+                  onClick={() => router.push('/auth/login')}
+                  className="text-slate-700 hover:text-slate-900 hover:bg-slate-100/80 rounded-lg px-4 py-2 font-medium transition-all duration-200 text-sm"
+                >
+                  Sign In
+                </Button>
+                <Button
+                  onClick={() => router.push('/auth/signup')}
+                  className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium px-5 py-2 rounded-lg text-sm transition-all duration-200 shadow-sm hover:shadow-md"
+                >
+                  Get Started
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -299,24 +299,13 @@ export default function Home() {
             })}
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8 fade-enter">
+          <div className="flex justify-center pt-8 fade-enter">
             <Button
               size="lg"
               onClick={() => router.push('/auth/signup')}
               className="wellness-button text-xl px-16 py-8 text-lg font-semibold"
             >
-              <Target className="w-6 h-6 mr-3" />
-              Begin Sacred Journey
-              <ArrowRight className="w-6 h-6 ml-3" />
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              onClick={() => router.push('/auth/login')}
-              className="text-xl px-16 py-8 border-2 border-slate-200 text-slate-700 hover:bg-white/60 rounded-2xl font-semibold"
-            >
-              <BookOpen className="w-6 h-6 mr-3" />
-              Continue Practice
+              Begin the Journey
             </Button>
           </div>
         </div>
@@ -342,48 +331,35 @@ export default function Home() {
             </p>
           </div>
           
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <div
-                  key={index}
-                  className="fade-enter group"
-                  style={{ animationDelay: `${index * 0.2}s` }}
-                >
-                  <Card className="wellness-card h-full group-hover:scale-105 transition-all duration-500 overflow-hidden">
-                    <CardContent className="p-12 text-center space-y-8 h-full flex flex-col relative">
-                      {/* Chakra background glow */}
-                      <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${feature.color} opacity-5 rounded-full blur-3xl`}></div>
-                      
-                      <KarmicAura karma={0.7 + index * 0.1} intensity="medium">
-                        <div className={`inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br ${feature.color} rounded-2xl breathing-element shadow-xl group-hover:shadow-2xl transition-all duration-500`}>
-                          <Icon className="w-12 h-12 text-white" />
-                        </div>
-                      </KarmicAura>
-                      
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-center space-x-2">
-                          <div className={`w-3 h-3 chakra-${feature.chakra} rounded-full animate-pulse`}></div>
-                          <Badge variant="outline" className="text-xs font-medium border-slate-200">
-                            {feature.chakra.charAt(0).toUpperCase() + feature.chakra.slice(1)} Chakra
-                          </Badge>
-                        </div>
-                        <h3 className="text-3xl font-bold text-slate-800">{feature.title}</h3>
-                        <p className="text-slate-600 leading-relaxed text-lg flex-1 font-light">
-                          {feature.description}
-                        </p>
+                <Card key={index} className="group border-0 bg-white/60 backdrop-blur-sm hover:bg-white/80 transition-all duration-300 hover:shadow-lg">
+                  <CardContent className="p-6">
+                    <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4`}>
+                      <Icon className="w-6 h-6 text-white" />
+                    </div>
+                    
+                    <div className="mb-2">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <div className={`w-2 h-2 chakra-${feature.chakra} rounded-full`}></div>
+                        <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                          {feature.chakra} Chakra
+                        </span>
                       </div>
-                      
-                      <div className="pt-4">
-                        <Button variant="ghost" className="text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 rounded-xl font-medium">
-                          Explore Path
-                          <ArrowRight className="w-4 h-4 ml-2" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
+                      <h3 className="text-xl font-semibold text-slate-900 mb-2">{feature.title}</h3>
+                      <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                        {feature.description}
+                      </p>
+                    </div>
+                    
+                    <Button variant="ghost" size="sm" className="justify-start text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 p-0 h-auto font-medium">
+                      Learn more
+                      <ArrowRight className="w-4 h-4 ml-1" />
+                    </Button>
+                  </CardContent>
+                </Card>
               );
             })}
           </div>
