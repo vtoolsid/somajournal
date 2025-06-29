@@ -2,211 +2,255 @@
 
 import { AppLayout } from '@/components/layout/app-layout';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { KarmicAura } from '@/components/ui/karmic-aura';
-import { MandalaProgress } from '@/components/ui/mandala-progress';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { FloatingParticles } from '@/components/ui/floating-particles';
 import { useAppStore } from '@/lib/store';
 import { useRouter } from 'next/navigation';
-import { mockJournalEntries } from '@/lib/mock-data';
-import { Heart, BookOpen, Sparkles, Plus, Calendar, Bot as Lotus } from 'lucide-react';
+import { 
+  mockJournalEntries, 
+  analyzePsychosomaticConnection,
+  calculateKarmicBalance,
+  getTopEmotions,
+  generateInsightMessage,
+  chakraColors
+} from '@/lib/mock-data';
+import { 
+  Heart, 
+  Brain, 
+  BarChart3, 
+  Edit3,
+  ArrowRight,
+  TrendingUp,
+  TrendingDown,
+  Minus
+} from 'lucide-react';
+import { RadialBarChart, RadialBar, BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from 'recharts';
 
 export default function DashboardPage() {
   const { user } = useAppStore();
   const router = useRouter();
 
-  const averageKarma = mockJournalEntries.reduce((sum, entry) => sum + entry.karmicValue, 0) / mockJournalEntries.length;
-  const recentEntry = mockJournalEntries[0];
+  // Data analysis
+  const psychosomaticData = analyzePsychosomaticConnection(mockJournalEntries);
+  const karmicBalance = calculateKarmicBalance(mockJournalEntries);
+  const topEmotions = getTopEmotions(mockJournalEntries, 4);
+  const insightMessage = generateInsightMessage(psychosomaticData);
 
-  const getKarmaMessage = (karma: number) => {
-    if (karma > 0.5) return { 
-      text: "Your energy radiates pure light ✨", 
-      color: "text-emerald-600",
-      icon: Sparkles 
-    };
-    if (karma > 0.2) return { 
-      text: "Gentle harmony flows through you 🌸", 
-      color: "text-indigo-600",
-      icon: Heart 
-    };
-    if (karma > -0.2) return { 
-      text: "Finding your balance 🌱", 
-      color: "text-slate-600",
-      icon: Lotus 
-    };
-    return { 
-      text: "Healing energy surrounds you 🌿", 
-      color: "text-amber-600",
-      icon: Heart 
-    };
+  // Helper function to get chakra color
+  const getChakraColor = (chakra: string) => {
+    return chakraColors[chakra as keyof typeof chakraColors] || chakraColors.heart;
   };
 
-  const karmaMessage = getKarmaMessage(averageKarma);
-  const KarmaIcon = karmaMessage.icon;
+  // Helper function to format insight message with bold text
+  const formatInsightMessage = (message: string) => {
+    return message.split('**').map((part, index) => 
+      index % 2 === 1 ? <strong key={index} className="font-semibold text-gray-800">{part}</strong> : part
+    );
+  };
+
+  // Chart configurations
+  const karmicChartData = [
+    {
+      name: 'Karmic Balance',
+      value: karmicBalance.percentage,
+      fill: karmicBalance.score > 0 ? '#10B981' : karmicBalance.score < 0 ? '#EF4444' : '#6B7280'
+    }
+  ];
+
+  const emotionChartData = topEmotions.map(emotion => ({
+    emotion: emotion.emotion,
+    count: emotion.count,
+    fill: getChakraColor(emotion.chakra)
+  }));
+
+  const chartConfig = {
+    count: {
+      label: "Frequency",
+    },
+    value: {
+      label: "Balance",
+    },
+  };
 
   return (
     <AppLayout>
       <div className="min-h-screen wellness-container">
-        <FloatingParticles count={12} />
+        <FloatingParticles count={8} />
         
-        <div className="relative z-10 p-8">
-          <div className="max-w-4xl mx-auto space-y-12">
-            {/* Welcome */}
-            <div className="text-center space-y-6 fade-enter">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full mb-6 breathing-element">
-                <Heart className="w-10 h-10 text-indigo-600" />
+        <div className="relative z-10 p-6 lg:p-8">
+          <div className="max-w-6xl mx-auto">
+            {/* Welcome Header */}
+            <div className="text-center mb-8 lg:mb-12 fade-enter">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full mb-6 breathing-element">
+                <Heart className="w-8 h-8 text-indigo-600" />
               </div>
-              
-              <div className="space-y-3">
-                <h1 className="text-5xl font-semibold text-slate-800">
-                  Welcome back, {user?.name}
-                </h1>
-                <p className="text-xl text-slate-600 max-w-md mx-auto leading-relaxed">
-                  How is your wellness feeling in this moment?
-                </p>
-              </div>
+              <h1 className="text-3xl lg:text-4xl font-semibold text-slate-800 mb-2">
+                Welcome back, {user?.name || 'Friend'}
+              </h1>
+              <p className="text-xl text-slate-600">
+                Your wellness journey at a glance
+              </p>
             </div>
 
-            {/* Karmic Balance */}
-            <KarmicAura karma={averageKarma} intensity="strong" className="fade-enter">
-              <Card className="wellness-card">
-                <CardContent className="p-12 text-center">
-                  <div className="space-y-8">
-                    <div className="flex justify-center">
-                      <MandalaProgress 
-                        value={(averageKarma + 1) * 50} 
-                        size={140}
-                        className="energy-pulse"
-                      />
+            {/* 2x2 Grid Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+              
+              {/* Card 1: Mind-Body Insight (Top-Left, PRIMARY) */}
+              <Card className="wellness-card animate-fadeInUp">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center breathing-element">
+                      <Brain className="w-5 h-5 text-purple-600" />
                     </div>
-                    
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-center space-x-3">
-                        <KarmaIcon className={`w-8 h-8 ${karmaMessage.color}`} />
-                        <h3 className="text-3xl font-semibold text-slate-800">
-                          Your Karmic Balance
-                        </h3>
-                      </div>
-                      
-                      <p className={`text-xl font-medium ${karmaMessage.color}`}>
-                        {karmaMessage.text}
+                    <CardTitle className="text-xl font-semibold text-slate-800">
+                      Today's Mind-Body Connection
+                    </CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="pb-4">
+                  <p className="text-slate-600 leading-relaxed text-base">
+                    {formatInsightMessage(insightMessage.message)}
+                  </p>
+                  {psychosomaticData.detectedSymptoms.length > 0 && (
+                    <div className="mt-4 p-3 bg-amber-50 rounded-lg border border-amber-200">
+                      <p className="text-sm text-amber-800">
+                        <strong>Physical symptoms detected:</strong> {psychosomaticData.detectedSymptoms.join(', ')}
                       </p>
-                      
-                      <div className="flex justify-center space-x-1 mt-6">
-                        {['root', 'sacral', 'solar', 'heart', 'throat', 'third-eye', 'crown'].map((chakra, index) => (
-                          <div
-                            key={chakra}
-                            className={`w-3 h-3 rounded-full chakra-${chakra} breathing-element`}
-                            style={{ animationDelay: `${index * 0.3}s` }}
+                    </div>
+                  )}
+                </CardContent>
+                <CardFooter>
+                  <Button 
+                    variant="link" 
+                    className="p-0 h-auto text-indigo-600 hover:text-indigo-700 font-medium"
+                    onClick={() => router.push('/karma')}
+                  >
+                    Explore in Body Map <ArrowRight className="w-4 h-4 ml-1" />
+                  </Button>
+                </CardFooter>
+              </Card>
+
+              {/* Card 2: Karmic Balance Mandala (Top-Right) */}
+              <Card className="wellness-card animate-fadeInUp animate-delay-200">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-xl font-semibold text-slate-800">
+                      Karmic Balance
+                    </CardTitle>
+                    <div className="flex items-center space-x-1 text-sm text-slate-500">
+                      {karmicBalance.trend === 'up' && <TrendingUp className="w-4 h-4 text-emerald-500" />}
+                      {karmicBalance.trend === 'down' && <TrendingDown className="w-4 h-4 text-red-500" />}
+                      {karmicBalance.trend === 'stable' && <Minus className="w-4 h-4 text-slate-500" />}
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-col items-center">
+                    <div className="relative w-48 h-48">
+                      <ChartContainer config={chartConfig} className="w-full h-full">
+                        <RadialBarChart 
+                          cx="50%" 
+                          cy="50%" 
+                          innerRadius="60%" 
+                          outerRadius="80%" 
+                          data={karmicChartData}
+                          startAngle={90}
+                          endAngle={450}
+                        >
+                          <RadialBar 
+                            dataKey="value" 
+                            cornerRadius={10}
+                            className="energy-pulse"
                           />
-                        ))}
+                        </RadialBarChart>
+                      </ChartContainer>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="text-center">
+                          <div className={`text-3xl font-bold ${karmicBalance.score > 0 ? 'text-emerald-600' : karmicBalance.score < 0 ? 'text-amber-600' : 'text-slate-600'}`}>
+                            {karmicBalance.score > 0 ? '+' : ''}{karmicBalance.score}
+                          </div>
+                          <div className="text-sm text-slate-500 mt-1">
+                            {karmicBalance.percentage}% positive
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </CardContent>
               </Card>
-            </KarmicAura>
 
-            {/* Quick Actions */}
-            <div className="grid md:grid-cols-2 gap-8">
-              <KarmicAura karma={0.6} className="fade-enter">
-                <Card 
-                  className="wellness-card cursor-pointer group" 
-                  onClick={() => router.push('/journal')}
-                >
-                  <CardContent className="p-10">
-                    <div className="flex items-center space-x-6">
-                      <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <BookOpen className="w-8 h-8 text-blue-600" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-2xl font-semibold text-slate-800 mb-2">
-                          Journal
-                        </h3>
-                        <p className="text-slate-600 leading-relaxed">
-                          Pour your heart onto the digital page
-                        </p>
-                      </div>
-                      <Plus className="w-6 h-6 text-slate-400 group-hover:text-indigo-600 transition-colors" />
+              {/* Card 3: Emotional Landscape (Bottom-Left) */}
+              <Card className="wellness-card animate-fadeInUp animate-delay-400">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-indigo-100 to-blue-100 rounded-full flex items-center justify-center breathing-element">
+                      <BarChart3 className="w-5 h-5 text-indigo-600" />
                     </div>
-                  </CardContent>
-                </Card>
-              </KarmicAura>
+                    <CardTitle className="text-xl font-semibold text-slate-800">
+                      Emotional Landscape
+                    </CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <ChartContainer config={chartConfig} className="h-48">
+                    <BarChart data={emotionChartData}>
+                      <XAxis 
+                        dataKey="emotion" 
+                        tick={{ fontSize: 12, fill: '#64748b' }}
+                        interval={0}
+                        angle={-45}
+                        textAnchor="end"
+                        height={60}
+                      />
+                      <YAxis tick={{ fontSize: 12, fill: '#64748b' }} />
+                      <ChartTooltip 
+                        content={<ChartTooltipContent />}
+                        cursor={{ opacity: 0.3 }}
+                      />
+                      <Bar 
+                        dataKey="count" 
+                        radius={[4, 4, 0, 0]}
+                        className="hover:opacity-80 transition-opacity"
+                      />
+                    </BarChart>
+                  </ChartContainer>
+                </CardContent>
+              </Card>
 
-              <KarmicAura karma={0.4} className="fade-enter">
-                <Card 
-                  className="wellness-card cursor-pointer group" 
-                  onClick={() => router.push('/karma')}
-                >
-                  <CardContent className="p-10">
-                    <div className="flex items-center space-x-6">
-                      <div className="w-16 h-16 bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <Sparkles className="w-8 h-8 text-purple-600" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-2xl font-semibold text-slate-800 mb-2">
-                          Insights
-                        </h3>
-                        <p className="text-slate-600 leading-relaxed">
-                          Discover the patterns of your journey
-                        </p>
-                      </div>
-                      <Sparkles className="w-6 h-6 text-slate-400 group-hover:text-purple-600 transition-colors" />
+              {/* Card 4: Invitation to Reflect (Bottom-Right) */}
+              <Card className="wellness-card border-2 border-indigo-200 hover:border-indigo-300 animate-fadeInUp animate-delay-600">
+                <CardContent className="flex flex-col items-center justify-center h-full p-8 text-center">
+                  <div className="mb-6">
+                    <div className="w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mb-4 mx-auto breathing-element">
+                      <Edit3 className="w-8 h-8 text-indigo-600" />
                     </div>
-                  </CardContent>
-                </Card>
-              </KarmicAura>
+                    <h3 className="text-2xl font-semibold text-slate-800 mb-3">
+                      What's on your mind?
+                    </h3>
+                    <p className="text-slate-600 text-sm">
+                      Take a moment to reflect and connect with your inner wisdom
+                    </p>
+                  </div>
+                  
+                  <Button 
+                    onClick={() => router.push('/journal')}
+                    className="wellness-button w-full py-4 text-lg font-medium transform transition-transform hover:scale-105 active:scale-95"
+                  >
+                    <Heart className="w-5 h-5 mr-2" />
+                    Reflect Now
+                  </Button>
+                </CardContent>
+              </Card>
+
             </div>
 
-            {/* Recent Entry */}
-            {recentEntry && (
-              <KarmicAura karma={recentEntry.karmicValue} className="fade-enter">
-                <Card className="wellness-card">
-                  <CardContent className="p-10">
-                    <div className="flex items-start space-x-6">
-                      <div className="w-12 h-12 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full flex items-center justify-center flex-shrink-0 breathing-element">
-                        <Calendar className="w-6 h-6 text-emerald-600" />
-                      </div>
-                      <div className="flex-1 space-y-4">
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-2xl font-semibold text-slate-800">
-                            Recent Reflection
-                          </h3>
-                          <span className="text-sm text-slate-500 bg-white/50 px-3 py-1 rounded-full">
-                            {recentEntry.createdAt.toLocaleDateString()}
-                          </span>
-                        </div>
-                        <p className="text-slate-600 leading-relaxed text-lg line-clamp-3">
-                          {recentEntry.content}
-                        </p>
-                        <Button 
-                          variant="ghost" 
-                          className="text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 p-0 text-lg"
-                          onClick={() => router.push('/journal')}
-                        >
-                          Continue reading →
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </KarmicAura>
-            )}
-
-            {/* Invitation */}
-            <div className="text-center py-12 fade-enter">
-              <div className="space-y-6">
-                <p className="text-xl text-slate-500 font-light">
-                  Take a moment to pause and reflect
-                </p>
-                <Button 
-                  className="wellness-button text-lg px-12 py-4"
-                  onClick={() => router.push('/journal')}
-                >
-                  <Heart className="w-5 h-5 mr-3" />
-                  Begin Writing
-                </Button>
-              </div>
+            {/* Optional: Recent Activity Summary */}
+            <div className="mt-8 lg:mt-12 text-center fade-enter">
+              <p className="text-sm text-slate-500">
+                Last updated: {new Date().toLocaleDateString()} • 
+                <span className="ml-1">{mockJournalEntries.length} journal entries analyzed</span>
+              </p>
             </div>
           </div>
         </div>

@@ -386,6 +386,26 @@
     animation: animate-spin-slow 8s linear infinite;
   }
   
+  .animate-fadeInUp {
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+  
+  .animate-delay-200 {
+    animation-delay: 0.2s;
+  }
+  
+  .animate-delay-400 {
+    animation-delay: 0.4s;
+  }
+  
+  .animate-delay-600 {
+    animation-delay: 0.6s;
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse-slow 3s ease-in-out infinite;
+  }
+  
   /* Chakra Animation Improvements - Disabled for better UX */
   
   /* Karma States */
@@ -402,6 +422,28 @@
     animation: fade-exit 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
+  /* Calendar Styling */
+  .rdp-day_today {
+    background-color: rgb(224 231 255) !important;
+    color: rgb(67 56 202) !important;
+    font-weight: 500 !important;
+  }
+  
+  .rdp-day_selected {
+    background-color: rgb(79 70 229) !important;
+    color: white !important;
+    font-weight: 500 !important;
+  }
+  
+  .rdp-day_selected:hover {
+    background-color: rgb(67 56 202) !important;
+  }
+  
+  .rdp-day_today.rdp-day_selected {
+    background-color: rgb(79 70 229) !important;
+    color: white !important;
+  }
+
   /* Floating Particles */
   .floating-particles {
     position: fixed;
@@ -556,6 +598,26 @@
   50% {
     transform: scale(1.05);
     box-shadow: 0 0 0 8px rgba(99, 102, 241, 0);
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
   }
 }
 

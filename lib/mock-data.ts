@@ -231,3 +231,109 @@ export const analyzeJournalEntry = (content: string) => {
     symptoms,
   };
 };
+
+// Dashboard Analysis Functions
+export const analyzePsychosomaticConnection = (entries: JournalEntry[]) => {
+  const recentEntries = entries.slice(0, 5); // Last 5 entries
+  const emotionSymptomMap: Record<string, string[]> = {
+    'anxiety': ['stomach discomfort', 'shallow breathing', 'tension'],
+    'stress': ['headache', 'muscle tension', 'fatigue'],
+    'anger': ['jaw clenching', 'raised blood pressure', 'tension'],
+    'sadness': ['heavy chest', 'low energy', 'sleep issues'],
+    'fear': ['rapid heartbeat', 'sweating', 'nausea'],
+    'frustration': ['headache', 'neck tension', 'irritability'],
+    'worry': ['stomach upset', 'restlessness', 'insomnia'],
+  };
+
+  // Find dominant emotions from recent entries
+  const emotionCounts: Record<string, number> = {};
+  const symptomCounts: Record<string, boolean> = {};
+
+  recentEntries.forEach(entry => {
+    Object.keys(entry.emotions).forEach(emotion => {
+      emotionCounts[emotion] = (emotionCounts[emotion] || 0) + 1;
+    });
+    Object.entries(entry.symptoms).forEach(([symptom, present]) => {
+      if (present) symptomCounts[symptom] = true;
+    });
+  });
+
+  const dominantEmotion = Object.entries(emotionCounts)
+    .sort(([,a], [,b]) => b - a)[0]?.[0];
+
+  const physicalManifestations = dominantEmotion ? emotionSymptomMap[dominantEmotion] || [] : [];
+  const detectedSymptoms = Object.keys(symptomCounts);
+
+  return {
+    dominantEmotion,
+    physicalManifestations,
+    detectedSymptoms,
+    connection: dominantEmotion && physicalManifestations.length > 0
+  };
+};
+
+export const calculateKarmicBalance = (entries: JournalEntry[]) => {
+  if (entries.length === 0) return { score: 0, percentage: 50 };
+  
+  const totalKarma = entries.reduce((sum, entry) => sum + entry.karmicValue, 0);
+  const averageKarma = totalKarma / entries.length;
+  const percentage = Math.round((averageKarma + 1) * 50); // Convert -1,1 to 0,100
+  
+  return {
+    score: Math.round(averageKarma * 100),
+    percentage,
+    trend: entries.length > 1 ? (entries[0].karmicValue > entries[1].karmicValue ? 'up' : 'down') : 'stable'
+  };
+};
+
+export const getTopEmotions = (entries: JournalEntry[], limit: number = 4) => {
+  const emotionCounts: Record<string, number> = {};
+  const emotionIntensities: Record<string, number[]> = {};
+
+  entries.forEach(entry => {
+    Object.entries(entry.emotions).forEach(([emotion, intensity]) => {
+      emotionCounts[emotion] = (emotionCounts[emotion] || 0) + 1;
+      emotionIntensities[emotion] = emotionIntensities[emotion] || [];
+      emotionIntensities[emotion].push(intensity);
+    });
+  });
+
+  return Object.entries(emotionCounts)
+    .map(([emotion, count]) => ({
+      emotion,
+      count,
+      averageIntensity: emotionIntensities[emotion].reduce((a, b) => a + b, 0) / emotionIntensities[emotion].length,
+      chakra: emotionChakraMapping[emotion] || 'heart'
+    }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, limit);
+};
+
+export const generateInsightMessage = (psychosomaticData: ReturnType<typeof analyzePsychosomaticConnection>) => {
+  const { dominantEmotion, physicalManifestations, detectedSymptoms, connection } = psychosomaticData;
+
+  if (!connection || !dominantEmotion) {
+    return {
+      message: "Your recent reflections show a balanced emotional state. Your body is feeling aligned.",
+      type: 'positive' as const
+    };
+  }
+
+  const symptomMatch = physicalManifestations.some(manifestation => 
+    detectedSymptoms.some(symptom => 
+      manifestation.toLowerCase().includes(symptom) || symptom.includes(manifestation.toLowerCase())
+    )
+  );
+
+  if (symptomMatch) {
+    return {
+      message: `Your recent journals show a pattern of **${dominantEmotion}**. Research shows this often manifests as **${physicalManifestations[0]}** and **${physicalManifestations[1] || 'tension'}**.`,
+      type: 'connection' as const
+    };
+  }
+
+  return {
+    message: `Your recent **${dominantEmotion}** may be affecting your body. Consider watching for **${physicalManifestations[0]}** or **${physicalManifestations[1] || 'muscle tension'}**.`,
+    type: 'awareness' as const
+  };
+};

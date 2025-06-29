@@ -148,11 +148,11 @@ export default function JournalPage() {
               
               {/* View Toggle */}
               <ToggleGroup type="single" value={viewMode} onValueChange={(value) => setViewMode(value as 'list' | 'calendar')} className="hidden lg:flex">
-                <ToggleGroupItem value="list" className="flex-1">
+                <ToggleGroupItem value="list" className="flex-1 data-[state=on]:bg-indigo-100 data-[state=on]:text-indigo-700 data-[state=on]:border-indigo-300">
                   <List className="w-4 h-4 mr-2" />
                   List
                 </ToggleGroupItem>
-                <ToggleGroupItem value="calendar" className="flex-1">
+                <ToggleGroupItem value="calendar" className="flex-1 data-[state=on]:bg-indigo-100 data-[state=on]:text-indigo-700 data-[state=on]:border-indigo-300">
                   <CalendarIcon className="w-4 h-4 mr-2" />
                   Calendar
                 </ToggleGroupItem>
@@ -164,7 +164,7 @@ export default function JournalPage() {
                   variant={viewMode === 'list' ? 'default' : 'outline'} 
                   size="sm" 
                   onClick={() => setViewMode('list')}
-                  className="flex-1"
+                  className={`flex-1 ${viewMode === 'list' ? 'bg-indigo-600 hover:bg-indigo-700 text-white' : 'border-gray-300 text-gray-700 hover:bg-gray-50'}`}
                 >
                   <List className="w-4 h-4 mr-2" />
                   List
@@ -173,7 +173,7 @@ export default function JournalPage() {
                   variant={viewMode === 'calendar' ? 'default' : 'outline'} 
                   size="sm" 
                   onClick={() => setViewMode('calendar')}
-                  className="flex-1"
+                  className={`flex-1 ${viewMode === 'calendar' ? 'bg-indigo-600 hover:bg-indigo-700 text-white' : 'border-gray-300 text-gray-700 hover:bg-gray-50'}`}
                 >
                   <CalendarIcon className="w-4 h-4 mr-2" />
                   Calendar
@@ -252,25 +252,12 @@ export default function JournalPage() {
                     mode="single"
                     selected={selectedDate}
                     onSelect={setSelectedDate}
-                    className="w-full lg:w-auto"
+                    className="w-full lg:w-auto [&_.rdp-day_today]:bg-indigo-100 [&_.rdp-day_today]:text-indigo-700 [&_.rdp-day_today]:font-medium [&_.rdp-day_selected]:bg-indigo-600 [&_.rdp-day_selected]:text-white [&_.rdp-day_selected]:font-medium"
                     modifiers={{
                       hasEntry: getDatesWithEntries(),
                     }}
-                    modifiersStyles={{
-                      hasEntry: { 
-                        position: 'relative',
-                        '&::after': {
-                          content: '""',
-                          position: 'absolute',
-                          bottom: '2px',
-                          left: '50%',
-                          transform: 'translateX(-50%)',
-                          width: '4px',
-                          height: '4px',
-                          borderRadius: '50%',
-                          backgroundColor: '#3b82f6',
-                        }
-                      }
+                    modifiersClassNames={{
+                      hasEntry: "relative after:content-[''] after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:bg-blue-500 after:rounded-full"
                     }}
                   />
                   {selectedDate && getEntriesForDate(selectedDate).length > 0 && (
