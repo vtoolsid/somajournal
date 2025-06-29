@@ -223,15 +223,19 @@ export default function Home() {
             </div>
             
             <div className="space-y-8">
-              <h1 className="text-7xl font-semibold text-slate-800 leading-tight">
+              <h1 className="text-7xl font-medium text-slate-800 leading-tight">
                 Bridge the gap between{' '}
                 <span className="gradient-text-shine">
-                  mental and physical
+                  mental
+                </span>
+                {' '}and{' '}
+                <span className="gradient-text-shine">
+                  physical
                 </span>
                 {' '}health
               </h1>
               
-              <p className="text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-light">
                 A comprehensive wellness platform that connects your mind and body, 
                 helping you achieve holistic health through integrated mental and physical well-being practices.
               </p>

@@ -197,7 +197,7 @@
 }
 
 @layer components {
-  /* Animated Gradient Text with Shine Effect */
+  /* Animated Gradient Text with Subtle Shine Effect */
   .gradient-text-shine {
     background: linear-gradient(
       90deg,
@@ -210,11 +210,11 @@
       #8b5cf6 85%,
       #4f46e5 100%
     );
-    background-size: 300% 100%;
+    background-size: 200% 100%;
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: gradient-shine 4s ease-in-out infinite;
+    animation: gradient-shine 6s ease-in-out infinite;
     position: relative;
   }
   
@@ -228,10 +228,10 @@
     background: linear-gradient(
       90deg,
       transparent 0%,
-      rgba(255, 255, 255, 0.4) 50%,
+      rgba(255, 255, 255, 0.15) 50%,
       transparent 100%
     );
-    animation: shine-sweep 2.5s ease-in-out infinite;
+    animation: shine-sweep 4s ease-in-out infinite;
     z-index: 1;
     pointer-events: none;
   }
