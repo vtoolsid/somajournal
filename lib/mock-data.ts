@@ -181,7 +181,11 @@ export const physicalSymptoms = [
 
 // Real BERT Emotion Analysis Function - Powered by Adaptive Classifier
 export const analyzeJournalEntry = async (content: string) => {
+  console.log('🔍 analyzeJournalEntry called with content:', content.substring(0, 100) + '...');
+  
   try {
+    console.log('📡 Making API request to /api/analyze-emotion...');
+    
     // Call the Next.js API route which proxies to Python BERT server
     const response = await fetch('/api/analyze-emotion', {
       method: 'POST',
@@ -190,32 +194,43 @@ export const analyzeJournalEntry = async (content: string) => {
       },
       body: JSON.stringify({ 
         text: content,
-        debug: false 
+        debug: true  // Enable debug mode for troubleshooting
       }),
     });
 
+    console.log('📨 API response status:', response.status);
+    console.log('📨 API response headers:', Object.fromEntries(response.headers.entries()));
+
     if (!response.ok) {
-      console.error('Emotion analysis API error:', response.status);
-      throw new Error(`API error: ${response.status}`);
+      const errorText = await response.text();
+      console.error('❌ Emotion analysis API error:', response.status, errorText);
+      throw new Error(`API error: ${response.status} - ${errorText}`);
     }
 
     const analysis = await response.json();
+    console.log('📊 Raw API response:', analysis);
     
     if (analysis.status !== 'success') {
-      console.error('Analysis failed:', analysis.message);
+      console.error('❌ Analysis failed:', analysis.message);
       throw new Error(analysis.message || 'Analysis failed');
     }
 
     // Convert BERT analysis to SomaJournal format
     const emotions: Record<string, number> = {};
-    analysis.emotions.forEach((emotion: any) => {
-      emotions[emotion.emotion] = emotion.confidence;
-    });
+    if (analysis.emotions && Array.isArray(analysis.emotions)) {
+      analysis.emotions.forEach((emotion: any) => {
+        emotions[emotion.emotion] = emotion.confidence;
+      });
+      console.log('🎭 Processed emotions:', emotions);
+    } else {
+      console.warn('⚠️ No emotions array in response');
+    }
 
     // Use symptoms from BERT analysis
     const symptoms = analysis.symptoms || {};
+    console.log('🏥 Processed symptoms:', symptoms);
 
-    return {
+    const result = {
       emotions,
       symptoms,
       // Additional metadata from adaptive analysis
@@ -224,12 +239,18 @@ export const analyzeJournalEntry = async (content: string) => {
       adaptive_info: analysis.adaptive_info,
       fallback: analysis.fallback || false
     };
+    
+    console.log('✅ Final processed result:', result);
+    return result;
 
   } catch (error) {
-    console.error('Failed to analyze journal entry:', error);
+    console.error('❌ Failed to analyze journal entry:', error);
+    console.error('🔄 Falling back to keyword analysis...');
     
     // Fallback to simple keyword analysis if BERT server is unavailable
-    return fallbackAnalysis(content);
+    const fallbackResult = fallbackAnalysis(content);
+    console.log('🔄 Fallback result:', fallbackResult);
+    return fallbackResult;
   }
 };
 

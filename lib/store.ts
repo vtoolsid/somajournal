@@ -56,6 +56,7 @@ interface AppState {
   login: (user: User) => void;
   logout: () => void;
   addJournalEntry: (entry: Omit<JournalEntry, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  addJournalEntryWithoutClear: (entry: Omit<JournalEntry, 'id' | 'createdAt' | 'updatedAt'>) => void;
   updateCurrentEntry: (content: string) => void;
   addMoodEntry: (entry: Omit<MoodEntry, 'id'>) => void;
   toggleTheme: () => void;
@@ -86,6 +87,18 @@ export const useAppStore = create<AppState>()(
         set((state) => ({
           journalEntries: [newEntry, ...state.journalEntries],
           currentEntry: '',
+        }));
+      },
+
+      addJournalEntryWithoutClear: (entry) => {
+        const newEntry: JournalEntry = {
+          ...entry,
+          id: Math.random().toString(36).substr(2, 9),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+        set((state) => ({
+          journalEntries: [newEntry, ...state.journalEntries],
         }));
       },
       

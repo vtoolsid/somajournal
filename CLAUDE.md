@@ -4,63 +4,161 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Common Development Commands
 
-### Development Server
+### Full Stack Development (Recommended)
 ```bash
-npm run dev     # Start Next.js development server
-npm run build   # Build for production
-npm run start   # Start production server
-npm run lint    # Run ESLint
+npm run dev:full        # Start both Next.js + Python BERT server concurrently
+npm run dev            # Start Next.js development server only
+npm run dev:python     # Start Python BERT emotion analysis server only
 ```
 
-### Package Management
+### Production & Build
 ```bash
-npm install     # Install dependencies
+npm run build          # Build Next.js for production
+npm run start          # Start production server
+npm run lint           # Run ESLint
+```
+
+### Python Emotion Analysis Setup
+```bash
+cd training
+pip install -r requirements.txt  # Install Python dependencies
+git lfs pull                     # Download BERT model files (418MB)
+python api_server.py             # Start BERT server manually
+```
+
+### Git LFS Model Management
+```bash
+git lfs install        # Initialize Git LFS
+git lfs pull          # Download large model files
+git lfs ls-files      # View LFS-tracked files
 ```
 
 ## Architecture Overview
 
-This is a **Next.js 13.5.1** wellness journaling application built with:
+This is a **Next.js 13.5.1** wellness journaling application with integrated **BERT emotion analysis** built with:
 
-- **Framework**: Next.js (App Router) with TypeScript
-- **UI**: Radix UI components with Tailwind CSS and custom shadcn/ui components
-- **State Management**: Zustand with persistence for auth, journal entries, and mood tracking
-- **Styling**: Tailwind CSS with custom animations and theming
-- **Forms**: React Hook Form with Zod validation
+- **Frontend**: Next.js (App Router) with TypeScript, Radix UI, Tailwind CSS
+- **Backend**: Python Flask API serving trained BERT emotion classifier
+- **State Management**: Zustand with localStorage persistence
+- **Model**: Fine-tuned BERT on 58k GoEmotions dataset (28 emotions, 62% precision)
+- **Storage**: Git LFS for large model files (418MB)
+
+### Dual-Server Architecture
+
+**Frontend (Next.js - Port 3000)**:
+- React components with shadcn/ui design system
+- Real-time emotion preview as users type
+- Proxy API routes to Python backend
+- Graceful fallback to keyword analysis
+
+**Backend (Python Flask - Port 8000)**:
+- Serves adaptive BERT emotion classifier
+- Endpoints: `/analyze-emotion`, `/preview-analysis`, `/health`
+- Adaptive detection: 1-5 emotions based on text characteristics
+- CORS enabled for Next.js integration
 
 ### Key Architecture Patterns
 
-**App Structure**: Uses Next.js App Router with route-based pages in `/app/`:
-- Authentication routes: `/auth/login`, `/auth/signup`
-- Protected routes: `/dashboard`, `/journal`, `/karma`, `/onboarding`
-- Layout protection via `AppLayout` component that redirects unauthenticated users
+**Adaptive Emotion Detection**: Core innovation that dynamically adjusts based on text:
+- **Text Length**: Short (1 emotion) → Medium (2-3) → Long (4-5 emotions)
+- **Emotional Richness**: Density of emotional vocabulary affects threshold
+- **Complexity Scoring**: Multiple emotion types, contrasts, intensity amplifiers
+- **Strategy Selection**: "Focus on primary" vs "Comprehensive analysis"
 
-**State Management**: Centralized Zustand store in `lib/store.ts` handles:
-- User authentication state
-- Journal entries with karmic values (-1.0 to 1.0)
-- Mood entries with emotion tracking
-- Theme preferences
-- Automatic persistence to localStorage
+**Hybrid Analysis Pipeline**:
+```
+Journal Text → Real-time Preview → Next.js API → Python Flask → Adaptive BERT → Results
+             ↓                                                                    ↓
+         Live Feedback                                                     Full Analysis
+```
+
+**State Management Flow**:
+- `lib/store.ts`: Zustand store with interfaces for User, JournalEntry, MoodEntry
+- `lib/mock-data.ts`: Contains `analyzeJournalEntry()` function (now calls BERT API)
+- Journal entries store both emotions (confidence scores) and symptoms (boolean flags)
+- Automatic persistence to localStorage with optimistic updates
 
 **Component Architecture**:
-- Reusable UI components in `/components/ui/` following shadcn/ui patterns
-- Layout components in `/components/layout/`
-- Custom components like `KarmicAura`, `MandalaProgress`, `FloatingParticles`
+- `/app/journal/page.tsx`: Main journal interface with real-time emotion preview
+- `/components/ui/`: shadcn/ui components with wellness-specific extensions
+- `/components/layout/`: AppLayout with authentication protection
+- Custom wellness components: KarmicAura, MandalaProgress, FloatingParticles
 
-**Data Models**:
-- `JournalEntry`: Core content with karmic analysis, emotions, and psychosomatic symptoms
-- `MoodEntry`: Daily mood tracking (1-5 scale) with emotion tags
-- `User`: Basic auth model with timezone support
-- Emotion mapping to chakra system (root, sacral, solar, heart, throat, third-eye, crown)
+### BERT Model Integration
 
-**Path Aliasing**: Uses `@/*` for root-level imports (configured in tsconfig.json)
+**Model Details**:
+- **Architecture**: Fine-tuned bert-base-uncased on GoEmotions dataset
+- **Performance**: 62% precision baseline, 75-80% with threshold optimization
+- **Emotions**: 28 categories (joy, anger, sadness, excitement, etc.)
+- **Adaptive Logic**: Dynamic threshold adjustment (0.2-0.8 range)
+- **Storage**: Git LFS managed files in `training/models/bert_emotion_model/`
+
+**API Integration Pattern**:
+- **Primary**: Python Flask server with full BERT analysis
+- **Fallback**: Keyword-based analysis when Python server unavailable
+- **Preview**: Lightweight characteristics analysis without model inference
+- **Error Handling**: Graceful degradation with user-friendly feedback
+
+### Data Models & Emotion Mapping
+
+**Core Interfaces** (defined in `lib/store.ts`):
+```typescript
+interface JournalEntry {
+  emotions: Record<string, number>;      // BERT confidence scores
+  symptoms: Record<string, boolean>;     // Physical symptom mapping
+  analysis?: {                           // Adaptive metadata
+    text_type: 'quick_note' | 'short_entry' | 'medium_entry' | 'detailed_journal';
+    emotional_richness: 'low' | 'moderate' | 'high';
+    recommended_approach: string;
+    threshold_used: number;
+  };
+}
+```
+
+**Emotion-to-Symptom Mapping**: Emotions trigger physical symptoms (tension, headache, fatigue) based on psychological research patterns.
+
+**Chakra Integration**: Emotions categorized by energy centers for holistic wellness tracking.
+
+### Development Workflow
+
+**Standard Development**:
+1. Run `npm run dev:full` to start both servers
+2. Navigate to `/journal` route for emotion analysis testing
+3. Type varying text lengths to see adaptive behavior
+4. Submit entries to view full BERT analysis results
+
+**Python Model Development**:
+- `training/scripts/adaptive_classifier.py`: Core adaptive logic
+- `training/scripts/inference.py`: Base BERT classifier
+- `training/api_server.py`: Flask server with CORS
+- Model files managed via Git LFS (never commit large files directly)
+
+**Frontend Integration Points**:
+- `app/api/analyze-emotion/route.ts`: Proxy to Python with fallback
+- `lib/mock-data.ts`: `analyzeJournalEntry()` async function
+- Real-time preview with debounced API calls (500ms)
 
 ### Wellness-Specific Features
 
-- **Karmic Analysis**: Journal entries include karmic value calculation
-- **Emotion-Chakra Mapping**: Emotions are categorized by chakra centers
-- **Psychosomatic Tracking**: Boolean symptom tracking linked to journal entries
-- **Mood Visualization**: Mood trends with emotion correlation
+**Adaptive Detection Strategies**:
+- Quick notes (< 10 words): "Focus on primary emotion only"
+- Short entries (10-30 words): "Balanced emotion detection"  
+- Medium entries (30-100 words): "Comprehensive analysis"
+- Detailed journals (100+ words): "Full emotional landscape"
 
-### TypeScript Configuration
+**Real-time User Feedback**:
+- Live emotion count preview as user types
+- Strategy display: "Will detect 2 emotions • Short entry • Balanced detection"
+- Word count and complexity indicators
 
-Strict TypeScript enabled with Next.js plugin integration. All components use proper typing with interfaces for User, JournalEntry, MoodEntry, and Emotion models.
+**Comprehensive Analysis Display**:
+- Emotion confidence percentages
+- Physical symptom indicators
+- Adaptive reasoning (threshold used, text type, strategy)
+- Emotional density and complexity metrics
+
+### Path Aliasing & TypeScript
+
+- Uses `@/*` for root-level imports (configured in tsconfig.json)
+- Strict TypeScript with Next.js plugin integration
+- All wellness models properly typed with emotion and chakra mappings

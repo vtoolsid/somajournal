@@ -38,9 +38,9 @@ def initialize_classifier():
     global classifier
     
     try:
-        from training.scripts.adaptive_classifier import AdaptiveEmotionClassifier
+        from scripts.adaptive_classifier import AdaptiveEmotionClassifier
         
-        model_path = 'training/models/bert_emotion_model'
+        model_path = 'models/bert_emotion_model'
         if not os.path.exists(model_path):
             logger.error(f"Model not found at {model_path}")
             return False

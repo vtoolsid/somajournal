@@ -31,11 +31,13 @@ import {
 } from 'lucide-react';
 
 export default function JournalPage() {
-  const { currentEntry, updateCurrentEntry, addJournalEntry, user } = useAppStore();
+  const { currentEntry, updateCurrentEntry, addJournalEntry, addJournalEntryWithoutClear, user } = useAppStore();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysis, setAnalysis] = useState<any>(null);
   const [showCeremony, setShowCeremony] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState<any>(null);
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
+  const [showResults, setShowResults] = useState(false);
   const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [newTag, setNewTag] = useState('');
@@ -45,41 +47,66 @@ export default function JournalPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!currentEntry.trim()) return;
+    console.log('🚀 Reflect button clicked!');
+    console.log('📝 Current entry text:', currentEntry);
+    
+    if (!currentEntry.trim()) {
+      console.log('❌ No text entered, aborting submission');
+      return;
+    }
 
     // Prevent submission for future dates
     const entryDate = selectedDate || new Date();
     if (entryDate > new Date()) {
+      console.log('❌ Future date selected, aborting submission');
       return;
     }
 
+    console.log('⏳ Starting analysis process...');
     setIsAnalyzing(true);
     setShowCeremony(true);
 
     try {
+      console.log('🧠 Calling BERT emotion analysis...');
+      // Clear any previous errors
+      setAnalysisError(null);
+      
       // Use real BERT emotion analysis
       const analysisResult = await analyzeJournalEntry(currentEntry);
-      setAnalysis(analysisResult);
+      console.log('✅ Analysis completed:', analysisResult);
       
-      addJournalEntry({
+      setAnalysis(analysisResult);
+      setShowResults(true);
+      console.log('📊 Analysis state updated, showing results to user');
+      
+      const newEntry = {
         content: currentEntry,
         userId: user?.id || '',
         location: 'San Francisco, CA',
         weather: '☀️ 72°F',
         tags: tags,
         ...analysisResult,
-      });
+      };
+      
+      console.log('💾 Adding journal entry to store:', newEntry);
+      addJournalEntryWithoutClear(newEntry);
       
       setIsAnalyzing(false);
       setShowCeremony(false);
-      setSelectedEntry(null);
       setTags([]);
       setEmotionPreview(null);
+      console.log('🎉 Successfully completed journal entry submission - results displayed');
     } catch (error) {
-      console.error('Analysis failed:', error);
+      console.error('❌ Analysis failed with error:', error);
+      console.error('📍 Error details:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      });
       setIsAnalyzing(false);
       setShowCeremony(false);
-      // Could show error message to user here
+      setAnalysisError(error instanceof Error ? error.message : 'Analysis failed');
+      console.log('💥 Error state set, user will see error message');
     }
   };
 
@@ -92,6 +119,17 @@ export default function JournalPage() {
 
   const removeTag = (tagToRemove: string) => {
     setTags(tags.filter(tag => tag !== tagToRemove));
+  };
+
+  const startNewEntry = () => {
+    console.log('🆕 Starting new journal entry');
+    setShowResults(false);
+    setAnalysis(null);
+    setAnalysisError(null);
+    setSelectedEntry(null);
+    updateCurrentEntry('');
+    setTags([]);
+    setEmotionPreview(null);
   };
 
   // Real-time emotion preview as user types
@@ -676,6 +714,152 @@ export default function JournalPage() {
                       </Button>
                     </div>
                   </form>
+
+                  {/* Analysis Results Display */}
+                  {showResults && analysis && (
+                    <div className="mt-8">
+                      <div className="border-t pt-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-lg font-semibold text-gray-800 flex items-center">
+                            <Sparkles className="w-5 h-5 mr-2 text-green-600" />
+                            Your Reflection Analysis
+                            {analysis.fallback && (
+                              <Badge variant="secondary" className="text-xs ml-2">Fallback Mode</Badge>
+                            )}
+                          </h3>
+                          <Button 
+                            onClick={startNewEntry}
+                            variant="outline"
+                            size="sm"
+                            className="border-green-200 text-green-700 hover:bg-green-50"
+                          >
+                            New Entry
+                          </Button>
+                        </div>
+
+                        <div className="bg-gradient-to-br from-green-50 via-white to-emerald-50 border border-green-200 rounded-lg p-6">
+                          <div className="space-y-6">
+                            {/* Emotions Display */}
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                              <div>
+                                <p className="text-sm font-medium text-gray-700 mb-3">Detected Emotions</p>
+                                <div className="space-y-2">
+                                  {Object.entries(analysis.emotions).map(([emotion, confidence]) => (
+                                    <div key={emotion} className="flex items-center justify-between p-2 bg-white rounded border border-green-100">
+                                      <Badge variant="outline" className="text-sm">
+                                        {emotion}
+                                      </Badge>
+                                      <span className="text-sm font-medium text-gray-600">
+                                        {typeof confidence === 'number' ? `${(confidence * 100).toFixed(0)}%` : 'detected'}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                              
+                              <div>
+                                <p className="text-sm font-medium text-gray-700 mb-3">Physical Symptoms</p>
+                                <div className="space-y-1">
+                                  {Object.entries(analysis.symptoms || {}).map(([symptom, present]) => (
+                                    <div key={symptom} className="flex items-center space-x-2 p-2 bg-white rounded border border-green-100">
+                                      <div className={`w-2 h-2 rounded-full ${present ? 'bg-red-400' : 'bg-gray-200'}`} />
+                                      <span className={`text-sm ${present ? 'text-gray-700 font-medium' : 'text-gray-400'}`}>
+                                        {symptom.replace('_', ' ')}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Adaptive Analysis Info */}
+                            {analysis.analysis && (
+                              <div className="border-t border-green-200 pt-4">
+                                <p className="text-sm font-medium text-gray-700 mb-3">Adaptive Analysis</p>
+                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 text-sm">
+                                  <div className="p-3 bg-white rounded border border-green-100">
+                                    <p className="text-gray-600">Text Type</p>
+                                    <p className="font-medium text-gray-800 capitalize">
+                                      {analysis.analysis.text_type?.replace('_', ' ')}
+                                    </p>
+                                  </div>
+                                  <div className="p-3 bg-white rounded border border-green-100">
+                                    <p className="text-gray-600">Emotional Richness</p>
+                                    <p className="font-medium text-gray-800 capitalize">
+                                      {analysis.analysis.emotional_richness}
+                                    </p>
+                                  </div>
+                                  <div className="p-3 bg-white rounded border border-green-100">
+                                    <p className="text-gray-600">Strategy Used</p>
+                                    <p className="font-medium text-gray-800">
+                                      {analysis.analysis.recommended_approach}
+                                    </p>
+                                  </div>
+                                </div>
+                                
+                                {analysis.characteristics && (
+                                  <div className="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-2 text-sm">
+                                    <div className="p-2 bg-white rounded border border-green-100">
+                                      <p className="text-gray-600">Word Count</p>
+                                      <p className="font-medium">{analysis.characteristics.word_count || analysis.analysis.word_count}</p>
+                                    </div>
+                                    <div className="p-2 bg-white rounded border border-green-100">
+                                      <p className="text-gray-600">Threshold</p>
+                                      <p className="font-medium">{analysis.analysis.threshold_used || 'N/A'}</p>
+                                    </div>
+                                    <div className="p-2 bg-white rounded border border-green-100">
+                                      <p className="text-gray-600">Max Emotions</p>
+                                      <p className="font-medium">{analysis.analysis.max_emotions || 'N/A'}</p>
+                                    </div>
+                                    <div className="p-2 bg-white rounded border border-green-100">
+                                      <p className="text-gray-600">Complexity</p>
+                                      <p className="font-medium">
+                                        {analysis.characteristics.complexity_score ? 
+                                          (analysis.characteristics.complexity_score * 100).toFixed(0) + '%' : 'N/A'}
+                                      </p>
+                                    </div>
+                                  </div>
+                                )}
+
+                                {analysis.adaptive_info && (
+                                  <div className="mt-3 p-3 bg-green-100 rounded border border-green-200 text-sm">
+                                    <p className="text-green-800">
+                                      <span className="font-medium">Strategy:</span> {analysis.adaptive_info.reasoning}
+                                    </p>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Error Display */}
+                  {analysisError && (
+                    <div className="mt-8">
+                      <div className="border-t pt-6">
+                        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                          <div className="flex items-center">
+                            <div className="w-4 h-4 bg-red-400 rounded-full mr-3"></div>
+                            <div>
+                              <h3 className="text-sm font-medium text-red-800">Analysis Failed</h3>
+                              <p className="text-sm text-red-700 mt-1">{analysisError}</p>
+                            </div>
+                          </div>
+                          <Button 
+                            onClick={startNewEntry}
+                            variant="outline"
+                            size="sm"
+                            className="mt-3 border-red-200 text-red-700 hover:bg-red-50"
+                          >
+                            Try Again
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}

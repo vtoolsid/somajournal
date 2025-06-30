@@ -3,11 +3,19 @@ import { NextRequest, NextResponse } from 'next/server';
 const PYTHON_API_URL = process.env.PYTHON_API_URL || 'http://localhost:8000';
 
 export async function POST(request: NextRequest) {
+  console.log('🔄 Next.js API route /api/analyze-emotion called');
+  
+  let body: any;
+  let requestText = '';
+  
   try {
-    // Parse the request body
-    const body = await request.json();
+    // Parse the request body once and store it
+    body = await request.json();
+    requestText = body.text || '';
+    console.log('📥 Request body received:', { text: requestText.substring(0, 50) + '...', debug: body.debug });
     
     if (!body.text || typeof body.text !== 'string') {
+      console.log('❌ Invalid text field in request');
       return NextResponse.json(
         { 
           status: 'error', 
@@ -18,7 +26,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Forward request to Python API server
+    console.log(`🐍 Forwarding to Python server: ${PYTHON_API_URL}/analyze-emotion`);
+    
+    // Forward request to Python API server with timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    
     const response = await fetch(`${PYTHON_API_URL}/analyze-emotion`, {
       method: 'POST',
       headers: {
@@ -28,7 +41,22 @@ export async function POST(request: NextRequest) {
         text: body.text,
         debug: body.debug || false
       }),
+      signal: controller.signal
+    }).catch(error => {
+      console.error('🌐 Network error connecting to Python server:', error.message);
+      return null;
     });
+    
+    clearTimeout(timeoutId);
+
+    if (!response) {
+      console.log('⚠️ Python server not reachable, using fallback');
+      const fallbackResult = createFallbackAnalysis(requestText);
+      console.log('✅ Returning fallback analysis:', fallbackResult);
+      return NextResponse.json(fallbackResult, { status: 200 });
+    }
+
+    console.log('🐍 Python server response status:', response.status);
 
     if (!response.ok) {
       // Handle Python server errors
@@ -36,25 +64,43 @@ export async function POST(request: NextRequest) {
       try {
         const errorData = await response.json();
         errorMessage = errorData.message || errorMessage;
+        console.log('🐍 Python server error data:', errorData);
       } catch {
         // If we can't parse error, use generic message
+        console.log('🐍 Could not parse Python server error response');
       }
 
-      console.error(`Python API error (${response.status}): ${errorMessage}`);
+      console.error(`❌ Python API error (${response.status}): ${errorMessage}`);
+      console.log('🔄 Falling back to keyword analysis...');
       
       // Return fallback analysis if Python server is down
-      return NextResponse.json(createFallbackAnalysis(body.text), { status: 200 });
+      const fallbackResult = createFallbackAnalysis(requestText);
+      console.log('✅ Returning fallback analysis:', fallbackResult);
+      return NextResponse.json(fallbackResult, { status: 200 });
     }
 
     const analysisResult = await response.json();
+    console.log('✅ Python server analysis result:', analysisResult);
+    console.log('📤 Returning analysis to frontend');
     return NextResponse.json(analysisResult);
 
   } catch (error) {
-    console.error('Emotion analysis API error:', error);
+    console.error('❌ Next.js API route error:', error);
     
-    // Return fallback analysis on any error
-    const body = await request.json().catch(() => ({ text: '' }));
-    return NextResponse.json(createFallbackAnalysis(body.text || ''));
+    // For static generation bailout, return a simple error response
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'NEXT_STATIC_GEN_BAILOUT') {
+      console.log('⚠️ Static generation bailout - this is normal during build');
+      return NextResponse.json({
+        status: 'error',
+        message: 'API not available during static generation',
+        code: 'STATIC_GEN'
+      }, { status: 503 });
+    }
+    
+    // Use the text we already parsed or empty string for fallback
+    const fallbackResult = createFallbackAnalysis(requestText || '');
+    console.log('🔄 Returning fallback due to API route error:', fallbackResult);
+    return NextResponse.json(fallbackResult);
   }
 }
 
