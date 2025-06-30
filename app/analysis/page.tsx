@@ -49,8 +49,9 @@ export default function AnalysisPage() {
         <div className="relative z-10 p-6 lg:p-8">
           <div className="max-w-7xl mx-auto">
             
-            {/* Header Section with Glassmorphic Design */}
-            <div className="text-center mb-8 lg:mb-12 fade-enter">
+            {/* Header Section with Enhanced Glassmorphic Design */}
+            <div className="relative text-center mb-8 lg:mb-12 fade-enter">
+              <div className="absolute inset-0 bg-gradient-to-br from-green-400/15 via-emerald-400/8 to-green-500/15 rounded-3xl blur-2xl"></div>
               <div className="mb-6">
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full mb-4 breathing-element">
                   <Brain className="w-8 h-8 text-green-600" />
@@ -62,9 +63,10 @@ export default function AnalysisPage() {
                   Industry-standard insights into your mental and physical wellness patterns
                 </p>
                 
-                {/* Analysis Status Cards */}
-                <div className="flex flex-wrap items-center justify-center gap-4 mt-6">
-                  <div className="bg-white/60 backdrop-blur-sm border border-green-200/50 rounded-lg px-4 py-2 shadow-sm">
+                {/* Analysis Status Cards - Enhanced Glassmorphic */}
+                <div className="relative flex flex-wrap items-center justify-center gap-4 mt-6">
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-300/10 via-emerald-300/5 to-green-400/10 rounded-2xl blur-lg"></div>
+                  <div className="relative bg-white/70 backdrop-blur-md border border-green-200/50 rounded-xl px-4 py-3 shadow-lg hover:shadow-xl transition-all duration-300">
                     <div className="flex items-center space-x-2">
                       <BarChart3 className="w-4 h-4 text-green-600" />
                       <span className="text-sm font-medium text-slate-700">
@@ -72,7 +74,7 @@ export default function AnalysisPage() {
                       </span>
                     </div>
                   </div>
-                  <div className="bg-white/60 backdrop-blur-sm border border-emerald-200/50 rounded-lg px-4 py-2 shadow-sm">
+                  <div className="relative bg-white/70 backdrop-blur-md border border-emerald-200/50 rounded-xl px-4 py-3 shadow-lg hover:shadow-xl transition-all duration-300">
                     <div className="flex items-center space-x-2">
                       <TrendingUp className="w-4 h-4 text-emerald-600" />
                       <span className="text-sm font-medium text-slate-700">
@@ -80,7 +82,7 @@ export default function AnalysisPage() {
                       </span>
                     </div>
                   </div>
-                  <div className="bg-white/60 backdrop-blur-sm border border-teal-200/50 rounded-lg px-4 py-2 shadow-sm">
+                  <div className="relative bg-white/70 backdrop-blur-md border border-teal-200/50 rounded-xl px-4 py-3 shadow-lg hover:shadow-xl transition-all duration-300">
                     <div className="flex items-center space-x-2">
                       <Heart className="w-4 h-4 text-teal-600" />
                       <span className="text-sm font-medium text-slate-700">
@@ -91,10 +93,12 @@ export default function AnalysisPage() {
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Main Analysis Section */}
+            {/* Main Analysis Section - Enhanced Glassmorphic */}
             {recentEntry ? (
-              <div className="mb-8">
+              <div className="relative mb-8">
+                <div className="absolute inset-0 bg-gradient-to-br from-green-300/10 via-emerald-300/5 to-green-400/10 rounded-3xl blur-xl"></div>
                 <PsychosomaticInsights 
                   emotions={emotions}
                   psychosomaticData={recentEntry.psychosomatic || {
@@ -105,8 +109,10 @@ export default function AnalysisPage() {
                 />
               </div>
             ) : (
-              /* No Data State */
-              <Card className="wellness-card border-2 border-green-200 hover:border-green-300 transition-all duration-300">
+              /* No Data State - Enhanced Glassmorphic */
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-green-300/15 via-emerald-300/8 to-green-400/15 rounded-3xl blur-xl"></div>
+                <Card className="relative wellness-card bg-white/60 backdrop-blur-md border-2 border-green-200/50 hover:border-green-300/60 transition-all duration-300 rounded-2xl shadow-xl">
                 <CardContent className="flex flex-col items-center justify-center py-16 text-center">
                   <div className="mb-6">
                     <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center mb-4 breathing-element">
@@ -130,12 +136,14 @@ export default function AnalysisPage() {
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </Button>
                 </CardContent>
-              </Card>
+                </Card>
+              </div>
             )}
 
-            {/* Additional Analysis Tools - Future Enhancement */}
-            <div className="mt-12 text-center">
-              <div className="bg-white/40 backdrop-blur-sm border border-gray-200/50 rounded-xl p-6 shadow-sm">
+            {/* Additional Analysis Tools - Enhanced Glassmorphic */}
+            <div className="relative mt-12 text-center">
+              <div className="absolute inset-0 bg-gradient-to-br from-slate-300/10 via-gray-300/5 to-slate-400/10 rounded-2xl blur-lg"></div>
+              <div className="relative bg-white/50 backdrop-blur-md border border-gray-200/40 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
                 <p className="text-sm text-slate-500 mb-2">
                   <Sparkles className="w-4 h-4 inline mr-1" />
                   Powered by advanced BERT emotion analysis and evidence-based psychosomatic research

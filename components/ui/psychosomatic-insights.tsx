@@ -128,9 +128,11 @@ export function PsychosomaticInsights({
 
   return (
     <div className={`space-y-6 ${className}`}>
-      {/* Header with credibility indicators */}
-      <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
-        <CardHeader>
+      {/* Header with credibility indicators - Enhanced Glassmorphic */}
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 via-emerald-400/10 to-green-500/20 rounded-3xl blur-xl"></div>
+        <Card className="relative bg-white/60 backdrop-blur-lg border border-green-200/50 rounded-2xl shadow-xl">
+          <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
@@ -166,11 +168,14 @@ export function PsychosomaticInsights({
             </div>
           </div>
         </CardHeader>
-      </Card>
+        </Card>
+      </div>
 
       {/* Main Analysis Tabs */}
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-        <TabsList className="grid w-full grid-cols-4 bg-white/60 backdrop-blur-sm border border-green-200/50 rounded-xl p-1 shadow-lg">
+        <div className="relative mb-6">
+          <div className="absolute inset-0 bg-gradient-to-r from-green-400/10 via-emerald-400/5 to-green-500/10 rounded-2xl blur-lg"></div>
+          <TabsList className="relative grid w-full grid-cols-4 bg-white/70 backdrop-blur-md border border-green-200/50 rounded-2xl p-2 shadow-xl">
           <TabsTrigger 
             value="overview" 
             className="flex items-center space-x-2 text-slate-700 font-medium data-[state=active]:bg-white data-[state=active]:text-green-700 data-[state=active]:shadow-md rounded-lg transition-all duration-200 hover:text-green-600"
@@ -199,11 +204,14 @@ export function PsychosomaticInsights({
             <Sparkles className="w-4 h-4" />
             <span>Analysis</span>
           </TabsTrigger>
-        </TabsList>
+          </TabsList>
+        </div>
 
         <TabsContent value="overview" className="space-y-4">
-          {/* Psychosomatic Overview */}
-          <Card>
+          {/* Psychosomatic Overview - Enhanced Glass Design */}
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-300/10 via-emerald-300/5 to-green-400/10 rounded-2xl blur-lg"></div>
+            <Card className="relative bg-white/60 backdrop-blur-md border border-green-200/40 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Brain className="w-5 h-5 text-blue-600" />
@@ -238,11 +246,14 @@ export function PsychosomaticInsights({
                 </div>
               )}
             </CardContent>
-          </Card>
+            </Card>
+          </div>
 
-          {/* Emotion Breakdown */}
+          {/* Emotion Breakdown - Enhanced Glass Design */}
           {emotions && emotions.length > 0 && (
-            <Card>
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-300/10 via-green-300/5 to-emerald-400/10 rounded-2xl blur-lg"></div>
+              <Card className="relative bg-white/60 backdrop-blur-md border border-emerald-200/40 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Zap className="w-5 h-5 text-orange-600" />
@@ -273,7 +284,8 @@ export function PsychosomaticInsights({
                   ))}
                 </div>
               </CardContent>
-            </Card>
+              </Card>
+            </div>
           )}
         </TabsContent>
 
@@ -283,9 +295,11 @@ export function PsychosomaticInsights({
             psychosomaticData={psychosomaticData}
           />
           
-          {/* Body Regions Details */}
+          {/* Body Regions Details - Enhanced Glass Design */}
           {psychosomaticData.psychosomatic_analysis?.primary_regions && (
-            <Card>
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-red-300/10 via-orange-300/5 to-red-400/10 rounded-2xl blur-lg"></div>
+              <Card className="relative bg-white/60 backdrop-blur-md border border-red-200/40 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Target className="w-5 h-5 text-red-600" />
@@ -305,12 +319,15 @@ export function PsychosomaticInsights({
                   ))}
                 </div>
               </CardContent>
-            </Card>
+              </Card>
+            </div>
           )}
         </TabsContent>
 
         <TabsContent value="wellness" className="space-y-4">
-          <Card>
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-300/10 via-emerald-300/5 to-green-400/10 rounded-2xl blur-lg"></div>
+            <Card className="relative bg-white/60 backdrop-blur-md border border-green-200/40 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Target className="w-5 h-5 text-green-600" />
@@ -396,7 +413,8 @@ export function PsychosomaticInsights({
                 )}
               </Accordion>
             </CardContent>
-          </Card>
+            </Card>
+          </div>
         </TabsContent>
 
         <TabsContent value="insights" className="space-y-6">
@@ -575,7 +593,7 @@ export function PsychosomaticInsights({
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-white/70 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4 border border-green-200/50">
+                  <div className="w-16 h-16 bg-white/70 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4 border border-green-200/50 breathing-element">
                     <Database className="w-8 h-8 text-green-600" />
                   </div>
                   <h4 className="font-semibold text-slate-700 mb-2">BERT-Powered</h4>
@@ -585,7 +603,7 @@ export function PsychosomaticInsights({
                 </div>
                 
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-white/70 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4 border border-emerald-200/50">
+                  <div className="w-16 h-16 bg-white/70 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4 border border-emerald-200/50 breathing-element">
                     <Activity className="w-8 h-8 text-emerald-600" />
                   </div>
                   <h4 className="font-semibold text-slate-700 mb-2">Evidence-Based</h4>
@@ -595,7 +613,7 @@ export function PsychosomaticInsights({
                 </div>
                 
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-white/70 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4 border border-green-200/50">
+                  <div className="w-16 h-16 bg-white/70 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4 border border-green-200/50 breathing-element">
                     <Sparkles className="w-8 h-8 text-green-600" />
                   </div>
                   <h4 className="font-semibold text-slate-700 mb-2">

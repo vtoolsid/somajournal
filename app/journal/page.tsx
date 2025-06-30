@@ -296,31 +296,63 @@ export default function JournalPage() {
               <BreathingLoader 
                 message={
                   analysisPhase === 'analyzing' 
-                    ? "Analyzing your emotions..." 
+                    ? "Centering your thoughts..." 
                     : analysisPhase === 'processing'
                     ? "Discovering emotional patterns..."
                     : analysisPhase === 'preparing'
-                    ? "Preparing your reflection..."
+                    ? "Preparing your insights..."
                     : "Your words are being analyzed with care..."
                 } 
               />
             </div>
             
-            {/* Progress Indicator */}
-            <div className="flex justify-center space-x-2 mb-4">
-              <div className={`w-2 h-2 rounded-full transition-all duration-500 ${
-                analysisPhase ? 'bg-green-600' : 'bg-gray-300'
-              }`} />
-              <div className={`w-2 h-2 rounded-full transition-all duration-500 ${
-                analysisPhase === 'processing' || analysisPhase === 'preparing' ? 'bg-green-600' : 'bg-gray-300'
-              }`} />
-              <div className={`w-2 h-2 rounded-full transition-all duration-500 ${
-                analysisPhase === 'preparing' ? 'bg-green-600' : 'bg-gray-300'
-              }`} />
+            {/* Enhanced Progress Indicator with Wellness Themes */}
+            <div className="flex items-center justify-center space-x-8 mb-6">
+              {/* Phase 1: Centering */}
+              <div className="flex flex-col items-center space-y-2">
+                <div className={`w-4 h-4 rounded-full transition-all duration-500 flex items-center justify-center ${
+                  analysisPhase ? 'bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg scale-110' : 'bg-gray-300'
+                }`}>
+                  {analysisPhase && (
+                    <div className="w-2 h-2 bg-white rounded-full breathing-element"></div>
+                  )}
+                </div>
+                <span className={`text-xs font-medium transition-all duration-500 ${
+                  analysisPhase ? 'text-green-700' : 'text-gray-400'
+                }`}>Centering</span>
+              </div>
+              
+              {/* Phase 2: Analyzing */}
+              <div className="flex flex-col items-center space-y-2">
+                <div className={`w-4 h-4 rounded-full transition-all duration-500 flex items-center justify-center ${
+                  analysisPhase === 'processing' || analysisPhase === 'preparing' ? 'bg-gradient-to-br from-emerald-500 to-green-600 shadow-lg scale-110' : 'bg-gray-300'
+                }`}>
+                  {(analysisPhase === 'processing' || analysisPhase === 'preparing') && (
+                    <div className="w-2 h-2 bg-white rounded-full breathing-element"></div>
+                  )}
+                </div>
+                <span className={`text-xs font-medium transition-all duration-500 ${
+                  analysisPhase === 'processing' || analysisPhase === 'preparing' ? 'text-emerald-700' : 'text-gray-400'
+                }`}>Patterns</span>
+              </div>
+              
+              {/* Phase 3: Insights */}
+              <div className="flex flex-col items-center space-y-2">
+                <div className={`w-4 h-4 rounded-full transition-all duration-500 flex items-center justify-center ${
+                  analysisPhase === 'preparing' ? 'bg-gradient-to-br from-green-600 to-emerald-700 shadow-lg scale-110' : 'bg-gray-300'
+                }`}>
+                  {analysisPhase === 'preparing' && (
+                    <div className="w-2 h-2 bg-white rounded-full breathing-element"></div>
+                  )}
+                </div>
+                <span className={`text-xs font-medium transition-all duration-500 ${
+                  analysisPhase === 'preparing' ? 'text-green-700' : 'text-gray-400'
+                }`}>Insights</span>
+              </div>
             </div>
             
-            {/* Preview Emotions */}
-            {previewEmotions.length > 0 && analysisPhase !== 'analyzing' && (
+            {/* Preview Emotions - Hidden during analysis to maintain professional appearance */}
+            {false && previewEmotions.length > 0 && analysisPhase !== 'analyzing' && (
               <div className="mt-8 animate-fade-in">
                 <p className="text-sm text-gray-600 mb-3">Detecting emotions...</p>
                 <div className="flex justify-center space-x-2">
@@ -501,36 +533,145 @@ export default function JournalPage() {
                             }}
                           />
                           
-                          {/* Show entries for selected date if it's in this month */}
+                          {/* Day One-inspired day view for selected date */}
                           {selectedDate && 
                            selectedDate.getMonth() === currentMonth.getMonth() && 
-                           selectedDate.getFullYear() === currentMonth.getFullYear() && 
-                           getEntriesForDate(selectedDate).length > 0 && (
-                            <div className="space-y-2 px-2">
-                              <h3 className="text-sm font-medium text-gray-700">
-                                Entries for {selectedDate.toLocaleDateString()}
-                              </h3>
-                              {getEntriesForDate(selectedDate).map((entry) => (
-                                <Card 
-                                  key={entry.id} 
-                                  className={`cursor-pointer transition-all hover:shadow-md ${
-                                    selectedEntry?.id === entry.id 
-                                      ? 'ring-2 ring-green-500 bg-green-50 hover:bg-green-100' 
-                                      : 'hover:bg-gray-50'
-                                  }`}
-                                  onClick={() => setSelectedEntry(entry)}
-                                >
-                                  <CardContent className="p-3">
-                                    <p className={`text-sm line-clamp-2 ${
-                                      selectedEntry?.id === entry.id 
-                                        ? '!text-green-800 hover:!text-green-900' 
-                                        : 'text-gray-700 hover:text-gray-800'
-                                    }`}>
-                                      {entry.content}
-                                    </p>
-                                  </CardContent>
-                                </Card>
-                              ))}
+                           selectedDate.getFullYear() === currentMonth.getFullYear() && (
+                            <div className="px-2 pb-4">
+                              {(() => {
+                                const dayEntries = getEntriesForDate(selectedDate);
+                                const isToday = selectedDate.toDateString() === new Date().toDateString();
+                                const dayName = selectedDate.toLocaleDateString('en-US', { weekday: 'long' });
+                                const dateStr = selectedDate.toLocaleDateString('en-US', { 
+                                  month: 'long', 
+                                  day: 'numeric',
+                                  year: 'numeric'
+                                });
+
+                                return (
+                                  <div className="space-y-4">
+                                    {/* Day Header - Day One Style */}
+                                    <div className="border-b border-gray-100 pb-3">
+                                      <div className="flex items-center justify-between">
+                                        <div>
+                                          <h2 className="text-lg font-semibold text-gray-800">
+                                            {isToday ? 'Today' : dayName}
+                                          </h2>
+                                          <p className="text-sm text-gray-500">{dateStr}</p>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                          {dayEntries.length > 0 && (
+                                            <Badge variant="outline" className="text-xs">
+                                              {dayEntries.length} {dayEntries.length === 1 ? 'entry' : 'entries'}
+                                            </Badge>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    {/* Entries or Empty State */}
+                                    {dayEntries.length > 0 ? (
+                                      <div className="space-y-3">
+                                        {dayEntries.map((entry, index) => (
+                                          <Card 
+                                            key={entry.id}
+                                            className={`cursor-pointer transition-all duration-200 border-l-4 ${
+                                              selectedEntry?.id === entry.id 
+                                                ? 'border-l-green-500 bg-green-50 hover:bg-green-100 shadow-md' 
+                                                : 'border-l-gray-200 hover:border-l-green-300 hover:bg-gray-50 hover:shadow-sm'
+                                            }`}
+                                            onClick={() => setSelectedEntry(entry)}
+                                          >
+                                            <CardContent className="p-4">
+                                              <div className="flex items-start justify-between mb-2">
+                                                <div className="flex items-center space-x-2">
+                                                  <div className={`w-2 h-2 rounded-full ${getEmotionDotColor(entry.emotions)}`} />
+                                                  <span className="text-xs text-gray-500 font-medium">
+                                                    {new Date(entry.createdAt).toLocaleTimeString('en-US', { 
+                                                      hour: 'numeric', 
+                                                      minute: '2-digit'
+                                                    })}
+                                                  </span>
+                                                </div>
+                                                {entry.tags && entry.tags.length > 0 && (
+                                                  <div className="flex space-x-1">
+                                                    {entry.tags.slice(0, 2).map((tag) => (
+                                                      <Badge key={tag} variant="secondary" className="text-xs px-1.5 py-0.5">
+                                                        {tag}
+                                                      </Badge>
+                                                    ))}
+                                                    {entry.tags.length > 2 && (
+                                                      <Badge variant="secondary" className="text-xs px-1.5 py-0.5">
+                                                        +{entry.tags.length - 2}
+                                                      </Badge>
+                                                    )}
+                                                  </div>
+                                                )}
+                                              </div>
+                                              <p className={`text-sm leading-relaxed line-clamp-3 ${
+                                                selectedEntry?.id === entry.id 
+                                                  ? 'text-green-800' 
+                                                  : 'text-gray-700'
+                                              }`}>
+                                                {entry.content}
+                                              </p>
+                                              {entry.location && (
+                                                <div className="flex items-center space-x-1 mt-2 text-xs text-gray-500">
+                                                  <MapPin className="w-3 h-3" />
+                                                  <span>{entry.location}</span>
+                                                </div>
+                                              )}
+                                            </CardContent>
+                                          </Card>
+                                        ))}
+                                      </div>
+                                    ) : (
+                                      /* Empty State - Day One Style */
+                                      <div className="text-center py-8 px-4">
+                                        <div className="mb-4">
+                                          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                            <Feather className="w-6 h-6 text-gray-400" />
+                                          </div>
+                                          <h3 className="text-sm font-medium text-gray-700 mb-1">
+                                            No entries for this day
+                                          </h3>
+                                          <p className="text-xs text-gray-500 leading-relaxed">
+                                            {isToday 
+                                              ? "Start writing about your day, thoughts, or feelings." 
+                                              : "No journal entries were created on this date."
+                                            }
+                                          </p>
+                                        </div>
+                                        
+                                        {/* Add Entry Button - Only for today or past dates */}
+                                        {selectedDate <= new Date() && (
+                                          <Button
+                                            onClick={() => {
+                                              setSelectedEntry(null);
+                                              setSelectedDate(selectedDate);
+                                              setViewMode('list'); // Switch back to editor view
+                                              updateCurrentEntry(''); // Clear any existing text
+                                              console.log('📝 Starting new entry for selected date:', selectedDate);
+                                            }}
+                                            className="bg-green-600 hover:bg-green-700 text-white shadow-sm transition-all hover:scale-105"
+                                            size="sm"
+                                          >
+                                            <Feather className="w-4 h-4 mr-2" />
+                                            {isToday ? 'Start Writing' : 'Add Entry'}
+                                          </Button>
+                                        )}
+                                        
+                                        {/* Future date message */}
+                                        {selectedDate > new Date() && (
+                                          <p className="text-xs text-amber-600 mt-2">
+                                            You can only create entries for today or past dates.
+                                          </p>
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })()}
                             </div>
                           )}
                         </div>
