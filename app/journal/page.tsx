@@ -38,6 +38,8 @@ export default function JournalPage() {
   const [selectedEntry, setSelectedEntry] = useState<any>(null);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [showResults, setShowResults] = useState(false);
+  const [analysisPhase, setAnalysisPhase] = useState<'analyzing' | 'processing' | 'preparing' | null>(null);
+  const [previewEmotions, setPreviewEmotions] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [newTag, setNewTag] = useState('');
@@ -65,15 +67,62 @@ export default function JournalPage() {
     console.log('⏳ Starting analysis process...');
     setIsAnalyzing(true);
     setShowCeremony(true);
+    setAnalysisPhase('analyzing');
+    setPreviewEmotions([]);
+    setAnalysisError(null);
+
+    // Phase 1: Initial Analysis (2-3 seconds)
+    setTimeout(() => {
+      setAnalysisPhase('processing');
+      console.log('📊 Moving to processing phase...');
+    }, 2500);
+
+    // Phase 2: Processing (show preview emotions)
+    setTimeout(() => {
+      // Extract some preview emotions from the text (simple keywords for preview)
+      const possibleEmotions = ['joy', 'gratitude', 'peace', 'excitement', 'hope', 'love'];
+      const textLower = currentEntry.toLowerCase();
+      const detected = possibleEmotions.filter(emotion => 
+        textLower.includes(emotion) || 
+        (emotion === 'joy' && textLower.includes('happy')) ||
+        (emotion === 'gratitude' && textLower.includes('grateful'))
+      ).slice(0, 3);
+      
+      if (detected.length === 0) {
+        // Default preview emotions based on positivity
+        const hasPositiveWords = ['good', 'great', 'wonderful', 'amazing', 'love'].some(word => textLower.includes(word));
+        detected.push(hasPositiveWords ? 'joy' : 'contemplation');
+      }
+      
+      setPreviewEmotions(detected);
+      console.log('🎭 Preview emotions:', detected);
+    }, 3500);
+
+    // Phase 3: Preparing Results
+    setTimeout(() => {
+      setAnalysisPhase('preparing');
+      console.log('📋 Preparing results...');
+    }, 5500);
 
     try {
       console.log('🧠 Calling BERT emotion analysis...');
-      // Clear any previous errors
-      setAnalysisError(null);
+      
+      // Ensure minimum ceremony duration
+      const startTime = Date.now();
       
       // Use real BERT emotion analysis
       const analysisResult = await analyzeJournalEntry(currentEntry);
       console.log('✅ Analysis completed:', analysisResult);
+      
+      // Calculate remaining wait time to ensure minimum 7 seconds total
+      const elapsedTime = Date.now() - startTime;
+      const remainingWait = Math.max(0, 7000 - elapsedTime);
+      
+      // Wait for remaining time if needed
+      if (remainingWait > 0) {
+        console.log(`⏱️ Waiting ${remainingWait}ms for ceremony completion...`);
+        await new Promise(resolve => setTimeout(resolve, remainingWait));
+      }
       
       setAnalysis(analysisResult);
       setShowResults(true);
@@ -91,11 +140,16 @@ export default function JournalPage() {
       console.log('💾 Adding journal entry to store:', newEntry);
       addJournalEntryWithoutClear(newEntry);
       
-      setIsAnalyzing(false);
-      setShowCeremony(false);
-      setTags([]);
-      setEmotionPreview(null);
-      console.log('🎉 Successfully completed journal entry submission - results displayed');
+      // Transition out of ceremony
+      setTimeout(() => {
+        setIsAnalyzing(false);
+        setShowCeremony(false);
+        setAnalysisPhase(null);
+        setTags([]);
+        setEmotionPreview(null);
+        console.log('🎉 Successfully completed journal entry submission - results displayed');
+      }, 500);
+      
     } catch (error) {
       console.error('❌ Analysis failed with error:', error);
       console.error('📍 Error details:', {
@@ -105,6 +159,7 @@ export default function JournalPage() {
       });
       setIsAnalyzing(false);
       setShowCeremony(false);
+      setAnalysisPhase(null);
       setAnalysisError(error instanceof Error ? error.message : 'Analysis failed');
       console.log('💥 Error state set, user will see error message');
     }
@@ -130,6 +185,8 @@ export default function JournalPage() {
     updateCurrentEntry('');
     setTags([]);
     setEmotionPreview(null);
+    setAnalysisPhase(null);
+    setPreviewEmotions([]);
   };
 
   // Real-time emotion preview as user types
@@ -221,9 +278,52 @@ export default function JournalPage() {
     return (
       <AppLayout>
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-white to-emerald-50">
-          <FloatingParticles count={20} />
-          <div className="relative z-10">
-            <BreathingLoader message="Your words are being analyzed with care..." />
+          <FloatingParticles count={analysisPhase === 'preparing' ? 40 : analysisPhase === 'processing' ? 30 : 20} />
+          <div className="relative z-10 text-center">
+            <div className="mb-8">
+              <BreathingLoader 
+                message={
+                  analysisPhase === 'analyzing' 
+                    ? "Analyzing your emotions..." 
+                    : analysisPhase === 'processing'
+                    ? "Discovering emotional patterns..."
+                    : analysisPhase === 'preparing'
+                    ? "Preparing your reflection..."
+                    : "Your words are being analyzed with care..."
+                } 
+              />
+            </div>
+            
+            {/* Progress Indicator */}
+            <div className="flex justify-center space-x-2 mb-4">
+              <div className={`w-2 h-2 rounded-full transition-all duration-500 ${
+                analysisPhase ? 'bg-green-600' : 'bg-gray-300'
+              }`} />
+              <div className={`w-2 h-2 rounded-full transition-all duration-500 ${
+                analysisPhase === 'processing' || analysisPhase === 'preparing' ? 'bg-green-600' : 'bg-gray-300'
+              }`} />
+              <div className={`w-2 h-2 rounded-full transition-all duration-500 ${
+                analysisPhase === 'preparing' ? 'bg-green-600' : 'bg-gray-300'
+              }`} />
+            </div>
+            
+            {/* Preview Emotions */}
+            {previewEmotions.length > 0 && analysisPhase !== 'analyzing' && (
+              <div className="mt-8 animate-fade-in">
+                <p className="text-sm text-gray-600 mb-3">Detecting emotions...</p>
+                <div className="flex justify-center space-x-2">
+                  {previewEmotions.map((emotion, index) => (
+                    <div
+                      key={emotion}
+                      className="px-3 py-1 bg-white/80 backdrop-blur rounded-full text-sm text-gray-700 animate-fade-in"
+                      style={{ animationDelay: `${index * 200}ms` }}
+                    >
+                      {emotion}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </AppLayout>
@@ -717,11 +817,11 @@ export default function JournalPage() {
 
                   {/* Analysis Results Display */}
                   {showResults && analysis && (
-                    <div className="mt-8">
+                    <div className="mt-8 animate-fade-in">
                       <div className="border-t pt-6">
                         <div className="flex items-center justify-between mb-4">
                           <h3 className="text-lg font-semibold text-gray-800 flex items-center">
-                            <Sparkles className="w-5 h-5 mr-2 text-green-600" />
+                            <Sparkles className="w-5 h-5 mr-2 text-green-600 animate-pulse" />
                             Your Reflection Analysis
                             {analysis.fallback && (
                               <Badge variant="secondary" className="text-xs ml-2">Fallback Mode</Badge>
@@ -731,27 +831,39 @@ export default function JournalPage() {
                             onClick={startNewEntry}
                             variant="outline"
                             size="sm"
-                            className="border-green-200 text-green-700 hover:bg-green-50"
+                            className="border-green-200 text-green-700 hover:bg-green-50 transition-all hover:scale-105"
                           >
                             New Entry
                           </Button>
                         </div>
 
-                        <div className="bg-gradient-to-br from-green-50 via-white to-emerald-50 border border-green-200 rounded-lg p-6">
+                        <div className="wellness-card bg-gradient-to-br from-green-50 via-white to-emerald-50 border border-green-200 rounded-lg p-6 hover:shadow-xl transition-shadow duration-300">
                           <div className="space-y-6">
                             {/* Emotions Display */}
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                               <div>
                                 <p className="text-sm font-medium text-gray-700 mb-3">Detected Emotions</p>
                                 <div className="space-y-2">
-                                  {Object.entries(analysis.emotions).map(([emotion, confidence]) => (
-                                    <div key={emotion} className="flex items-center justify-between p-2 bg-white rounded border border-green-100">
-                                      <Badge variant="outline" className="text-sm">
+                                  {Object.entries(analysis.emotions).map(([emotion, confidence], index) => (
+                                    <div 
+                                      key={emotion} 
+                                      className="flex items-center justify-between p-3 bg-white rounded-lg border border-green-100 hover:border-green-300 transition-all animate-fade-in hover:shadow-md"
+                                      style={{ animationDelay: `${index * 100}ms` }}
+                                    >
+                                      <Badge variant="outline" className="text-sm font-medium">
                                         {emotion}
                                       </Badge>
-                                      <span className="text-sm font-medium text-gray-600">
-                                        {typeof confidence === 'number' ? `${(confidence * 100).toFixed(0)}%` : 'detected'}
-                                      </span>
+                                      <div className="flex items-center space-x-2">
+                                        <div className="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+                                          <div 
+                                            className="h-full bg-gradient-to-r from-green-400 to-emerald-500 transition-all duration-1000"
+                                            style={{ width: `${(confidence as number) * 100}%` }}
+                                          />
+                                        </div>
+                                        <span className="text-sm font-medium text-gray-600 min-w-[45px] text-right">
+                                          {typeof confidence === 'number' ? `${(confidence * 100).toFixed(0)}%` : 'detected'}
+                                        </span>
+                                      </div>
                                     </div>
                                   ))}
                                 </div>
@@ -760,9 +872,15 @@ export default function JournalPage() {
                               <div>
                                 <p className="text-sm font-medium text-gray-700 mb-3">Physical Symptoms</p>
                                 <div className="space-y-1">
-                                  {Object.entries(analysis.symptoms || {}).map(([symptom, present]) => (
-                                    <div key={symptom} className="flex items-center space-x-2 p-2 bg-white rounded border border-green-100">
-                                      <div className={`w-2 h-2 rounded-full ${present ? 'bg-red-400' : 'bg-gray-200'}`} />
+                                  {Object.entries(analysis.symptoms || {}).map(([symptom, present], index) => (
+                                    <div 
+                                      key={symptom} 
+                                      className="flex items-center space-x-2 p-3 bg-white rounded-lg border border-green-100 animate-fade-in"
+                                      style={{ animationDelay: `${(index + 3) * 100}ms` }}
+                                    >
+                                      <div className={`w-3 h-3 rounded-full transition-all ${
+                                        present ? 'bg-red-400 animate-pulse' : 'bg-gray-200'
+                                      }`} />
                                       <span className={`text-sm ${present ? 'text-gray-700 font-medium' : 'text-gray-400'}`}>
                                         {symptom.replace('_', ' ')}
                                       </span>
