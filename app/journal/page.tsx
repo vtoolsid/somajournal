@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { AppLayout } from '@/components/layout/app-layout';
 import { Button } from '@/components/ui/button';
@@ -31,7 +31,8 @@ import {
   Feather,
   Star,
   Activity,
-  Target
+  Target,
+  ArrowRight
 } from 'lucide-react';
 
 export default function JournalPage() {
@@ -52,6 +53,27 @@ export default function JournalPage() {
   const [emotionPreview, setEmotionPreview] = useState<any>(null);
   const [previewTimeout, setPreviewTimeout] = useState<NodeJS.Timeout | null>(null);
   const [psychosomaticTab, setPsychosomaticTab] = useState('overview');
+  const [showDetailModal, setShowDetailModal] = useState(false);
+
+  // ESC key handler for modal
+  useEffect(() => {
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && showDetailModal) {
+        setShowDetailModal(false);
+      }
+    };
+
+    if (showDetailModal) {
+      document.addEventListener('keydown', handleEscKey);
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscKey);
+      document.body.style.overflow = 'unset';
+    };
+  }, [showDetailModal]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -766,7 +788,7 @@ export default function JournalPage() {
               </div>
             ) : (
               /* Editor View */
-              <div className="flex-1 p-4 lg:p-8">
+              <div className="flex-1 p-4 lg:p-8 pb-4">
                 <div className="max-w-3xl mx-auto h-full flex flex-col">
                   <div className="mb-4 lg:mb-6">
                     <h2 className="text-xl lg:text-2xl font-semibold text-gray-800 mb-2">New Entry</h2>
@@ -889,9 +911,9 @@ export default function JournalPage() {
 
                   {/* Psychosomatic Analysis Results Display */}
                   {showResults && analysis && (
-                    <div className="mt-8 animate-fade-in">
-                      <div className="border-t pt-6">
-                        <div className="flex items-center justify-between mb-6">
+                    <div className="mt-4 mb-12 animate-fade-in">
+                      <div className="border-t pt-4">
+                        <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center space-x-3">
                             <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
                               <Sparkles className="w-5 h-5 text-white" />
@@ -923,9 +945,11 @@ export default function JournalPage() {
                         </div>
 
                         {/* Psychosomatic Analysis Results */}
-                        <div className="space-y-6">
-                            {/* Psychosomatic Analysis Component */}
-                            <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
+                        <div className="space-y-4 max-w-4xl mx-auto">
+                            {/* Enhanced Analysis Summary Card */}
+                            <div className="relative">
+                              <div className="absolute inset-0 bg-gradient-to-br from-green-400/10 via-emerald-400/5 to-green-500/10 rounded-3xl blur-xl"></div>
+                              <Card className="relative bg-white/70 backdrop-blur-md border border-green-200/50 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
                               <CardHeader>
                                 <div className="flex items-center justify-between">
                                   <div className="flex items-center space-x-3">
@@ -1012,23 +1036,72 @@ export default function JournalPage() {
                                 )}
 
                               </CardContent>
-                            </Card>
-
-                            {/* Psychosomatic Analysis Component */}
-                            <div id="psychosomatic-analysis">
-                              <PsychosomaticInsights 
-                                emotions={analysis.emotions ? Object.entries(analysis.emotions).map(([emotion, confidence]) => ({
-                                  emotion,
-                                  confidence: typeof confidence === 'number' ? confidence : 0.5
-                                })) : []}
-                                psychosomaticData={analysis.psychosomatic || {
-                                  psychosomatic_analysis: analysis.psychosomatic_analysis,
-                                  personalized_insights: analysis.personalized_insights,
-                                  wellness_recommendations: analysis.wellness_recommendations
-                                }}
-                                className="mb-6"
-                              />
+                              </Card>
                             </div>
+
+                            {/* View Detailed Analysis Button */}
+                            <div className="mt-3 mb-4 flex justify-center">
+                              <Button
+                                onClick={() => setShowDetailModal(true)}
+                                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 px-6 py-3"
+                                size="lg"
+                              >
+                                <Sparkles className="w-5 h-5 mr-2" />
+                                View Detailed Analysis
+                                <ArrowRight className="w-5 h-5 ml-2" />
+                              </Button>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Detailed Analysis Modal */}
+                  {showDetailModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
+                      {/* Backdrop */}
+                      <div 
+                        className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
+                        onClick={() => setShowDetailModal(false)}
+                      ></div>
+                      
+                      {/* Modal Content */}
+                      <div className="relative bg-white rounded-3xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden transform transition-all duration-300 scale-100">
+                        {/* Modal Header */}
+                        <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-green-50 to-emerald-50">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
+                              <Activity className="w-5 h-5 text-white" />
+                            </div>
+                            <div>
+                              <h2 className="text-xl font-semibold text-gray-800">Detailed Psychosomatic Analysis</h2>
+                              <p className="text-sm text-gray-600">Complete mind-body connection insights</p>
+                            </div>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setShowDetailModal(false)}
+                            className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full w-8 h-8 p-0"
+                          >
+                            ×
+                          </Button>
+                        </div>
+                        
+                        {/* Modal Body */}
+                        <div className="overflow-y-auto max-h-[calc(90vh-140px)] p-6">
+                          <PsychosomaticInsights 
+                            emotions={analysis?.emotions ? Object.entries(analysis.emotions).map(([emotion, confidence]) => ({
+                              emotion,
+                              confidence: typeof confidence === 'number' ? confidence : 0.5
+                            })) : []}
+                            psychosomaticData={analysis?.psychosomatic || {
+                              psychosomatic_analysis: analysis?.psychosomatic_analysis,
+                              personalized_insights: analysis?.personalized_insights,
+                              wellness_recommendations: analysis?.wellness_recommendations
+                            }}
+                            className=""
+                          />
                         </div>
                       </div>
                     </div>
