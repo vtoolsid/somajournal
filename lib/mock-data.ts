@@ -179,10 +179,112 @@ export const physicalSymptoms = [
   'muscle_tension',
 ];
 
+import { config, isPrototypeMode, getMockDelay, debugLog } from './config';
+import { generateMockAnalysisResponse } from './mock-psychosomatic-data';
+
 // Real BERT Emotion Analysis Function - Powered by Adaptive Classifier
 export const analyzeJournalEntry = async (content: string) => {
   console.log('🔍 analyzeJournalEntry called with content:', content.substring(0, 100) + '...');
   
+  // Check if we're in prototype mode
+  if (isPrototypeMode()) {
+    console.log('🎭 PROTOTYPE MODE: Using mock psychosomatic analysis');
+    
+    // Simulate processing delay
+    await new Promise(resolve => setTimeout(resolve, getMockDelay()));
+    
+    // Extract emotions from text using simple keyword analysis
+    const words = content.toLowerCase().split(' ');
+    const detectedEmotions: Array<{ emotion: string; confidence: number }> = [];
+    
+    // Enhanced emotion detection for prototype mode
+    const emotionPatterns = {
+      joy: ['happy', 'joy', 'wonderful', 'amazing', 'great', 'awesome', 'fantastic', 'love', 'excited', 'grateful', 'blessed'],
+      sadness: ['sad', 'down', 'depressed', 'awful', 'terrible', 'cry', 'upset', 'heartbroken', 'disappointed', 'lonely'],
+      anger: ['angry', 'mad', 'frustrated', 'annoyed', 'furious', 'irritated', 'hate', 'rage', 'pissed'],
+      nervousness: ['anxious', 'worried', 'nervous', 'stress', 'scared', 'fear', 'overwhelmed', 'tense', 'panic'],
+      gratitude: ['grateful', 'thankful', 'appreciate', 'blessed', 'fortunate'],
+      excitement: ['excited', 'thrilled', 'eager', 'pumped', 'energized'],
+      fear: ['afraid', 'frightened', 'terrified', 'scary', 'danger'],
+      surprise: ['surprised', 'shocked', 'amazed', 'unexpected'],
+      disgust: ['disgusted', 'gross', 'revolting', 'nasty'],
+      confusion: ['confused', 'puzzled', 'unclear', 'lost'],
+      disappointment: ['disappointed', 'letdown', 'failed', 'regret'],
+      love: ['love', 'adore', 'cherish', 'affection'],
+      pride: ['proud', 'accomplished', 'achievement', 'success'],
+      embarrassment: ['embarrassed', 'ashamed', 'humiliated', 'awkward'],
+      guilt: ['guilty', 'remorse', 'regret', 'sorry'],
+      relief: ['relieved', 'relaxed', 'calm', 'peaceful'],
+      admiration: ['admire', 'respect', 'inspire', 'look up to'],
+      caring: ['care', 'concern', 'support', 'help'],
+      approval: ['approve', 'agree', 'good', 'right', 'correct'],
+      disapproval: ['disapprove', 'wrong', 'disagree', 'bad'],
+      annoyance: ['annoyed', 'bothered', 'irritated', 'frustrated'],
+      curiosity: ['curious', 'wonder', 'interested', 'intrigued'],
+      desire: ['want', 'wish', 'desire', 'need', 'crave'],
+      optimism: ['optimistic', 'hopeful', 'positive', 'bright'],
+      amusement: ['funny', 'laugh', 'amusing', 'humor', 'hilarious'],
+      grief: ['grief', 'loss', 'mourn', 'bereaved'],
+      realization: ['realize', 'understand', 'discover', 'aware'],
+    };
+    
+    // Detect emotions based on keywords
+    for (const [emotion, keywords] of Object.entries(emotionPatterns)) {
+      const matches = keywords.filter(keyword => words.includes(keyword));
+      if (matches.length > 0) {
+        // Calculate confidence based on number of matches and text length
+        const confidence = Math.min(0.9, 0.4 + (matches.length * 0.2));
+        detectedEmotions.push({
+          emotion,
+          confidence: Math.round(confidence * 100) / 100
+        });
+      }
+    }
+    
+    // Sort by confidence and limit based on text length
+    detectedEmotions.sort((a, b) => b.confidence - a.confidence);
+    const wordCount = words.length;
+    const maxEmotions = wordCount < 10 ? 1 : wordCount < 50 ? 3 : 5;
+    const limitedEmotions = detectedEmotions.slice(0, maxEmotions);
+    
+    // Default to neutral if no emotions detected
+    if (limitedEmotions.length === 0) {
+      limitedEmotions.push({ emotion: 'neutral', confidence: 0.65 });
+    }
+    
+    // Generate complete mock response with psychosomatic analysis
+    const mockResponse = generateMockAnalysisResponse(content, limitedEmotions);
+    
+    debugLog('Mock analysis generated:', {
+      emotions: limitedEmotions,
+      primaryEmotion: mockResponse.psychosomatic.primary_emotion
+    });
+    
+    // Convert to the expected format
+    const emotions: Record<string, number> = {};
+    limitedEmotions.forEach(e => {
+      emotions[e.emotion] = e.confidence;
+    });
+    
+    const result = {
+      emotions,
+      symptoms: mockResponse.symptoms,
+      analysis: mockResponse.analysis,
+      characteristics: mockResponse.characteristics,
+      adaptive_info: mockResponse.adaptive_info,
+      fallback: false,
+      psychosomatic: mockResponse.psychosomatic,
+      personalized_insights: mockResponse.psychosomatic.personalized_insights,
+      psychosomatic_analysis: mockResponse.psychosomatic.psychosomatic_analysis,
+      prototype_mode: true
+    };
+    
+    console.log('✅ Prototype analysis complete:', result);
+    console.log('🎯 Psychosomatic data included:', !!result.psychosomatic);
+    return result;
+  }
+  
+  // Original API-based analysis code
   try {
     console.log('📡 Making API request to /api/analyze-emotion...');
     

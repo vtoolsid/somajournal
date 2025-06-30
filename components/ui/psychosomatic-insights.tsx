@@ -88,11 +88,11 @@ export function PsychosomaticInsights({
   return (
     <div className={`space-y-6 ${className}`}>
       {/* Header with credibility indicators */}
-      <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+      <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
                 <Activity className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -100,11 +100,11 @@ export function PsychosomaticInsights({
                   Psychosomatic Analysis
                 </CardTitle>
                 <div className="flex items-center space-x-2 mt-1">
-                  <Badge variant="default" className="bg-blue-600 text-white">
+                  <Badge variant="default" className="bg-green-600 text-white">
                     Evidence-based
                   </Badge>
                   {isPremium && (
-                    <Badge variant="default" className="bg-purple-600 text-white">
+                    <Badge variant="default" className="bg-emerald-600 text-white">
                       <Sparkles className="w-3 h-3 mr-1" />
                       AI-Enhanced
                     </Badge>
@@ -159,27 +159,27 @@ export function PsychosomaticInsights({
             </CardHeader>
             <CardContent className="space-y-4">
               {psychosomaticData.psychosomatic_analysis?.bodily_sensations && (
-                <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                  <h4 className="font-semibold text-blue-800 mb-2">Primary Sensations</h4>
-                  <p className="text-blue-700">
+                <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                  <h4 className="font-semibold text-green-800 mb-2">Primary Sensations</h4>
+                  <p className="text-green-700">
                     {psychosomaticData.psychosomatic_analysis.bodily_sensations}
                   </p>
                 </div>
               )}
 
               {psychosomaticData.psychosomatic_analysis?.physiological_description && (
-                <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                  <h4 className="font-semibold text-green-800 mb-2">Physiological Response</h4>
-                  <p className="text-green-700">
+                <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+                  <h4 className="font-semibold text-emerald-800 mb-2">Physiological Response</h4>
+                  <p className="text-emerald-700">
                     {psychosomaticData.psychosomatic_analysis.physiological_description}
                   </p>
                 </div>
               )}
 
               {psychosomaticData.psychosomatic_analysis?.traditional_understanding && (
-                <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                  <h4 className="font-semibold text-purple-800 mb-2">Traditional Understanding</h4>
-                  <p className="text-purple-700">
+                <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                  <h4 className="font-semibold text-slate-800 mb-2">Traditional Understanding</h4>
+                  <p className="text-slate-700">
                     {psychosomaticData.psychosomatic_analysis.traditional_understanding}
                   </p>
                 </div>
@@ -205,9 +205,9 @@ export function PsychosomaticInsights({
                     >
                       <div className="flex items-center space-x-3">
                         <div className={`w-3 h-3 rounded-full ${
-                          index === 0 ? 'bg-blue-500' : 
-                          index === 1 ? 'bg-green-500' : 
-                          index === 2 ? 'bg-orange-500' : 'bg-purple-500'
+                          index === 0 ? 'bg-green-500' : 
+                          index === 1 ? 'bg-emerald-500' : 
+                          index === 2 ? 'bg-green-400' : 'bg-emerald-400'
                         }`} />
                         <span className="font-medium text-slate-700 capitalize">
                           {emotion.emotion}
@@ -349,13 +349,13 @@ export function PsychosomaticInsights({
         <TabsContent value="insights" className="space-y-4">
           {/* Personalized Insights */}
           {psychosomaticData.personalized_insights && (
-            <Card className="border-purple-200 bg-gradient-to-br from-purple-50 to-pink-50">
+            <Card className="border-green-200 bg-gradient-to-br from-green-50 to-emerald-50">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <Sparkles className="w-5 h-5 text-purple-600" />
+                  <Sparkles className="w-5 h-5 text-green-600" />
                   <span>Personalized Insights</span>
                   {isPremium && (
-                    <Badge className="bg-purple-600 text-white">
+                    <Badge className="bg-emerald-600 text-white">
                       AI-Enhanced
                     </Badge>
                   )}
@@ -363,12 +363,12 @@ export function PsychosomaticInsights({
               </CardHeader>
               <CardContent className="space-y-4">
                 {psychosomaticData.personalized_insights.personalized_psychosomatic && (
-                  <div className="p-4 bg-white/70 rounded-lg border border-purple-200">
-                    <h4 className="font-semibold text-purple-800 mb-2 flex items-center space-x-2">
+                  <div className="p-4 bg-white/70 rounded-lg border border-green-200">
+                    <h4 className="font-semibold text-green-800 mb-2 flex items-center space-x-2">
                       <Heart className="w-4 h-4" />
                       <span>Your Body's Story</span>
                     </h4>
-                    <p className="text-purple-700">
+                    <p className="text-green-700">
                       {psychosomaticData.personalized_insights.personalized_psychosomatic}
                     </p>
                   </div>
@@ -376,18 +376,18 @@ export function PsychosomaticInsights({
 
                 {psychosomaticData.personalized_insights.personalized_wellness && (
                   <div className="space-y-3">
-                    <h4 className="font-semibold text-purple-800 flex items-center space-x-2">
+                    <h4 className="font-semibold text-green-800 flex items-center space-x-2">
                       <Target className="w-4 h-4" />
                       <span>Personalized Recommendations</span>
                     </h4>
                     
                     {psychosomaticData.personalized_insights.personalized_wellness.immediate_techniques && (
                       <div className="p-3 bg-white/50 rounded-lg">
-                        <h5 className="font-medium text-purple-700 mb-2">Right Now</h5>
+                        <h5 className="font-medium text-green-700 mb-2">Right Now</h5>
                         <ul className="space-y-1">
                           {psychosomaticData.personalized_insights.personalized_wellness.immediate_techniques.map((technique, index) => (
-                            <li key={index} className="text-sm text-purple-600 flex items-start space-x-2">
-                              <div className="w-1.5 h-1.5 bg-purple-400 rounded-full mt-2 flex-shrink-0" />
+                            <li key={index} className="text-sm text-green-600 flex items-start space-x-2">
+                              <div className="w-1.5 h-1.5 bg-green-400 rounded-full mt-2 flex-shrink-0" />
                               <span>{technique}</span>
                             </li>
                           ))}
@@ -397,11 +397,11 @@ export function PsychosomaticInsights({
 
                     {psychosomaticData.personalized_insights.personalized_wellness.contextual_insight && (
                       <div className="p-3 bg-white/50 rounded-lg">
-                        <h5 className="font-medium text-purple-700 mb-2 flex items-center space-x-2">
+                        <h5 className="font-medium text-emerald-700 mb-2 flex items-center space-x-2">
                           <Lightbulb className="w-4 h-4" />
                           <span>Key Insight</span>
                         </h5>
-                        <p className="text-sm text-purple-600">
+                        <p className="text-sm text-emerald-600">
                           {psychosomaticData.personalized_insights.personalized_wellness.contextual_insight}
                         </p>
                       </div>
@@ -410,12 +410,12 @@ export function PsychosomaticInsights({
                 )}
 
                 {psychosomaticData.personalized_insights.encouragement && (
-                  <div className="p-4 bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg border border-purple-200">
-                    <h4 className="font-semibold text-purple-800 mb-2 flex items-center space-x-2">
+                  <div className="p-4 bg-gradient-to-r from-green-100 to-emerald-100 rounded-lg border border-green-200">
+                    <h4 className="font-semibold text-green-800 mb-2 flex items-center space-x-2">
                       <Award className="w-4 h-4" />
                       <span>Encouragement</span>
                     </h4>
-                    <p className="text-purple-700 italic">
+                    <p className="text-green-700 italic">
                       "{psychosomaticData.personalized_insights.encouragement}"
                     </p>
                   </div>
@@ -435,8 +435,8 @@ export function PsychosomaticInsights({
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <Award className="w-6 h-6 text-blue-600" />
+                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <Award className="w-6 h-6 text-green-600" />
                   </div>
                   <h4 className="font-semibold text-slate-700">Evidence-Based</h4>
                   <p className="text-xs text-slate-500 mt-1">
@@ -445,8 +445,8 @@ export function PsychosomaticInsights({
                 </div>
                 
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <Activity className="w-6 h-6 text-green-600" />
+                  <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <Activity className="w-6 h-6 text-emerald-600" />
                   </div>
                   <h4 className="font-semibold text-slate-700">Scientifically Grounded</h4>
                   <p className="text-xs text-slate-500 mt-1">
@@ -455,8 +455,8 @@ export function PsychosomaticInsights({
                 </div>
                 
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <Sparkles className="w-6 h-6 text-purple-600" />
+                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <Sparkles className="w-6 h-6 text-green-600" />
                   </div>
                   <h4 className="font-semibold text-slate-700">
                     {isPremium ? 'AI-Enhanced' : 'Template-Based'}

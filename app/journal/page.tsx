@@ -857,11 +857,11 @@ export default function JournalPage() {
                         {analysis.psychosomatic || analysis.psychosomatic_analysis || analysis.personalized_insights ? (
                           <div className="space-y-6">
                             {/* Executive Summary Card */}
-                            <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border-blue-200">
+                            <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
                               <CardHeader>
                                 <div className="flex items-center justify-between">
                                   <div className="flex items-center space-x-3">
-                                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                                    <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
                                       <Heart className="w-5 h-5 text-white" />
                                     </div>
                                     <div>
@@ -870,9 +870,9 @@ export default function JournalPage() {
                                     </div>
                                   </div>
                                   <div className="flex items-center space-x-2">
-                                    <Badge className="bg-blue-600 text-white">Evidence-based</Badge>
+                                    <Badge className="bg-green-600 text-white">Evidence-based</Badge>
                                     {analysis.psychosomatic?.personalized_insights?.gpt_enhanced && (
-                                      <Badge className="bg-purple-600 text-white">
+                                      <Badge className="bg-emerald-600 text-white">
                                         <Sparkles className="w-3 h-3 mr-1" />
                                         AI-Enhanced
                                       </Badge>
@@ -885,11 +885,11 @@ export default function JournalPage() {
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                   <div className="space-y-3">
                                     <h4 className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
-                                      <Sparkles className="w-4 h-4 text-blue-600" />
+                                      <Sparkles className="w-4 h-4 text-green-600" />
                                       <span>Primary Emotion Detected</span>
                                     </h4>
-                                    <div className="p-3 bg-white rounded-lg border border-blue-200">
-                                      <p className="text-lg font-semibold text-blue-800 capitalize">
+                                    <div className="p-3 bg-white rounded-lg border border-green-200">
+                                      <p className="text-lg font-semibold text-green-800 capitalize">
                                         {analysis.psychosomatic?.primary_emotion || analysis.emotions?.[0]?.emotion || 'Neutral'}
                                       </p>
                                       <p className="text-sm text-gray-600 mt-1">
@@ -900,10 +900,10 @@ export default function JournalPage() {
                                   
                                   <div className="space-y-3">
                                     <h4 className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
-                                      <Activity className="w-4 h-4 text-purple-600" />
+                                      <Activity className="w-4 h-4 text-emerald-600" />
                                       <span>Body Response</span>
                                     </h4>
-                                    <div className="p-3 bg-white rounded-lg border border-purple-200">
+                                    <div className="p-3 bg-white rounded-lg border border-emerald-200">
                                       <p className="text-sm text-gray-700">
                                         {analysis.psychosomatic?.psychosomatic_analysis?.bodily_sensations || 
                                          'Your body is responding to your emotional state'}
@@ -932,12 +932,12 @@ export default function JournalPage() {
 
                                 {/* Personalized Insight Preview */}
                                 {analysis.psychosomatic?.personalized_insights?.encouragement && (
-                                  <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
-                                    <h4 className="text-sm font-semibold text-purple-800 mb-2 flex items-center space-x-2">
+                                  <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
+                                    <h4 className="text-sm font-semibold text-green-800 mb-2 flex items-center space-x-2">
                                       <Star className="w-4 h-4" />
                                       <span>Personal Insight</span>
                                     </h4>
-                                    <p className="text-sm text-purple-700 italic">
+                                    <p className="text-sm text-green-700 italic">
                                       "{analysis.psychosomatic.personalized_insights.encouragement}"
                                     </p>
                                   </div>
@@ -947,7 +947,7 @@ export default function JournalPage() {
                                 <div className="pt-2">
                                   <Button 
                                     variant="outline" 
-                                    className="w-full border-blue-300 text-blue-700 hover:bg-blue-50"
+                                    className="w-full border-green-300 text-green-700 hover:bg-green-50"
                                     onClick={() => {
                                       const element = document.getElementById('detailed-psychosomatic-analysis');
                                       element?.scrollIntoView({ behavior: 'smooth' });
