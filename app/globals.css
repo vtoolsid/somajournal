@@ -483,7 +483,7 @@
   
   .wellness-button:hover {
     @apply shadow-xl scale-105;
-    box-shadow: 0 20px 40px -12px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 20px 40px -12px rgba(34, 197, 94, 0.4);
   }
   
   .wellness-input {
@@ -497,8 +497,8 @@
   }
   
   .wellness-input:focus {
-    @apply border-indigo-300 shadow-lg;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1), 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    @apply border-green-300 shadow-lg;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1), 0 10px 25px -5px rgba(0, 0, 0, 0.1);
     color: rgb(30 41 59) !important;
   }
   
@@ -857,18 +857,18 @@
     position: absolute;
     width: 2px;
     height: 2px;
-    background: rgba(99, 102, 241, 0.3);
+    background: rgba(34, 197, 94, 0.3);
     border-radius: 50%;
     animation: float-particle 20s linear infinite;
   }
   
   .particle:nth-child(2n) {
-    background: rgba(147, 51, 234, 0.2);
+    background: rgba(16, 185, 129, 0.2);
     animation-duration: 25s;
   }
   
   .particle:nth-child(3n) {
-    background: rgba(34, 197, 94, 0.2);
+    background: rgba(5, 150, 105, 0.2);
     animation-duration: 30s;
   }
 }
@@ -913,11 +913,11 @@
 
 @keyframes energy-pulse {
   0%, 100% { 
-    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.3);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.3);
     transform: scale(1);
   }
   50% { 
-    box-shadow: 0 0 0 8px rgba(99, 102, 241, 0);
+    box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
     transform: scale(1.01);
   }
 }
@@ -933,8 +933,8 @@
 }
 
 @keyframes progress-glow {
-  0%, 100% { filter: drop-shadow(0 0 2px rgba(99, 102, 241, 0.5)); }
-  50% { filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.8)); }
+  0%, 100% { filter: drop-shadow(0 0 2px rgba(34, 197, 94, 0.5)); }
+  50% { filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.8)); }
 }
 
 @keyframes fade-enter {
@@ -991,11 +991,11 @@
 @keyframes chakra-body-pulse {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
   }
   50% {
     transform: scale(1.05);
-    box-shadow: 0 0 0 8px rgba(99, 102, 241, 0);
+    box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
   }
 }
 
@@ -1031,7 +1031,7 @@
   }
   
   .gradient-text-shine {
-    background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%);
+    background: linear-gradient(90deg, #22c55e 0%, #10b981 50%, #059669 100%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
