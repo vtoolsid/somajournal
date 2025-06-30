@@ -237,10 +237,16 @@ export const analyzeJournalEntry = async (content: string) => {
       analysis: analysis.analysis,
       characteristics: analysis.characteristics,
       adaptive_info: analysis.adaptive_info,
-      fallback: analysis.fallback || false
+      fallback: analysis.fallback || false,
+      // Include psychosomatic analysis if available
+      psychosomatic: analysis.psychosomatic || null,
+      // Include personalized insights if available from psychosomatic analysis
+      personalized_insights: analysis.psychosomatic?.personalized_insights || null,
+      psychosomatic_analysis: analysis.psychosomatic?.psychosomatic_analysis || null
     };
     
     console.log('✅ Final processed result:', result);
+    console.log('🎯 Psychosomatic data included:', !!result.psychosomatic);
     return result;
 
   } catch (error) {

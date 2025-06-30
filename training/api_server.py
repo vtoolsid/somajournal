@@ -33,6 +33,15 @@ CORS(app)  # Enable CORS for Next.js frontend
 # Global classifier instance
 classifier = None
 
+# Import psychosomatic analysis system
+try:
+    from gpt_personalization import create_hybrid_analysis
+    PSYCHOSOMATIC_AVAILABLE = True
+    logger.info("✅ Psychosomatic analysis system loaded")
+except ImportError as e:
+    PSYCHOSOMATIC_AVAILABLE = False
+    logger.warning(f"⚠️ Psychosomatic analysis not available: {e}")
+
 def initialize_classifier():
     """Initialize the adaptive emotion classifier."""
     global classifier
@@ -160,6 +169,19 @@ def analyze_emotion():
         # Convert to SomaJournal format (symptoms detection)
         symptoms = detect_symptoms_from_emotions(emotions)
         
+        # Add psychosomatic analysis if available
+        psychosomatic_analysis = None
+        if PSYCHOSOMATIC_AVAILABLE:
+            try:
+                psychosomatic_analysis = create_hybrid_analysis(
+                    text, 
+                    emotions,
+                    user_context=data.get('user_context')  # Optional user context
+                )
+                logger.info("✅ Psychosomatic analysis completed")
+            except Exception as e:
+                logger.warning(f"⚠️ Psychosomatic analysis failed: {e}")
+        
         response = {
             'status': 'success',
             'emotions': emotions,
@@ -171,6 +193,10 @@ def analyze_emotion():
                 'reasoning': f"Detected {len(emotions)} emotions using {analysis['text_type']} strategy"
             }
         }
+        
+        # Include psychosomatic analysis if available
+        if psychosomatic_analysis:
+            response['psychosomatic'] = psychosomatic_analysis
         
         if debug:
             response['debug'] = {

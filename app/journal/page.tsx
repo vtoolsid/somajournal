@@ -13,6 +13,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { BreathingLoader } from '@/components/ui/breathing-loader';
 import { FloatingParticles } from '@/components/ui/floating-particles';
+import { PsychosomaticInsights } from '@/components/ui/psychosomatic-insights';
 import { useAppStore } from '@/lib/store';
 import { mockJournalEntries, analyzeJournalEntry } from '@/lib/mock-data';
 import { 
@@ -27,7 +28,9 @@ import {
   Paperclip,
   Clock,
   Feather,
-  Star
+  Star,
+  Activity,
+  Target
 } from 'lucide-react';
 
 export default function JournalPage() {
@@ -815,18 +818,31 @@ export default function JournalPage() {
                     </div>
                   </form>
 
-                  {/* Analysis Results Display */}
+                  {/* Psychosomatic Analysis Results Display */}
                   {showResults && analysis && (
                     <div className="mt-8 animate-fade-in">
                       <div className="border-t pt-6">
-                        <div className="flex items-center justify-between mb-4">
-                          <h3 className="text-lg font-semibold text-gray-800 flex items-center">
-                            <Sparkles className="w-5 h-5 mr-2 text-green-600 animate-pulse" />
-                            Your Reflection Analysis
-                            {analysis.fallback && (
-                              <Badge variant="secondary" className="text-xs ml-2">Fallback Mode</Badge>
-                            )}
-                          </h3>
+                        <div className="flex items-center justify-between mb-6">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
+                              <Sparkles className="w-5 h-5 text-white" />
+                            </div>
+                            <div>
+                              <h3 className="text-xl font-semibold text-gray-800">
+                                Your Reflection Analysis
+                              </h3>
+                              <div className="flex items-center space-x-2 mt-1">
+                                {analysis.fallback && (
+                                  <Badge variant="secondary" className="text-xs">Fallback Mode</Badge>
+                                )}
+                                {analysis.psychosomatic && (
+                                  <Badge className="bg-blue-600 text-white text-xs">
+                                    Evidence-based
+                                  </Badge>
+                                )}
+                              </div>
+                            </div>
+                          </div>
                           <Button 
                             onClick={startNewEntry}
                             variant="outline"
@@ -837,119 +853,203 @@ export default function JournalPage() {
                           </Button>
                         </div>
 
-                        <div className="wellness-card bg-gradient-to-br from-green-50 via-white to-emerald-50 border border-green-200 rounded-lg p-6 hover:shadow-xl transition-shadow duration-300">
+                        {/* Comprehensive Analysis Results */}
+                        {analysis.psychosomatic || analysis.psychosomatic_analysis || analysis.personalized_insights ? (
                           <div className="space-y-6">
-                            {/* Emotions Display */}
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                              <div>
-                                <p className="text-sm font-medium text-gray-700 mb-3">Detected Emotions</p>
-                                <div className="space-y-2">
-                                  {Object.entries(analysis.emotions).map(([emotion, confidence], index) => (
-                                    <div 
-                                      key={emotion} 
-                                      className="flex items-center justify-between p-3 bg-white rounded-lg border border-green-100 hover:border-green-300 transition-all animate-fade-in hover:shadow-md"
-                                      style={{ animationDelay: `${index * 100}ms` }}
-                                    >
-                                      <Badge variant="outline" className="text-sm font-medium">
-                                        {emotion}
+                            {/* Executive Summary Card */}
+                            <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border-blue-200">
+                              <CardHeader>
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center space-x-3">
+                                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                                      <Heart className="w-5 h-5 text-white" />
+                                    </div>
+                                    <div>
+                                      <h3 className="text-lg font-semibold text-gray-800">Analysis Summary</h3>
+                                      <p className="text-sm text-gray-600">Your mind-body connection insights</p>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center space-x-2">
+                                    <Badge className="bg-blue-600 text-white">Evidence-based</Badge>
+                                    {analysis.psychosomatic?.personalized_insights?.gpt_enhanced && (
+                                      <Badge className="bg-purple-600 text-white">
+                                        <Sparkles className="w-3 h-3 mr-1" />
+                                        AI-Enhanced
                                       </Badge>
-                                      <div className="flex items-center space-x-2">
-                                        <div className="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
-                                          <div 
-                                            className="h-full bg-gradient-to-r from-green-400 to-emerald-500 transition-all duration-1000"
-                                            style={{ width: `${(confidence as number) * 100}%` }}
-                                          />
-                                        </div>
-                                        <span className="text-sm font-medium text-gray-600 min-w-[45px] text-right">
-                                          {typeof confidence === 'number' ? `${(confidence * 100).toFixed(0)}%` : 'detected'}
-                                        </span>
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                              
-                              <div>
-                                <p className="text-sm font-medium text-gray-700 mb-3">Physical Symptoms</p>
-                                <div className="space-y-1">
-                                  {Object.entries(analysis.symptoms || {}).map(([symptom, present], index) => (
-                                    <div 
-                                      key={symptom} 
-                                      className="flex items-center space-x-2 p-3 bg-white rounded-lg border border-green-100 animate-fade-in"
-                                      style={{ animationDelay: `${(index + 3) * 100}ms` }}
-                                    >
-                                      <div className={`w-3 h-3 rounded-full transition-all ${
-                                        present ? 'bg-red-400 animate-pulse' : 'bg-gray-200'
-                                      }`} />
-                                      <span className={`text-sm ${present ? 'text-gray-700 font-medium' : 'text-gray-400'}`}>
-                                        {symptom.replace('_', ' ')}
-                                      </span>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Adaptive Analysis Info */}
-                            {analysis.analysis && (
-                              <div className="border-t border-green-200 pt-4">
-                                <p className="text-sm font-medium text-gray-700 mb-3">Adaptive Analysis</p>
-                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 text-sm">
-                                  <div className="p-3 bg-white rounded border border-green-100">
-                                    <p className="text-gray-600">Text Type</p>
-                                    <p className="font-medium text-gray-800 capitalize">
-                                      {analysis.analysis.text_type?.replace('_', ' ')}
-                                    </p>
-                                  </div>
-                                  <div className="p-3 bg-white rounded border border-green-100">
-                                    <p className="text-gray-600">Emotional Richness</p>
-                                    <p className="font-medium text-gray-800 capitalize">
-                                      {analysis.analysis.emotional_richness}
-                                    </p>
-                                  </div>
-                                  <div className="p-3 bg-white rounded border border-green-100">
-                                    <p className="text-gray-600">Strategy Used</p>
-                                    <p className="font-medium text-gray-800">
-                                      {analysis.analysis.recommended_approach}
-                                    </p>
+                                    )}
                                   </div>
                                 </div>
-                                
-                                {analysis.characteristics && (
-                                  <div className="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-2 text-sm">
-                                    <div className="p-2 bg-white rounded border border-green-100">
-                                      <p className="text-gray-600">Word Count</p>
-                                      <p className="font-medium">{analysis.characteristics.word_count || analysis.analysis.word_count}</p>
-                                    </div>
-                                    <div className="p-2 bg-white rounded border border-green-100">
-                                      <p className="text-gray-600">Threshold</p>
-                                      <p className="font-medium">{analysis.analysis.threshold_used || 'N/A'}</p>
-                                    </div>
-                                    <div className="p-2 bg-white rounded border border-green-100">
-                                      <p className="text-gray-600">Max Emotions</p>
-                                      <p className="font-medium">{analysis.analysis.max_emotions || 'N/A'}</p>
-                                    </div>
-                                    <div className="p-2 bg-white rounded border border-green-100">
-                                      <p className="text-gray-600">Complexity</p>
-                                      <p className="font-medium">
-                                        {analysis.characteristics.complexity_score ? 
-                                          (analysis.characteristics.complexity_score * 100).toFixed(0) + '%' : 'N/A'}
+                              </CardHeader>
+                              <CardContent className="space-y-4">
+                                {/* Primary Emotion & Body Response */}
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                  <div className="space-y-3">
+                                    <h4 className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
+                                      <Sparkles className="w-4 h-4 text-blue-600" />
+                                      <span>Primary Emotion Detected</span>
+                                    </h4>
+                                    <div className="p-3 bg-white rounded-lg border border-blue-200">
+                                      <p className="text-lg font-semibold text-blue-800 capitalize">
+                                        {analysis.psychosomatic?.primary_emotion || analysis.emotions?.[0]?.emotion || 'Neutral'}
+                                      </p>
+                                      <p className="text-sm text-gray-600 mt-1">
+                                        {analysis.psychosomatic?.psychosomatic_analysis?.intensity || 'Moderate'} intensity
                                       </p>
                                     </div>
                                   </div>
+                                  
+                                  <div className="space-y-3">
+                                    <h4 className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
+                                      <Activity className="w-4 h-4 text-purple-600" />
+                                      <span>Body Response</span>
+                                    </h4>
+                                    <div className="p-3 bg-white rounded-lg border border-purple-200">
+                                      <p className="text-sm text-gray-700">
+                                        {analysis.psychosomatic?.psychosomatic_analysis?.bodily_sensations || 
+                                         'Your body is responding to your emotional state'}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Key Wellness Recommendations */}
+                                {analysis.psychosomatic?.wellness_recommendations && (
+                                  <div className="space-y-3">
+                                    <h4 className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
+                                      <Target className="w-4 h-4 text-green-600" />
+                                      <span>Immediate Recommendations</span>
+                                    </h4>
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                                      {analysis.psychosomatic.wellness_recommendations.immediate_techniques?.slice(0, 2).map((technique, index) => (
+                                        <div key={index} className="flex items-start space-x-2 p-3 bg-green-50 rounded-lg border border-green-200">
+                                          <div className="w-2 h-2 bg-green-500 rounded-full mt-1.5 flex-shrink-0" />
+                                          <p className="text-sm text-green-800">{technique}</p>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
                                 )}
 
-                                {analysis.adaptive_info && (
-                                  <div className="mt-3 p-3 bg-green-100 rounded border border-green-200 text-sm">
-                                    <p className="text-green-800">
-                                      <span className="font-medium">Strategy:</span> {analysis.adaptive_info.reasoning}
+                                {/* Personalized Insight Preview */}
+                                {analysis.psychosomatic?.personalized_insights?.encouragement && (
+                                  <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
+                                    <h4 className="text-sm font-semibold text-purple-800 mb-2 flex items-center space-x-2">
+                                      <Star className="w-4 h-4" />
+                                      <span>Personal Insight</span>
+                                    </h4>
+                                    <p className="text-sm text-purple-700 italic">
+                                      "{analysis.psychosomatic.personalized_insights.encouragement}"
                                     </p>
                                   </div>
                                 )}
-                              </div>
-                            )}
+
+                                {/* View Detailed Analysis Button */}
+                                <div className="pt-2">
+                                  <Button 
+                                    variant="outline" 
+                                    className="w-full border-blue-300 text-blue-700 hover:bg-blue-50"
+                                    onClick={() => {
+                                      const element = document.getElementById('detailed-psychosomatic-analysis');
+                                      element?.scrollIntoView({ behavior: 'smooth' });
+                                    }}
+                                  >
+                                    <BookOpen className="w-4 h-4 mr-2" />
+                                    View Detailed Analysis
+                                  </Button>
+                                </div>
+                              </CardContent>
+                            </Card>
+
+                            {/* Detailed Psychosomatic Analysis Component */}
+                            <div id="detailed-psychosomatic-analysis">
+                              <PsychosomaticInsights 
+                                emotions={analysis.emotions ? Object.entries(analysis.emotions).map(([emotion, confidence]) => ({
+                                  emotion,
+                                  confidence: typeof confidence === 'number' ? confidence : 0.5
+                                })) : []}
+                                psychosomaticData={analysis.psychosomatic || {
+                                  psychosomatic_analysis: analysis.psychosomatic_analysis,
+                                  personalized_insights: analysis.personalized_insights,
+                                  wellness_recommendations: analysis.wellness_recommendations
+                                }}
+                                className="mb-6"
+                              />
+                            </div>
                           </div>
-                        </div>
+                        ) : (
+                          // Fallback to legacy analysis display when psychosomatic data not available
+                          <div className="wellness-card bg-gradient-to-br from-green-50 via-white to-emerald-50 border border-green-200 rounded-lg p-6 hover:shadow-xl transition-shadow duration-300">
+                            <div className="space-y-6">
+                              {/* Emotions Display */}
+                              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                <div>
+                                  <p className="text-sm font-medium text-gray-700 mb-3">Detected Emotions</p>
+                                  <div className="space-y-2">
+                                    {Object.entries(analysis.emotions || {}).map(([emotion, confidence], index) => (
+                                      <div 
+                                        key={emotion} 
+                                        className="flex items-center justify-between p-3 bg-white rounded-lg border border-green-100 hover:border-green-300 transition-all animate-fade-in hover:shadow-md"
+                                        style={{ animationDelay: `${index * 100}ms` }}
+                                      >
+                                        <Badge variant="outline" className="text-sm font-medium">
+                                          {emotion}
+                                        </Badge>
+                                        <div className="flex items-center space-x-2">
+                                          <div className="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+                                            <div 
+                                              className="h-full bg-gradient-to-r from-green-400 to-emerald-500 transition-all duration-1000"
+                                              style={{ width: `${(confidence as number) * 100}%` }}
+                                            />
+                                          </div>
+                                          <span className="text-sm font-medium text-gray-600 min-w-[45px] text-right">
+                                            {typeof confidence === 'number' ? `${(confidence * 100).toFixed(0)}%` : 'detected'}
+                                          </span>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                                
+                                <div>
+                                  <p className="text-sm font-medium text-gray-700 mb-3">Physical Symptoms</p>
+                                  <div className="space-y-1">
+                                    {Object.entries(analysis.symptoms || {}).map(([symptom, present], index) => (
+                                      <div 
+                                        key={symptom} 
+                                        className="flex items-center space-x-2 p-3 bg-white rounded-lg border border-green-100 animate-fade-in"
+                                        style={{ animationDelay: `${(index + 3) * 100}ms` }}
+                                      >
+                                        <div className={`w-3 h-3 rounded-full transition-all ${
+                                          present ? 'bg-red-400 animate-pulse' : 'bg-gray-200'
+                                        }`} />
+                                        <span className={`text-sm ${present ? 'text-gray-700 font-medium' : 'text-gray-400'}`}>
+                                          {symptom.replace('_', ' ')}
+                                        </span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Upgrade to Premium Notice */}
+                              <div className="border-t border-green-200 pt-6">
+                                <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
+                                  <div className="flex items-center space-x-3">
+                                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                                      <Sparkles className="w-4 h-4 text-white" />
+                                    </div>
+                                    <div>
+                                      <h4 className="font-semibold text-blue-800">Unlock Psychosomatic Analysis</h4>
+                                      <p className="text-sm text-blue-700 mt-1">
+                                        Get evidence-based body mapping, personalized wellness recommendations, and AI-enhanced insights.
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}

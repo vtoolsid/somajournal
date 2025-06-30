@@ -26,6 +26,19 @@ git lfs pull                     # Download BERT model files (418MB)
 python api_server.py             # Start BERT server manually
 ```
 
+### Psychosomatic Analysis Setup (Premium Feature)
+```bash
+# 1. Install OpenAI dependency
+pip install openai
+
+# 2. Set up API key in .env.local (copy from .env.example)
+cp .env.example .env.local
+# Edit .env.local and add your OpenAI API key:
+# OPENAI_API_KEY=sk-your-actual-api-key-here
+
+# 3. The system gracefully falls back to evidence-based templates if no API key
+```
+
 ### Git LFS Model Management
 ```bash
 git lfs install        # Initialize Git LFS
