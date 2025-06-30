@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Force this route to be dynamically rendered at request time
-export const dynamic = 'force-dynamic';
-
 const PYTHON_API_URL = process.env.PYTHON_API_URL || 'http://localhost:8000';
 
 export async function POST(request: NextRequest) {
