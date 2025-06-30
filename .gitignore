@@ -1,2 +1,40 @@
 node_modules
 .next/
+out/
+
+# Training artifacts (moved to Downloads backup)
+training/outputs/
+training/venv/
+training/data/
+training/__pycache__/
+training/scripts/__pycache__/
+
+# Model checkpoints (keep final model only)
+training/outputs/training_results/
+training/outputs/precision_finetuning/
+
+# Build artifacts
+*.tsbuildinfo
+.next/
+out/
+build/
+dist/
+
+# Development files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Temporary files
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+.pytest_cache/
+.coverage
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

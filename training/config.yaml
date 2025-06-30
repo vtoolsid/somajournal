@@ -1,0 +1,56 @@
+# BERT Fine-tuning Configuration for GoEmotions Dataset
+
+# Model Configuration
+model:
+  name: "bert-base-uncased"
+  num_labels: 28
+  max_length: 128
+  problem_type: "multi_label_classification"
+
+# Training Configuration
+training:
+  num_epochs: 3
+  train_batch_size: 16
+  eval_batch_size: 16
+  gradient_accumulation_steps: 2
+  learning_rate: 2e-5
+  warmup_steps: 500
+  weight_decay: 0.01
+  seed: 42
+  
+# Evaluation Configuration
+evaluation:
+  strategy: "steps"
+  eval_steps: 500
+  save_steps: 500
+  save_total_limit: 3
+  load_best_model_at_end: true
+  metric_for_best_model: "f1"
+  greater_is_better: true
+
+# Early Stopping
+early_stopping:
+  patience: 3
+  
+# Inference Configuration
+inference:
+  threshold: 0.3
+  top_k: 5
+  
+# Data Configuration
+data:
+  dataset_name: "google-research-datasets/go_emotions"
+  train_file: "data/train.tsv"
+  dev_file: "data/dev.tsv"
+  test_file: "data/test.tsv"
+  
+# Output Configuration
+output:
+  model_dir: "models/bert_emotion_model"
+  results_dir: "outputs"
+  logs_dir: "outputs/training_logs"
+
+# Hardware Configuration
+hardware:
+  use_gpu: true
+  fp16: true  # Mixed precision training
