@@ -266,8 +266,8 @@ export function PsychosomaticInsights({
                           {emotion.emotion}
                         </span>
                       </div>
-                      <Badge variant="outline" className="text-xs">
-                        {Math.round(emotion.confidence * 100)}%
+                      <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200">
+                        Detected
                       </Badge>
                     </div>
                   ))}
@@ -537,10 +537,7 @@ export function PsychosomaticInsights({
                             }`} />
                             <div>
                               <p className="font-medium text-slate-700 capitalize">
-                                {analysis.primaryEmotion[0]} 
-                                <span className="text-sm text-slate-500 font-normal ml-2">
-                                  ({Math.round(analysis.primaryEmotion[1] * 100)}% confidence)
-                                </span>
+                                {analysis.primaryEmotion[0]}
                               </p>
                               <p className="text-xs text-slate-500">
                                 {analysis.date.toLocaleDateString()} • {analysis.emotionCount} emotions

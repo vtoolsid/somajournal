@@ -97,7 +97,11 @@ export default function AnalysisPage() {
               <div className="mb-8">
                 <PsychosomaticInsights 
                   emotions={emotions}
-                  psychosomaticData={psychosomaticData}
+                  psychosomaticData={recentEntry.psychosomatic || {
+                    psychosomatic_analysis: recentEntry.psychosomatic_analysis,
+                    personalized_insights: recentEntry.personalized_insights,
+                    wellness_recommendations: recentEntry.wellness_recommendations
+                  }}
                 />
               </div>
             ) : (

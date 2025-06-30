@@ -21,6 +21,16 @@ export interface JournalEntry {
   location?: string;
   weather?: string;
   tags?: string[];
+  // Analysis fields
+  analysis?: any;
+  characteristics?: any;
+  adaptive_info?: any;
+  fallback?: boolean;
+  psychosomatic?: any;
+  personalized_insights?: any;
+  psychosomatic_analysis?: any;
+  wellness_recommendations?: any;
+  prototype_mode?: boolean;
 }
 
 export interface Emotion {

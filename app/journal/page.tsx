@@ -159,9 +159,9 @@ export default function JournalPage() {
     } catch (error) {
       console.error('❌ Analysis failed with error:', error);
       console.error('📍 Error details:', {
-        message: error.message,
-        stack: error.stack,
-        name: error.name
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : 'No stack trace',
+        name: error instanceof Error ? error.name : 'UnknownError'
       });
       setIsAnalyzing(false);
       setShowCeremony(false);
@@ -847,7 +847,7 @@ export default function JournalPage() {
                                       <span>Immediate Recommendations</span>
                                     </h4>
                                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                                      {analysis.psychosomatic.wellness_recommendations.immediate_techniques?.slice(0, 2).map((technique, index) => (
+                                      {analysis.psychosomatic.wellness_recommendations.immediate_techniques?.slice(0, 2).map((technique: string, index: number) => (
                                         <div key={index} className="flex items-start space-x-2 p-3 bg-green-50 rounded-lg border border-green-200">
                                           <div className="w-2 h-2 bg-green-500 rounded-full mt-1.5 flex-shrink-0" />
                                           <p className="text-sm text-green-800">{technique}</p>

@@ -182,6 +182,66 @@ export const physicalSymptoms = [
 import { config, isPrototypeMode, getMockDelay, debugLog } from './config';
 import { generateMockAnalysisResponse } from './mock-psychosomatic-data';
 
+// ChatGPT emotion analysis for neutral cases
+async function getChatGptEmotionAnalysis(content: string, wordCount: number): Promise<Array<{ emotion: string; confidence: number }>> {
+  console.log('🤖 Starting ChatGPT emotion analysis...');
+  
+  // Determine max emotions based on text length and emotional richness algorithm
+  const maxEmotions = wordCount < 10 ? 1 : wordCount < 50 ? 3 : 5;
+  const emotionalRichness = wordCount < 10 ? 'low' : wordCount < 50 ? 'moderate' : 'high';
+  
+  const prompt = `You are an expert emotion analyst for a wellness journaling app. Analyze the following journal entry and identify the most relevant emotions from this exact list of 28 emotions:
+
+joy, sadness, anger, fear, surprise, disgust, trust, anticipation, love, admiration, terror, amazement, grief, loathing, rage, vigilance, ecstasy, acceptance, apprehension, distraction, pensiveness, boredom, annoyance, interest, serenity, optimism, aggressiveness, submission
+
+Journal Entry: "${content}"
+
+Text Analysis Context:
+- Word count: ${wordCount}
+- Emotional richness: ${emotionalRichness}  
+- Max emotions to detect: ${maxEmotions}
+- Text type: ${wordCount < 10 ? 'quick_note' : wordCount < 50 ? 'short_entry' : wordCount < 100 ? 'medium_entry' : 'detailed_journal'}
+
+Instructions:
+1. Identify the ${maxEmotions} most relevant emotion(s) from the 28-emotion list above
+2. Consider subtle emotional undertones, not just obvious keywords
+3. Focus on the emotional state and intent behind the writing
+4. Return ONLY a JSON array in this exact format (no additional text):
+[{"emotion": "emotion_name", "confidence": 0.75}]
+
+The confidence should be between 0.4 and 0.9. Respond with only the JSON array.`;
+
+  try {
+    const response = await fetch('/api/chat-emotion-analysis', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ 
+        prompt,
+        maxTokens: 150,
+        temperature: 0.3 // Lower temperature for more consistent results
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`ChatGPT API error: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log('🤖 ChatGPT raw response:', result);
+    
+    if (result.emotions && Array.isArray(result.emotions)) {
+      return result.emotions.slice(0, maxEmotions); // Ensure we don't exceed max
+    }
+    
+    return [];
+  } catch (error) {
+    console.error('❌ ChatGPT emotion analysis error:', error);
+    return [];
+  }
+}
+
 // Real BERT Emotion Analysis Function - Powered by Adaptive Classifier
 export const analyzeJournalEntry = async (content: string) => {
   console.log('🔍 analyzeJournalEntry called with content:', content.substring(0, 100) + '...');
@@ -247,9 +307,25 @@ export const analyzeJournalEntry = async (content: string) => {
     const maxEmotions = wordCount < 10 ? 1 : wordCount < 50 ? 3 : 5;
     const limitedEmotions = detectedEmotions.slice(0, maxEmotions);
     
-    // Default to neutral if no emotions detected
+    // Use ChatGPT analysis if no emotions detected using our algorithm
     if (limitedEmotions.length === 0) {
-      limitedEmotions.push({ emotion: 'neutral', confidence: 0.65 });
+      console.log('🤖 No emotions detected by keyword analysis, using ChatGPT for emotion insight...');
+      
+      try {
+        const chatGptEmotions = await getChatGptEmotionAnalysis(content, words.length);
+        if (chatGptEmotions && chatGptEmotions.length > 0) {
+          limitedEmotions.push(...chatGptEmotions);
+          console.log('✨ ChatGPT detected emotions:', chatGptEmotions);
+        } else {
+          // Fallback to neutral only if ChatGPT also fails
+          console.log('🤷 ChatGPT returned no emotions, using neutral fallback');
+          limitedEmotions.push({ emotion: 'neutral', confidence: 0.65 });
+        }
+      } catch (error) {
+        console.error('❌ ChatGPT emotion analysis failed:', error);
+        // Fallback to neutral
+        limitedEmotions.push({ emotion: 'neutral', confidence: 0.65 });
+      }
     }
     
     // Generate complete mock response with psychosomatic analysis
@@ -318,12 +394,35 @@ export const analyzeJournalEntry = async (content: string) => {
     }
 
     // Convert BERT analysis to SomaJournal format
-    const emotions: Record<string, number> = {};
+    let emotions: Record<string, number> = {};
     if (analysis.emotions && Array.isArray(analysis.emotions)) {
       analysis.emotions.forEach((emotion: any) => {
         emotions[emotion.emotion] = emotion.confidence;
       });
       console.log('🎭 Processed emotions:', emotions);
+      
+      // Check if primary emotion is neutral - use ChatGPT for deeper analysis
+      const primaryEmotion = analysis.emotions[0]?.emotion;
+      if (primaryEmotion === 'neutral' || Object.keys(emotions).length === 0) {
+        console.log('🤖 Neutral detected in BERT analysis, using ChatGPT for enhanced insight...');
+        
+        try {
+          const words = content.toLowerCase().split(' ');
+          const chatGptEmotions = await getChatGptEmotionAnalysis(content, words.length);
+          
+          if (chatGptEmotions && chatGptEmotions.length > 0) {
+            console.log('✨ ChatGPT enhanced emotions:', chatGptEmotions);
+            // Replace or supplement the emotions with ChatGPT analysis
+            emotions = {};
+            chatGptEmotions.forEach(e => {
+              emotions[e.emotion] = e.confidence;
+            });
+          }
+        } catch (error) {
+          console.error('❌ ChatGPT enhancement failed:', error);
+          // Keep original BERT results
+        }
+      }
     } else {
       console.warn('⚠️ No emotions array in response');
     }
