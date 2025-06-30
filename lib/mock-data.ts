@@ -179,24 +179,86 @@ export const physicalSymptoms = [
   'muscle_tension',
 ];
 
-// Mock NLP Analysis Function - Objective wellness tracking
-export const analyzeJournalEntry = (content: string) => {
-  // Simple keyword-based analysis for demo
-  const words = content.toLowerCase().split(' ');
+// Real BERT Emotion Analysis Function - Powered by Adaptive Classifier
+export const analyzeJournalEntry = async (content: string) => {
+  try {
+    // Call the Next.js API route which proxies to Python BERT server
+    const response = await fetch('/api/analyze-emotion', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ 
+        text: content,
+        debug: false 
+      }),
+    });
+
+    if (!response.ok) {
+      console.error('Emotion analysis API error:', response.status);
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const analysis = await response.json();
+    
+    if (analysis.status !== 'success') {
+      console.error('Analysis failed:', analysis.message);
+      throw new Error(analysis.message || 'Analysis failed');
+    }
+
+    // Convert BERT analysis to SomaJournal format
+    const emotions: Record<string, number> = {};
+    analysis.emotions.forEach((emotion: any) => {
+      emotions[emotion.emotion] = emotion.confidence;
+    });
+
+    // Use symptoms from BERT analysis
+    const symptoms = analysis.symptoms || {};
+
+    return {
+      emotions,
+      symptoms,
+      // Additional metadata from adaptive analysis
+      analysis: analysis.analysis,
+      characteristics: analysis.characteristics,
+      adaptive_info: analysis.adaptive_info,
+      fallback: analysis.fallback || false
+    };
+
+  } catch (error) {
+    console.error('Failed to analyze journal entry:', error);
+    
+    // Fallback to simple keyword analysis if BERT server is unavailable
+    return fallbackAnalysis(content);
+  }
+};
+
+// Fallback analysis for when BERT server is unavailable
+const fallbackAnalysis = (content: string) => {
+  console.log('Using fallback keyword analysis');
   
+  const words = content.toLowerCase().split(' ');
   const emotions: Record<string, number> = {};
   const symptoms: Record<string, boolean> = {};
   
-  // Emotion detection (count-based, not intensity-based)
-  const emotionWords = ['happy', 'joy', 'love', 'peace', 'grateful', 'wonderful', 'amazing', 'beautiful', 'calm', 'serene', 'blissful', 'angry', 'sad', 'frustrated', 'annoyed', 'upset', 'terrible', 'awful', 'stressed', 'anxious', 'worried'];
+  // Basic emotion detection
+  const emotionWords = {
+    'joy': ['happy', 'joy', 'wonderful', 'amazing', 'great', 'love'],
+    'sadness': ['sad', 'down', 'depressed', 'awful', 'terrible'],
+    'anger': ['angry', 'mad', 'frustrated', 'annoyed'],
+    'peace': ['peaceful', 'calm', 'serene', 'tranquil'],
+    'gratitude': ['grateful', 'thankful', 'appreciate'],
+    'anxiety': ['anxious', 'worried', 'nervous', 'stress']
+  };
   
-  emotionWords.forEach(word => {
-    if (words.includes(word)) {
-      emotions[word] = 1; // Binary presence, not intensity
+  Object.entries(emotionWords).forEach(([emotion, keywords]) => {
+    const matches = keywords.filter(keyword => words.includes(keyword));
+    if (matches.length > 0) {
+      emotions[emotion] = 0.7; // Default confidence for fallback
     }
   });
   
-  // Physical symptoms detection
+  // Basic symptom detection
   const symptomWords = ['headache', 'pain', 'tired', 'fatigue', 'tension', 'stress', 'ache'];
   symptomWords.forEach(symptom => {
     symptoms[symptom] = words.some(word => word.includes(symptom));
@@ -205,6 +267,12 @@ export const analyzeJournalEntry = (content: string) => {
   return {
     emotions,
     symptoms,
+    analysis: {
+      text_type: words.length < 20 ? 'short_entry' : 'medium_entry',
+      emotional_richness: 'low',
+      recommended_approach: 'Keyword fallback analysis'
+    },
+    fallback: true
   };
 };
 

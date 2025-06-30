@@ -40,6 +40,8 @@ export default function JournalPage() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [newTag, setNewTag] = useState('');
   const [tags, setTags] = useState<string[]>([]);
+  const [emotionPreview, setEmotionPreview] = useState<any>(null);
+  const [previewTimeout, setPreviewTimeout] = useState<NodeJS.Timeout | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,8 +56,9 @@ export default function JournalPage() {
     setIsAnalyzing(true);
     setShowCeremony(true);
 
-    setTimeout(() => {
-      const analysisResult = analyzeJournalEntry(currentEntry);
+    try {
+      // Use real BERT emotion analysis
+      const analysisResult = await analyzeJournalEntry(currentEntry);
       setAnalysis(analysisResult);
       
       addJournalEntry({
@@ -71,7 +74,13 @@ export default function JournalPage() {
       setShowCeremony(false);
       setSelectedEntry(null);
       setTags([]);
-    }, 3000);
+      setEmotionPreview(null);
+    } catch (error) {
+      console.error('Analysis failed:', error);
+      setIsAnalyzing(false);
+      setShowCeremony(false);
+      // Could show error message to user here
+    }
   };
 
   const handleAddTag = (e: React.KeyboardEvent) => {
@@ -83,6 +92,55 @@ export default function JournalPage() {
 
   const removeTag = (tagToRemove: string) => {
     setTags(tags.filter(tag => tag !== tagToRemove));
+  };
+
+  // Real-time emotion preview as user types
+  const updateEmotionPreview = async (text: string) => {
+    if (!text.trim()) {
+      setEmotionPreview(null);
+      return;
+    }
+
+    // Clear previous timeout
+    if (previewTimeout) {
+      clearTimeout(previewTimeout);
+    }
+
+    // Set new timeout for debounced preview
+    const timeout = setTimeout(async () => {
+      try {
+        const response = await fetch('/api/preview-analysis', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ text }),
+        });
+
+        if (response.ok) {
+          const preview = await response.json();
+          setEmotionPreview(preview);
+        }
+      } catch (error) {
+        console.error('Preview analysis failed:', error);
+        // Simple fallback preview
+        const wordCount = text.trim().split(' ').length;
+        setEmotionPreview({
+          emotion_count: wordCount < 10 ? 1 : wordCount < 50 ? 2 : 3,
+          strategy: wordCount < 10 ? 'Focus on primary emotion' : 'Balanced analysis',
+          text_type: wordCount < 10 ? 'Quick note' : 'Entry',
+          word_count: wordCount
+        });
+      }
+    }, 500); // 500ms debounce
+
+    setPreviewTimeout(timeout);
+  };
+
+  // Update current entry and trigger preview
+  const handleTextChange = (value: string) => {
+    updateCurrentEntry(value);
+    updateEmotionPreview(value);
   };
 
   const getEmotionColor = (emotions: Record<string, number>) => {
@@ -391,29 +449,105 @@ export default function JournalPage() {
                       <AccordionTrigger>
                         <div className="flex items-center space-x-2">
                           <Sparkles className="w-4 h-4" />
-                          <span>Karmic Analysis</span>
+                          <span>Emotion Analysis</span>
+                          {selectedEntry.fallback && (
+                            <Badge variant="secondary" className="text-xs">Fallback</Badge>
+                          )}
                         </div>
                       </AccordionTrigger>
                       <AccordionContent>
-                        <div className="space-y-4">
-                          <div className="grid grid-cols-2 gap-4">
-                            <div className="text-center">
-                              <p className="text-sm text-gray-600">Emotion Count</p>
-                              <div className={`text-2xl font-bold ${getEmotionColor(selectedEntry.emotions)}`}>
-                                {Object.keys(selectedEntry.emotions).length}
+                        <div className="space-y-6">
+                          {/* Emotions Display */}
+                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                            <div>
+                              <p className="text-sm text-gray-600 mb-2">Detected Emotions</p>
+                              <div className="space-y-2">
+                                {Object.entries(selectedEntry.emotions).map(([emotion, confidence]) => (
+                                  <div key={emotion} className="flex items-center justify-between">
+                                    <Badge variant="outline" className="text-xs">
+                                      {emotion}
+                                    </Badge>
+                                    <span className="text-xs text-gray-500">
+                                      {typeof confidence === 'number' ? `${(confidence * 100).toFixed(0)}%` : 'detected'}
+                                    </span>
+                                  </div>
+                                ))}
                               </div>
                             </div>
+                            
                             <div>
-                              <p className="text-sm text-gray-600 mb-2">Emotions</p>
-                              <div className="flex flex-wrap gap-1">
-                                {Object.keys(selectedEntry.emotions).map((emotion) => (
-                                  <Badge key={emotion} variant="outline" className="text-xs">
-                                    {emotion}
-                                  </Badge>
+                              <p className="text-sm text-gray-600 mb-2">Physical Symptoms</p>
+                              <div className="space-y-1">
+                                {Object.entries(selectedEntry.symptoms || {}).map(([symptom, present]) => (
+                                  <div key={symptom} className="flex items-center space-x-2">
+                                    <div className={`w-2 h-2 rounded-full ${present ? 'bg-red-400' : 'bg-gray-200'}`} />
+                                    <span className={`text-xs ${present ? 'text-gray-700' : 'text-gray-400'}`}>
+                                      {symptom.replace('_', ' ')}
+                                    </span>
+                                  </div>
                                 ))}
                               </div>
                             </div>
                           </div>
+
+                          {/* Adaptive Analysis Info */}
+                          {selectedEntry.analysis && (
+                            <div className="border-t pt-4">
+                              <p className="text-sm font-medium text-gray-700 mb-3">Adaptive Analysis</p>
+                              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 text-xs">
+                                <div>
+                                  <p className="text-gray-600">Text Type</p>
+                                  <p className="font-medium text-gray-800 capitalize">
+                                    {selectedEntry.analysis.text_type?.replace('_', ' ')}
+                                  </p>
+                                </div>
+                                <div>
+                                  <p className="text-gray-600">Emotional Richness</p>
+                                  <p className="font-medium text-gray-800 capitalize">
+                                    {selectedEntry.analysis.emotional_richness}
+                                  </p>
+                                </div>
+                                <div>
+                                  <p className="text-gray-600">Strategy Used</p>
+                                  <p className="font-medium text-gray-800">
+                                    {selectedEntry.analysis.recommended_approach}
+                                  </p>
+                                </div>
+                              </div>
+                              
+                              {selectedEntry.characteristics && (
+                                <div className="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-2 text-xs">
+                                  <div>
+                                    <p className="text-gray-600">Word Count</p>
+                                    <p className="font-medium">{selectedEntry.characteristics.word_count || selectedEntry.analysis.word_count}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-gray-600">Threshold</p>
+                                    <p className="font-medium">{selectedEntry.analysis.threshold_used || 'N/A'}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-gray-600">Max Emotions</p>
+                                    <p className="font-medium">{selectedEntry.analysis.max_emotions || 'N/A'}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-gray-600">Complexity</p>
+                                    <p className="font-medium">
+                                      {selectedEntry.characteristics.complexity_score ? 
+                                        (selectedEntry.characteristics.complexity_score * 100).toFixed(0) + '%' : 'N/A'}
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+
+                              {selectedEntry.adaptive_info && (
+                                <div className="mt-3 p-2 bg-green-50 rounded text-xs">
+                                  <p className="text-green-800">
+                                    <span className="font-medium">Strategy:</span> {selectedEntry.adaptive_info.reasoning}
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+                          )}
                         </div>
                       </AccordionContent>
                     </AccordionItem>
@@ -455,9 +589,31 @@ export default function JournalPage() {
                     <Textarea
                       placeholder="Write your thoughts here..."
                       value={currentEntry}
-                      onChange={(e) => updateCurrentEntry(e.target.value)}
+                      onChange={(e) => handleTextChange(e.target.value)}
                       className="flex-1 resize-none border-0 text-base lg:text-lg leading-relaxed focus:ring-0 bg-transparent placeholder:text-gray-400 min-h-32 lg:min-h-0"
                     />
+                    
+                    {/* Emotion Preview */}
+                    {emotionPreview && currentEntry.trim() && (
+                      <div className="mt-4 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <Sparkles className="w-4 h-4 text-green-600" />
+                            <span className="text-sm font-medium text-green-800">
+                              Will detect {emotionPreview.emotion_count} emotion{emotionPreview.emotion_count !== 1 ? 's' : ''}
+                            </span>
+                          </div>
+                          <div className="text-xs text-green-600">
+                            {emotionPreview.text_type} • {emotionPreview.strategy}
+                          </div>
+                        </div>
+                        {emotionPreview.word_count && (
+                          <div className="mt-1 text-xs text-green-600">
+                            {emotionPreview.word_count} words
+                          </div>
+                        )}
+                      </div>
+                    )}
                     
                     {/* Tagging System */}
                     <div className="mt-6 space-y-3">
