@@ -129,20 +129,32 @@ export function PsychosomaticInsights({
 
       {/* Main Analysis Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="overview" className="flex items-center space-x-2">
+        <TabsList className="grid w-full grid-cols-4 bg-white/60 backdrop-blur-sm border border-green-200/50 rounded-xl p-1 shadow-lg">
+          <TabsTrigger 
+            value="overview" 
+            className="flex items-center space-x-2 text-slate-700 font-medium data-[state=active]:bg-white data-[state=active]:text-green-700 data-[state=active]:shadow-md rounded-lg transition-all duration-200 hover:text-green-600"
+          >
             <Heart className="w-4 h-4" />
             <span>Overview</span>
           </TabsTrigger>
-          <TabsTrigger value="bodymap" className="flex items-center space-x-2">
+          <TabsTrigger 
+            value="bodymap" 
+            className="flex items-center space-x-2 text-slate-700 font-medium data-[state=active]:bg-white data-[state=active]:text-green-700 data-[state=active]:shadow-md rounded-lg transition-all duration-200 hover:text-green-600"
+          >
             <Activity className="w-4 h-4" />
             <span>Body Map</span>
           </TabsTrigger>
-          <TabsTrigger value="wellness" className="flex items-center space-x-2">
+          <TabsTrigger 
+            value="wellness" 
+            className="flex items-center space-x-2 text-slate-700 font-medium data-[state=active]:bg-white data-[state=active]:text-green-700 data-[state=active]:shadow-md rounded-lg transition-all duration-200 hover:text-green-600"
+          >
             <Target className="w-4 h-4" />
             <span>Wellness</span>
           </TabsTrigger>
-          <TabsTrigger value="insights" className="flex items-center space-x-2">
+          <TabsTrigger 
+            value="insights" 
+            className="flex items-center space-x-2 text-slate-700 font-medium data-[state=active]:bg-white data-[state=active]:text-green-700 data-[state=active]:shadow-md rounded-lg transition-all duration-200 hover:text-green-600"
+          >
             <Sparkles className="w-4 h-4" />
             <span>Insights</span>
           </TabsTrigger>
