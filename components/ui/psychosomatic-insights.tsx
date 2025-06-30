@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { PsychosomaticBodyMap } from './psychosomatic-body-map';
+import { useAppStore } from '@/lib/store';
 import { 
   Heart, 
   Brain, 
@@ -20,7 +21,13 @@ import {
   Users,
   Star,
   Award,
-  Lightbulb
+  Lightbulb,
+  Calendar,
+  TrendingUp,
+  Eye,
+  ChevronRight,
+  Database,
+  Cpu
 } from 'lucide-react';
 
 interface PsychosomaticInsightsProps {
@@ -60,14 +67,48 @@ interface PsychosomaticInsightsProps {
     personalization_level?: string;
   };
   className?: string;
+  initialTab?: string;
+  onTabChange?: (tab: string) => void;
 }
 
 export function PsychosomaticInsights({ 
   emotions, 
   psychosomaticData, 
-  className = '' 
+  className = '',
+  initialTab = 'overview',
+  onTabChange
 }: PsychosomaticInsightsProps) {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState(initialTab);
+  const [showHistory, setShowHistory] = useState(false);
+  const { journalEntries } = useAppStore();
+  
+  // Sync external tab changes
+  useEffect(() => {
+    console.log('🔄 PsychosomaticInsights: initialTab changed to:', initialTab);
+    setActiveTab(initialTab);
+  }, [initialTab]);
+  
+  useEffect(() => {
+    console.log('🎯 PsychosomaticInsights: activeTab is now:', activeTab);
+  }, [activeTab]);
+  
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    onTabChange?.(tab);
+  };
+  
+  // Get recent journal entries with analysis data
+  const recentAnalyses = journalEntries
+    .filter(entry => entry.emotions && Object.keys(entry.emotions).length > 0)
+    .slice(0, 5)
+    .map(entry => ({
+      id: entry.id,
+      date: entry.createdAt,
+      content: entry.content.substring(0, 100) + '...',
+      primaryEmotion: Object.entries(entry.emotions)[0] || ['neutral', 0.5],
+      emotionCount: Object.keys(entry.emotions).length,
+      hasSymptoms: entry.symptoms && Object.values(entry.symptoms).some(Boolean)
+    }));
 
   if (!psychosomaticData) {
     return (
@@ -128,7 +169,7 @@ export function PsychosomaticInsights({
       </Card>
 
       {/* Main Analysis Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
         <TabsList className="grid w-full grid-cols-4 bg-white/60 backdrop-blur-sm border border-green-200/50 rounded-xl p-1 shadow-lg">
           <TabsTrigger 
             value="overview" 
@@ -156,7 +197,7 @@ export function PsychosomaticInsights({
             className="flex items-center space-x-2 text-slate-700 font-medium data-[state=active]:bg-white data-[state=active]:text-green-700 data-[state=active]:shadow-md rounded-lg transition-all duration-200 hover:text-green-600"
           >
             <Sparkles className="w-4 h-4" />
-            <span>Insights</span>
+            <span>Analysis</span>
           </TabsTrigger>
         </TabsList>
 
@@ -358,123 +399,216 @@ export function PsychosomaticInsights({
           </Card>
         </TabsContent>
 
-        <TabsContent value="insights" className="space-y-4">
-          {/* Personalized Insights */}
-          {psychosomaticData.personalized_insights && (
-            <Card className="border-green-200 bg-gradient-to-br from-green-50 to-emerald-50">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Sparkles className="w-5 h-5 text-green-600" />
-                  <span>Personalized Insights</span>
-                  {isPremium && (
-                    <Badge className="bg-emerald-600 text-white">
-                      AI-Enhanced
+        <TabsContent value="insights" className="space-y-6">
+          {/* Hero Section - Most Recent Insight */}
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 via-emerald-400/10 to-green-500/20 rounded-3xl blur-xl"></div>
+            <Card className="relative bg-white/60 backdrop-blur-sm border border-green-200/50 rounded-2xl shadow-lg">
+              <CardHeader className="pb-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
+                      <Sparkles className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-xl text-slate-800">Latest Analysis</CardTitle>
+                      <p className="text-sm text-slate-600 mt-1">Your most recent emotional insight</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Badge className="bg-green-600 text-white px-3 py-1">
+                      <Cpu className="w-3 h-3 mr-1" />
+                      BERT-Powered
                     </Badge>
-                  )}
-                </CardTitle>
+                    {isPremium && (
+                      <Badge className="bg-emerald-600 text-white px-3 py-1">
+                        <Sparkles className="w-3 h-3 mr-1" />
+                        AI-Enhanced
+                      </Badge>
+                    )}
+                  </div>
+                </div>
               </CardHeader>
               <CardContent className="space-y-4">
-                {psychosomaticData.personalized_insights.personalized_psychosomatic && (
-                  <div className="p-4 bg-white/70 rounded-lg border border-green-200">
-                    <h4 className="font-semibold text-green-800 mb-2 flex items-center space-x-2">
-                      <Heart className="w-4 h-4" />
-                      <span>Your Body's Story</span>
-                    </h4>
-                    <p className="text-green-700">
-                      {psychosomaticData.personalized_insights.personalized_psychosomatic}
-                    </p>
-                  </div>
-                )}
-
-                {psychosomaticData.personalized_insights.personalized_wellness && (
-                  <div className="space-y-3">
-                    <h4 className="font-semibold text-green-800 flex items-center space-x-2">
-                      <Target className="w-4 h-4" />
-                      <span>Personalized Recommendations</span>
-                    </h4>
-                    
-                    {psychosomaticData.personalized_insights.personalized_wellness.immediate_techniques && (
-                      <div className="p-3 bg-white/50 rounded-lg">
-                        <h5 className="font-medium text-green-700 mb-2">Right Now</h5>
-                        <ul className="space-y-1">
-                          {psychosomaticData.personalized_insights.personalized_wellness.immediate_techniques.map((technique, index) => (
-                            <li key={index} className="text-sm text-green-600 flex items-start space-x-2">
-                              <div className="w-1.5 h-1.5 bg-green-400 rounded-full mt-2 flex-shrink-0" />
-                              <span>{technique}</span>
-                            </li>
-                          ))}
-                        </ul>
+                {/* Current Analysis Summary */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                  <div className="lg:col-span-2 space-y-4">
+                    {psychosomaticData.personalized_insights?.personalized_psychosomatic && (
+                      <div className="p-4 bg-white/70 backdrop-blur-sm rounded-xl border border-green-200/50">
+                        <h4 className="font-semibold text-green-800 mb-2 flex items-center space-x-2">
+                          <Heart className="w-4 h-4" />
+                          <span>Your Body's Current Story</span>
+                        </h4>
+                        <p className="text-green-700 leading-relaxed">
+                          {psychosomaticData.personalized_insights.personalized_psychosomatic}
+                        </p>
                       </div>
                     )}
-
-                    {psychosomaticData.personalized_insights.personalized_wellness.contextual_insight && (
-                      <div className="p-3 bg-white/50 rounded-lg">
-                        <h5 className="font-medium text-emerald-700 mb-2 flex items-center space-x-2">
-                          <Lightbulb className="w-4 h-4" />
-                          <span>Key Insight</span>
-                        </h5>
-                        <p className="text-sm text-emerald-600">
-                          {psychosomaticData.personalized_insights.personalized_wellness.contextual_insight}
+                    
+                    {psychosomaticData.personalized_insights?.encouragement && (
+                      <div className="p-4 bg-gradient-to-r from-green-50/80 to-emerald-50/80 backdrop-blur-sm rounded-xl border border-green-200/50">
+                        <h4 className="font-semibold text-green-800 mb-2 flex items-center space-x-2">
+                          <Award className="w-4 h-4" />
+                          <span>Personal Insight</span>
+                        </h4>
+                        <p className="text-green-700 italic font-medium">
+                          "{psychosomaticData.personalized_insights.encouragement}"
                         </p>
                       </div>
                     )}
                   </div>
-                )}
-
-                {psychosomaticData.personalized_insights.encouragement && (
-                  <div className="p-4 bg-gradient-to-r from-green-100 to-emerald-100 rounded-lg border border-green-200">
-                    <h4 className="font-semibold text-green-800 mb-2 flex items-center space-x-2">
-                      <Award className="w-4 h-4" />
-                      <span>Encouragement</span>
-                    </h4>
-                    <p className="text-green-700 italic">
-                      "{psychosomaticData.personalized_insights.encouragement}"
-                    </p>
+                  
+                  {/* Quick Stats */}
+                  <div className="space-y-3">
+                    <div className="p-3 bg-white/50 backdrop-blur-sm rounded-lg border border-green-200/30">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-slate-600">Primary Emotion</span>
+                        <TrendingUp className="w-4 h-4 text-green-600" />
+                      </div>
+                      <p className="text-lg font-semibold text-green-700 capitalize mt-1">
+                        {primaryEmotion || 'Neutral'}
+                      </p>
+                    </div>
+                    
+                    <div className="p-3 bg-white/50 backdrop-blur-sm rounded-lg border border-green-200/30">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-slate-600">Emotions Detected</span>
+                        <Activity className="w-4 h-4 text-emerald-600" />
+                      </div>
+                      <p className="text-lg font-semibold text-emerald-700 mt-1">
+                        {emotions.length} emotions
+                      </p>
+                    </div>
+                    
+                    <div className="p-3 bg-white/50 backdrop-blur-sm rounded-lg border border-green-200/30">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-slate-600">Analysis Type</span>
+                        <Database className="w-4 h-4 text-green-600" />
+                      </div>
+                      <p className="text-sm font-medium text-green-700 mt-1">
+                        {isPremium ? 'GPT + BERT Hybrid' : 'BERT Classification'}
+                      </p>
+                    </div>
                   </div>
-                )}
+                </div>
               </CardContent>
             </Card>
-          )}
+          </div>
 
-          {/* Analysis Quality Indicators */}
-          <Card>
+          {/* Analysis History Section */}
+          <Card className="bg-white/60 backdrop-blur-sm border border-green-200/50 rounded-2xl shadow-lg">
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <BookOpen className="w-5 h-5 text-slate-600" />
-                <span>Analysis Quality</span>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-green-600 rounded-lg flex items-center justify-center">
+                    <Clock className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg text-slate-800">Analysis History</CardTitle>
+                    <p className="text-sm text-slate-600">Track your emotional journey over time</p>
+                  </div>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowHistory(!showHistory)}
+                  className="border-green-300 text-green-700 hover:bg-green-50"
+                >
+                  <Eye className="w-4 h-4 mr-2" />
+                  {showHistory ? 'Hide History' : 'View All'}
+                </Button>
+              </div>
+            </CardHeader>
+            
+            {showHistory && (
+              <CardContent className="pt-0">
+                <div className="space-y-3">
+                  {recentAnalyses.length > 0 ? (
+                    recentAnalyses.map((analysis, index) => (
+                      <div
+                        key={analysis.id}
+                        className="p-4 bg-white/50 backdrop-blur-sm rounded-xl border border-green-200/30 hover:bg-white/70 transition-all duration-200"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <div className={`w-3 h-3 rounded-full ${
+                              index === 0 ? 'bg-green-500' : 
+                              index === 1 ? 'bg-emerald-500' : 'bg-green-400'
+                            }`} />
+                            <div>
+                              <p className="font-medium text-slate-700 capitalize">
+                                {analysis.primaryEmotion[0]} 
+                                <span className="text-sm text-slate-500 font-normal ml-2">
+                                  ({Math.round(analysis.primaryEmotion[1] * 100)}% confidence)
+                                </span>
+                              </p>
+                              <p className="text-xs text-slate-500">
+                                {analysis.date.toLocaleDateString()} • {analysis.emotionCount} emotions
+                                {analysis.hasSymptoms && " • Physical symptoms detected"}
+                              </p>
+                            </div>
+                          </div>
+                          <ChevronRight className="w-4 h-4 text-slate-400" />
+                        </div>
+                        <p className="text-sm text-slate-600 mt-2 truncate">
+                          {analysis.content}
+                        </p>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-8">
+                      <Calendar className="w-12 h-12 text-slate-400 mx-auto mb-3" />
+                      <p className="text-slate-500">No previous analyses found</p>
+                      <p className="text-sm text-slate-400">Start journaling to see your emotional patterns</p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            )}
+          </Card>
+
+          {/* Value Proposition Section */}
+          <Card className="bg-gradient-to-br from-green-50/80 to-emerald-50/80 backdrop-blur-sm border border-green-200/50 rounded-2xl shadow-lg">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2 text-slate-800">
+                <Award className="w-5 h-5 text-green-600" />
+                <span>Analysis Excellence</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <Award className="w-6 h-6 text-green-600" />
+                  <div className="w-16 h-16 bg-white/70 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4 border border-green-200/50">
+                    <Database className="w-8 h-8 text-green-600" />
                   </div>
-                  <h4 className="font-semibold text-slate-700">Evidence-Based</h4>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Based on peer-reviewed research
+                  <h4 className="font-semibold text-slate-700 mb-2">BERT-Powered</h4>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    Fine-tuned on 58,000 emotions with 62% precision across 28 categories
                   </p>
                 </div>
                 
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <Activity className="w-6 h-6 text-emerald-600" />
+                  <div className="w-16 h-16 bg-white/70 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4 border border-emerald-200/50">
+                    <Activity className="w-8 h-8 text-emerald-600" />
                   </div>
-                  <h4 className="font-semibold text-slate-700">Scientifically Grounded</h4>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Psychosomatic mapping validated
+                  <h4 className="font-semibold text-slate-700 mb-2">Evidence-Based</h4>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    Psychosomatic mapping validated by peer-reviewed research studies
                   </p>
                 </div>
                 
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <Sparkles className="w-6 h-6 text-green-600" />
+                  <div className="w-16 h-16 bg-white/70 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4 border border-green-200/50">
+                    <Sparkles className="w-8 h-8 text-green-600" />
                   </div>
-                  <h4 className="font-semibold text-slate-700">
-                    {isPremium ? 'AI-Enhanced' : 'Template-Based'}
+                  <h4 className="font-semibold text-slate-700 mb-2">
+                    {isPremium ? 'AI-Enhanced' : 'Adaptive Detection'}
                   </h4>
-                  <p className="text-xs text-slate-500 mt-1">
-                    {isPremium ? 'Contextually personalized' : 'Evidence-based guidance'}
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    {isPremium 
+                      ? 'GPT-powered personalization with contextual understanding'
+                      : 'Dynamic emotion detection based on text characteristics'
+                    }
                   </p>
                 </div>
               </div>

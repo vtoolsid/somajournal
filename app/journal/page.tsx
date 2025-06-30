@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { AppLayout } from '@/components/layout/app-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -34,7 +35,8 @@ import {
 } from 'lucide-react';
 
 export default function JournalPage() {
-  const { currentEntry, updateCurrentEntry, addJournalEntry, addJournalEntryWithoutClear, user } = useAppStore();
+  const { currentEntry, updateCurrentEntry, addJournalEntry, addJournalEntryWithoutClear, user, journalEntries } = useAppStore();
+  const router = useRouter();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysis, setAnalysis] = useState<any>(null);
   const [showCeremony, setShowCeremony] = useState(false);
@@ -49,6 +51,7 @@ export default function JournalPage() {
   const [tags, setTags] = useState<string[]>([]);
   const [emotionPreview, setEmotionPreview] = useState<any>(null);
   const [previewTimeout, setPreviewTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [psychosomaticTab, setPsychosomaticTab] = useState('overview');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -257,7 +260,9 @@ export default function JournalPage() {
     const today = new Date();
     const todayStr = `${today.getMonth() + 1}-${today.getDate()}`;
     
-    return mockJournalEntries.find(entry => {
+    // Combine actual entries with mock entries for "on this day" feature
+    const allEntries = [...journalEntries, ...mockJournalEntries];
+    return allEntries.find(entry => {
       const entryDate = new Date(entry.createdAt);
       const entryStr = `${entryDate.getMonth() + 1}-${entryDate.getDate()}`;
       return entryStr === todayStr && entryDate.getFullYear() !== today.getFullYear();
@@ -266,13 +271,17 @@ export default function JournalPage() {
 
   const getEntriesForDate = (date: Date) => {
     const dateStr = date.toDateString();
-    return mockJournalEntries.filter(entry => 
+    // Combine actual entries with mock entries for calendar display
+    const allEntries = [...journalEntries, ...mockJournalEntries];
+    return allEntries.filter(entry => 
       new Date(entry.createdAt).toDateString() === dateStr
     );
   };
 
   const getDatesWithEntries = () => {
-    return mockJournalEntries.map(entry => new Date(entry.createdAt));
+    // Combine actual entries with mock entries for calendar highlighting
+    const allEntries = [...journalEntries, ...mockJournalEntries];
+    return allEntries.map(entry => new Date(entry.createdAt));
   };
 
   const onThisDayEntry = getOnThisDayEntry();
@@ -412,7 +421,8 @@ export default function JournalPage() {
               {viewMode === 'list' ? (
                 <ScrollArea className="h-full">
                   <div className="p-4 space-y-3">
-                    {mockJournalEntries.map((entry) => (
+                    {/* Show actual journal entries first, then mock entries */}
+                    {[...journalEntries, ...mockJournalEntries].map((entry) => (
                       <Card 
                         key={entry.id}
                         className={`cursor-pointer transition-all hover:shadow-md ${
@@ -585,114 +595,32 @@ export default function JournalPage() {
                     </div>
                   )}
 
-                  <Accordion type="single" collapsible className="w-full">
-                    <AccordionItem value="analysis">
-                      <AccordionTrigger>
-                        <div className="flex items-center space-x-2">
-                          <Sparkles className="w-4 h-4" />
-                          <span>Emotion Analysis</span>
-                          {selectedEntry.fallback && (
-                            <Badge variant="secondary" className="text-xs">Fallback</Badge>
-                          )}
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <div className="space-y-6">
-                          {/* Emotions Display */}
-                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                            <div>
-                              <p className="text-sm text-gray-600 mb-2">Detected Emotions</p>
-                              <div className="space-y-2">
-                                {Object.entries(selectedEntry.emotions).map(([emotion, confidence]) => (
-                                  <div key={emotion} className="flex items-center justify-between">
-                                    <Badge variant="outline" className="text-xs">
-                                      {emotion}
-                                    </Badge>
-                                    <span className="text-xs text-gray-500">
-                                      {typeof confidence === 'number' ? `${(confidence * 100).toFixed(0)}%` : 'detected'}
-                                    </span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                            
-                            <div>
-                              <p className="text-sm text-gray-600 mb-2">Physical Symptoms</p>
-                              <div className="space-y-1">
-                                {Object.entries(selectedEntry.symptoms || {}).map(([symptom, present]) => (
-                                  <div key={symptom} className="flex items-center space-x-2">
-                                    <div className={`w-2 h-2 rounded-full ${present ? 'bg-red-400' : 'bg-gray-200'}`} />
-                                    <span className={`text-xs ${present ? 'text-gray-700' : 'text-gray-400'}`}>
-                                      {symptom.replace('_', ' ')}
-                                    </span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Adaptive Analysis Info */}
-                          {selectedEntry.analysis && (
-                            <div className="border-t pt-4">
-                              <p className="text-sm font-medium text-gray-700 mb-3">Adaptive Analysis</p>
-                              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 text-xs">
-                                <div>
-                                  <p className="text-gray-600">Text Type</p>
-                                  <p className="font-medium text-gray-800 capitalize">
-                                    {selectedEntry.analysis.text_type?.replace('_', ' ')}
-                                  </p>
-                                </div>
-                                <div>
-                                  <p className="text-gray-600">Emotional Richness</p>
-                                  <p className="font-medium text-gray-800 capitalize">
-                                    {selectedEntry.analysis.emotional_richness}
-                                  </p>
-                                </div>
-                                <div>
-                                  <p className="text-gray-600">Strategy Used</p>
-                                  <p className="font-medium text-gray-800">
-                                    {selectedEntry.analysis.recommended_approach}
-                                  </p>
-                                </div>
-                              </div>
-                              
-                              {selectedEntry.characteristics && (
-                                <div className="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-2 text-xs">
-                                  <div>
-                                    <p className="text-gray-600">Word Count</p>
-                                    <p className="font-medium">{selectedEntry.characteristics.word_count || selectedEntry.analysis.word_count}</p>
-                                  </div>
-                                  <div>
-                                    <p className="text-gray-600">Threshold</p>
-                                    <p className="font-medium">{selectedEntry.analysis.threshold_used || 'N/A'}</p>
-                                  </div>
-                                  <div>
-                                    <p className="text-gray-600">Max Emotions</p>
-                                    <p className="font-medium">{selectedEntry.analysis.max_emotions || 'N/A'}</p>
-                                  </div>
-                                  <div>
-                                    <p className="text-gray-600">Complexity</p>
-                                    <p className="font-medium">
-                                      {selectedEntry.characteristics.complexity_score ? 
-                                        (selectedEntry.characteristics.complexity_score * 100).toFixed(0) + '%' : 'N/A'}
-                                    </p>
-                                  </div>
-                                </div>
-                              )}
-
-                              {selectedEntry.adaptive_info && (
-                                <div className="mt-3 p-2 bg-green-50 rounded text-xs">
-                                  <p className="text-green-800">
-                                    <span className="font-medium">Strategy:</span> {selectedEntry.adaptive_info.reasoning}
-                                  </p>
-                                </div>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
+                  {/* Psychosomatic Analysis */}
+                  <div className="mt-8">
+                    <div className="flex items-center space-x-2 mb-6">
+                      <Sparkles className="w-5 h-5 text-green-600" />
+                      <h3 className="text-lg font-semibold text-gray-800">Comprehensive Analysis</h3>
+                      {selectedEntry.fallback && (
+                        <Badge variant="secondary" className="text-xs">Fallback Mode</Badge>
+                      )}
+                      {selectedEntry.psychosomatic && (
+                        <Badge className="bg-blue-600 text-white text-xs">Evidence-based</Badge>
+                      )}
+                    </div>
+                    
+                    <PsychosomaticInsights 
+                      emotions={Object.entries(selectedEntry.emotions || {}).map(([emotion, confidence]) => ({
+                        emotion,
+                        confidence: typeof confidence === 'number' ? confidence : 0.5
+                      }))}
+                      psychosomaticData={selectedEntry.psychosomatic || {
+                        psychosomatic_analysis: selectedEntry.psychosomatic_analysis,
+                        personalized_insights: selectedEntry.personalized_insights,
+                        wellness_recommendations: selectedEntry.wellness_recommendations
+                      }}
+                      className="mb-6"
+                    />
+                  </div>
                 </div>
               </div>
             ) : (
@@ -853,10 +781,9 @@ export default function JournalPage() {
                           </Button>
                         </div>
 
-                        {/* Comprehensive Analysis Results */}
-                        {analysis.psychosomatic || analysis.psychosomatic_analysis || analysis.personalized_insights ? (
-                          <div className="space-y-6">
-                            {/* Executive Summary Card */}
+                        {/* Psychosomatic Analysis Results */}
+                        <div className="space-y-6">
+                            {/* Psychosomatic Analysis Component */}
                             <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
                               <CardHeader>
                                 <div className="flex items-center justify-between">
@@ -943,25 +870,11 @@ export default function JournalPage() {
                                   </div>
                                 )}
 
-                                {/* View Detailed Analysis Button */}
-                                <div className="pt-2">
-                                  <Button 
-                                    variant="outline" 
-                                    className="w-full border-green-300 text-green-700 hover:bg-green-50"
-                                    onClick={() => {
-                                      const element = document.getElementById('detailed-psychosomatic-analysis');
-                                      element?.scrollIntoView({ behavior: 'smooth' });
-                                    }}
-                                  >
-                                    <BookOpen className="w-4 h-4 mr-2" />
-                                    View Detailed Analysis
-                                  </Button>
-                                </div>
                               </CardContent>
                             </Card>
 
-                            {/* Detailed Psychosomatic Analysis Component */}
-                            <div id="detailed-psychosomatic-analysis">
+                            {/* Psychosomatic Analysis Component */}
+                            <div id="psychosomatic-analysis">
                               <PsychosomaticInsights 
                                 emotions={analysis.emotions ? Object.entries(analysis.emotions).map(([emotion, confidence]) => ({
                                   emotion,
@@ -975,81 +888,7 @@ export default function JournalPage() {
                                 className="mb-6"
                               />
                             </div>
-                          </div>
-                        ) : (
-                          // Fallback to legacy analysis display when psychosomatic data not available
-                          <div className="wellness-card bg-gradient-to-br from-green-50 via-white to-emerald-50 border border-green-200 rounded-lg p-6 hover:shadow-xl transition-shadow duration-300">
-                            <div className="space-y-6">
-                              {/* Emotions Display */}
-                              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                <div>
-                                  <p className="text-sm font-medium text-gray-700 mb-3">Detected Emotions</p>
-                                  <div className="space-y-2">
-                                    {Object.entries(analysis.emotions || {}).map(([emotion, confidence], index) => (
-                                      <div 
-                                        key={emotion} 
-                                        className="flex items-center justify-between p-3 bg-white rounded-lg border border-green-100 hover:border-green-300 transition-all animate-fade-in hover:shadow-md"
-                                        style={{ animationDelay: `${index * 100}ms` }}
-                                      >
-                                        <Badge variant="outline" className="text-sm font-medium">
-                                          {emotion}
-                                        </Badge>
-                                        <div className="flex items-center space-x-2">
-                                          <div className="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
-                                            <div 
-                                              className="h-full bg-gradient-to-r from-green-400 to-emerald-500 transition-all duration-1000"
-                                              style={{ width: `${(confidence as number) * 100}%` }}
-                                            />
-                                          </div>
-                                          <span className="text-sm font-medium text-gray-600 min-w-[45px] text-right">
-                                            {typeof confidence === 'number' ? `${(confidence * 100).toFixed(0)}%` : 'detected'}
-                                          </span>
-                                        </div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                                
-                                <div>
-                                  <p className="text-sm font-medium text-gray-700 mb-3">Physical Symptoms</p>
-                                  <div className="space-y-1">
-                                    {Object.entries(analysis.symptoms || {}).map(([symptom, present], index) => (
-                                      <div 
-                                        key={symptom} 
-                                        className="flex items-center space-x-2 p-3 bg-white rounded-lg border border-green-100 animate-fade-in"
-                                        style={{ animationDelay: `${(index + 3) * 100}ms` }}
-                                      >
-                                        <div className={`w-3 h-3 rounded-full transition-all ${
-                                          present ? 'bg-red-400 animate-pulse' : 'bg-gray-200'
-                                        }`} />
-                                        <span className={`text-sm ${present ? 'text-gray-700 font-medium' : 'text-gray-400'}`}>
-                                          {symptom.replace('_', ' ')}
-                                        </span>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                              </div>
-
-                              {/* Upgrade to Premium Notice */}
-                              <div className="border-t border-green-200 pt-6">
-                                <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
-                                  <div className="flex items-center space-x-3">
-                                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                                      <Sparkles className="w-4 h-4 text-white" />
-                                    </div>
-                                    <div>
-                                      <h4 className="font-semibold text-blue-800">Unlock Psychosomatic Analysis</h4>
-                                      <p className="text-sm text-blue-700 mt-1">
-                                        Get evidence-based body mapping, personalized wellness recommendations, and AI-enhanced insights.
-                                      </p>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        )}
+                        </div>
                       </div>
                     </div>
                   )}
@@ -1066,14 +905,6 @@ export default function JournalPage() {
                               <p className="text-sm text-red-700 mt-1">{analysisError}</p>
                             </div>
                           </div>
-                          <Button 
-                            onClick={startNewEntry}
-                            variant="outline"
-                            size="sm"
-                            className="mt-3 border-red-200 text-red-700 hover:bg-red-50"
-                          >
-                            Try Again
-                          </Button>
                         </div>
                       </div>
                     </div>
