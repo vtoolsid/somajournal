@@ -16,13 +16,13 @@ export const ChakraRing = ({ className = '' }: ChakraRingProps) => {
   // Positions for each chakra starting with crown (purple) at bottom going clockwise
   // Very tight spacing going to the right side - crown to root order
   const chakraPositions = [
-    { id: 'crown', distance: 210, angle: 270, size: 28 }, // Bottom - Purple
-    { id: 'third-eye', distance: 212, angle: 290, size: 30 }, // Bottom-right - Indigo
-    { id: 'throat', distance: 214, angle: 310, size: 32 }, // Right - Blue
-    { id: 'heart', distance: 216, angle: 330, size: 34 }, // Right - Green
-    { id: 'solar', distance: 218, angle: 350, size: 36 }, // Right - Yellow
-    { id: 'sacral', distance: 220, angle: 10, size: 38 }, // Right-top - Orange
-    { id: 'root', distance: 222, angle: 30, size: 40 }, // Top-right - Red
+    { id: 'crown', distance: 210, angle: 270, size: 33 }, // Bottom - Purple
+    { id: 'third-eye', distance: 214, angle: 290, size: 40 }, // Bottom-right - Indigo (smaller than crown)
+    { id: 'throat', distance: 218, angle: 310, size: 38 }, // Right - Blue
+    { id: 'heart', distance: 222, angle: 330, size: 40 }, // Right - Green
+    { id: 'solar', distance: 226, angle: 350, size: 42 }, // Right - Yellow
+    { id: 'sacral', distance: 230, angle: 10, size: 44 }, // Right-top - Orange
+    { id: 'root', distance: 234, angle: 30, size: 46 }, // Top-right - Red (largest)
   ];
 
   const handleChakraClick = (chakraId: string) => {
@@ -98,7 +98,7 @@ export const ChakraRing = ({ className = '' }: ChakraRingProps) => {
                   className="absolute z-10 px-4 py-3 text-xs font-light text-white rounded-lg shadow-xl whitespace-nowrap pointer-events-none"
                   style={{
                     left: '50%',
-                    top: `-${position.size + 25}px`,
+                    top: `-${position.size + 35}px`,
                     transform: 'translateX(-50%)',
                     backgroundColor: `${chakra.color}dd`,
                     backdropFilter: 'blur(8px)',

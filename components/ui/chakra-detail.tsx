@@ -2,6 +2,8 @@
 
 import { ChakraInfo } from '@/lib/chakra-data';
 import { Dialog, DialogContentWithoutClose, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { X } from 'lucide-react';
+import Image from 'next/image';
 
 interface ChakraDetailProps {
   chakra: ChakraInfo;
@@ -18,25 +20,32 @@ export const ChakraDetail = ({ chakra, isOpen, onClose }: ChakraDetailProps) => 
           boxShadow: `0 25px 50px -12px ${chakra.color}40, 0 0 0 1px ${chakra.color}20`
         }}
       >
-        <DialogHeader className="space-y-4 pb-6">
+        <DialogHeader className="pb-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div 
-                className="w-12 h-12 rounded-full border-2 border-white shadow-lg flex items-center justify-center"
-                style={{ 
-                  backgroundColor: chakra.color,
-                  boxShadow: `0 0 20px ${chakra.color}40`
-                }}
-              >
-                {/* You can add chakra icon here if desired */}
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-full border-2 border-gray-200 shadow-lg flex items-center justify-center overflow-hidden bg-white">
+                <Image
+                  src={`/images/chakras/${chakra.id}.png`}
+                  alt={`${chakra.name} symbol`}
+                  width={56}
+                  height={56}
+                  className="w-full h-full object-cover"
+                />
               </div>
-              <div>
-                <DialogTitle className="text-2xl font-semibold text-slate-800">
+              <div className="flex flex-col justify-center">
+                <DialogTitle className="text-2xl font-semibold text-slate-800 leading-tight">
                   {chakra.name}
                 </DialogTitle>
-                <p className="text-sm text-slate-600 italic">{chakra.sanskrit}</p>
+                <p className="text-sm text-slate-500 italic mt-0.5">{chakra.sanskrit}</p>
               </div>
             </div>
+            <button
+              onClick={onClose}
+              className="p-2.5 hover:bg-gray-100 rounded-full transition-colors"
+              aria-label="Close"
+            >
+              <X className="w-5 h-5 text-gray-400 hover:text-gray-600" />
+            </button>
           </div>
         </DialogHeader>
 
