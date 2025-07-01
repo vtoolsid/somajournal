@@ -53,7 +53,7 @@ export default function LoginPage() {
           </div>
 
           {/* Sign-in Options */}
-          <div className="space-y-4 mb-8">
+          <div className="space-y-6 mb-16">
             {/* Google Sign-in Button */}
             <Button
               onClick={handleGoogleSignin}

@@ -37,7 +37,7 @@ export default function SignUpPage() {
       <div className="w-full lg:w-1/2 flex flex-col justify-center px-8 lg:px-16 bg-white">
         <div className="max-w-sm mx-auto w-full">
           {/* Header */}
-          <div className="mb-16">
+          <div className="mb-12">
             {/* Simple Brand Identity */}
             <div className="flex justify-center mb-12">
               <div className="w-20 h-20 flex items-center justify-center">
@@ -56,7 +56,7 @@ export default function SignUpPage() {
           </div>
 
           {/* Signup Options */}
-          <div className="space-y-4 mb-8">
+          <div className="space-y-6 mb-16">
             {/* Google Signup Button */}
             <Button
               onClick={handleGoogleSignup}
