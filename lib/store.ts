@@ -128,6 +128,10 @@ export const useAppStore = create<AppState>()(
     }),
     {
       name: 'karmic-wellness-storage',
+      partialize: (state) => ({
+        ...state,
+        currentEntry: '', // Always start with empty currentEntry
+      }),
     }
   )
 );

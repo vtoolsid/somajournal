@@ -52,7 +52,6 @@ export default function JournalPage() {
   const [tags, setTags] = useState<string[]>([]);
   const [emotionPreview, setEmotionPreview] = useState<any>(null);
   const [previewTimeout, setPreviewTimeout] = useState<NodeJS.Timeout | null>(null);
-  const [psychosomaticTab, setPsychosomaticTab] = useState('overview');
   const [showDetailModal, setShowDetailModal] = useState(false);
 
   // ESC key handler for modal

@@ -3,12 +3,12 @@
 import { useAppStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
 import { useRouter, usePathname } from 'next/navigation';
-import { Home, BookOpen, TrendingUp, Heart, LogOut } from 'lucide-react';
+import { Home, BookOpen, Heart, LogOut, Settings } from 'lucide-react';
 
 const navigation = [
   { name: 'Home', href: '/dashboard', icon: Home },
   { name: 'Journal', href: '/journal', icon: BookOpen },
-  { name: 'Analysis', href: '/analysis', icon: TrendingUp },
+  { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
 export function Sidebar() {
