@@ -143,11 +143,20 @@ export const ChakraDetail = ({ chakra, isOpen, onClose }: ChakraDetailProps) => 
             </p>
           </div>
 
-          {/* Wellness tip */}
-          <div className="bg-green-50 rounded-xl p-4 border border-green-200">
-            <p className="text-sm text-green-800">
-              <span className="font-medium">Wellness Tip:</span> Focus on this chakra during your 
-              journaling practice to explore and balance these aspects of your well-being.
+          {/* Alignment Guidance */}
+          <div 
+            className="rounded-xl p-4 border"
+            style={{
+              backgroundColor: `${chakra.color}10`,
+              borderColor: `${chakra.color}30`
+            }}
+          >
+            <h4 className="font-medium text-slate-800 mb-2">How to Align This Chakra</h4>
+            <p 
+              className="text-sm leading-relaxed"
+              style={{ color: `${chakra.color}` }}
+            >
+              {chakra.alignmentGuidance}
             </p>
           </div>
         </div>

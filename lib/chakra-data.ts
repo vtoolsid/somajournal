@@ -13,6 +13,7 @@ export interface ChakraInfo {
   physicalAspects: string[];
   mentalAspects: string[];
   affirmation: string;
+  alignmentGuidance: string;
 }
 
 export const chakraData: ChakraInfo[] = [
@@ -30,7 +31,8 @@ export const chakraData: ChakraInfo[] = [
     emotions: ['Security', 'Trust', 'Groundedness', 'Stability'],
     physicalAspects: ['Legs', 'Feet', 'Lower back', 'Adrenal glands'],
     mentalAspects: ['Focus', 'Determination', 'Self-preservation', 'Material needs'],
-    affirmation: 'I am safe, secure, and grounded in my being.'
+    affirmation: 'I am safe, secure, and grounded in my being.',
+    alignmentGuidance: 'Connect with earth energy through barefoot walking, root vegetable nutrition, and mountain pose. Practice grounding meditations while visualizing red light at your spine base. Engage in physical activities like gardening, hiking, or leg-strengthening exercises to build stability and security.'
   },
   {
     id: 'sacral',
@@ -46,7 +48,8 @@ export const chakraData: ChakraInfo[] = [
     emotions: ['Joy', 'Passion', 'Pleasure', 'Creativity'],
     physicalAspects: ['Reproductive organs', 'Kidneys', 'Bladder', 'Lower abdomen'],
     mentalAspects: ['Emotional balance', 'Creative expression', 'Intimacy', 'Change'],
-    affirmation: 'I embrace my creativity and allow my emotions to flow freely.'
+    affirmation: 'I embrace my creativity and allow my emotions to flow freely.',
+    alignmentGuidance: 'Enhance your creative flow through artistic expression, dance, and hip circles. Practice emotional release with water meditations and orange light visualization. Explore sensual pleasures mindfully, nurture intimate relationships, and engage in activities that bring you joy and passion.'
   },
   {
     id: 'solar',
@@ -54,7 +57,7 @@ export const chakraData: ChakraInfo[] = [
     sanskrit: 'Manipura',
     sanskritName: 'मणिपूर',
     beejMantra: 'RAM',
-    color: '#FDD835',
+    color: '#D4A50A',
     element: 'Fire',
     location: 'Upper abdomen',
     description: 'The seat of personal power, confidence, and self-worth.',
@@ -62,7 +65,8 @@ export const chakraData: ChakraInfo[] = [
     emotions: ['Confidence', 'Motivation', 'Personal power', 'Self-worth'],
     physicalAspects: ['Stomach', 'Liver', 'Pancreas', 'Digestive system'],
     mentalAspects: ['Willpower', 'Decision making', 'Personal identity', 'Autonomy'],
-    affirmation: 'I am confident in my abilities and trust my inner wisdom.'
+    affirmation: 'I am confident in my abilities and trust my inner wisdom.',
+    alignmentGuidance: 'Build personal power through core-strengthening exercises, sun exposure, and yellow light meditation. Practice making decisive choices, set healthy boundaries, and engage in activities that boost confidence. Use warrior poses and deep breathing to ignite your inner fire and self-determination.'
   },
   {
     id: 'heart',
@@ -78,7 +82,8 @@ export const chakraData: ChakraInfo[] = [
     emotions: ['Love', 'Compassion', 'Forgiveness', 'Peace'],
     physicalAspects: ['Heart', 'Lungs', 'Arms', 'Hands'],
     mentalAspects: ['Empathy', 'Emotional healing', 'Relationships', 'Unity'],
-    affirmation: 'I give and receive love freely and unconditionally.'
+    affirmation: 'I give and receive love freely and unconditionally.',
+    alignmentGuidance: 'Open your heart through loving-kindness meditation, heart-opening yoga poses, and green light visualization. Practice forgiveness, express gratitude daily, spend time in nature, and cultivate compassion for yourself and others. Deep breathing exercises and giving acts of service enhance heart connection.'
   },
   {
     id: 'throat',
@@ -94,7 +99,8 @@ export const chakraData: ChakraInfo[] = [
     emotions: ['Truth', 'Communication', 'Expression', 'Authenticity'],
     physicalAspects: ['Throat', 'Neck', 'Thyroid', 'Mouth'],
     mentalAspects: ['Clear communication', 'Self-expression', 'Truth speaking', 'Listening'],
-    affirmation: 'I speak my truth with clarity and confidence.'
+    affirmation: 'I speak my truth with clarity and confidence.',
+    alignmentGuidance: 'Strengthen your voice through singing, chanting, and blue light meditation. Practice honest communication, active listening, and speaking your truth with kindness. Journal regularly, engage in creative writing, and express yourself authentically through words and sound healing.'
   },
   {
     id: 'third-eye',
@@ -110,7 +116,8 @@ export const chakraData: ChakraInfo[] = [
     emotions: ['Wisdom', 'Intuition', 'Clarity', 'Understanding'],
     physicalAspects: ['Eyes', 'Brain', 'Pituitary gland', 'Nervous system'],
     mentalAspects: ['Intuition', 'Imagination', 'Concentration', 'Self-awareness'],
-    affirmation: 'I trust my intuition and see clearly with wisdom.'
+    affirmation: 'I trust my intuition and see clearly with wisdom.',
+    alignmentGuidance: 'Enhance intuition through meditation, mindfulness, and indigo light visualization. Practice dream journaling, third-eye point massage, and quiet contemplation. Reduce screen time, engage in visualization exercises, and trust your inner knowing to develop psychic awareness and clarity.'
   },
   {
     id: 'crown',
@@ -126,7 +133,8 @@ export const chakraData: ChakraInfo[] = [
     emotions: ['Spiritual', 'Connected', 'Enlightened', 'Unified'],
     physicalAspects: ['Brain', 'Pineal gland', 'Nervous system', 'Head'],
     mentalAspects: ['Spiritual connection', 'Higher consciousness', 'Universal understanding', 'Transcendence'],
-    affirmation: 'I am connected to the divine wisdom of the universe.'
+    affirmation: 'I am connected to the divine wisdom of the universe.',
+    alignmentGuidance: 'Connect with divine consciousness through meditation, prayer, and violet light visualization. Practice mindful presence, study spiritual teachings, and cultivate gratitude. Spend time in sacred spaces, engage in selfless service, and maintain a spiritual practice to deepen your connection to universal wisdom.'
   }
 ];
 

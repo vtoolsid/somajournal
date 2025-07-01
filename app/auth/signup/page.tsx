@@ -81,7 +81,7 @@ export default function SignUpPage() {
   );
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex overflow-hidden">
       {/* Left Side - Chakra System */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
         <div className="absolute inset-0 flex items-center justify-center">
