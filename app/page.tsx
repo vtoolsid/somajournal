@@ -118,7 +118,7 @@ export default function Home() {
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                   SomaJournal
                 </h1>
-                <p className="text-sm text-slate-500 font-medium">✨ Digital Enlightenment Sanctuary</p>
+                <p className="text-sm text-slate-500 font-medium">Your AI Mind-Body Analyst</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -172,19 +172,17 @@ export default function Home() {
             
             <div className="space-y-8">
               <h1 className="text-7xl font-medium text-slate-800 leading-tight">
-                Bridge the gap between{' '}
                 <span className="gradient-text-shine">
-                  mental
+                  Map Your Mind.
                 </span>
-                {' '}and{' '}
+                {' '}
                 <span className="gradient-text-shine">
-                  physical
+                  Heal Your Body.
                 </span>
-                {' '}health
               </h1>
               
               <p className="text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-light">
-                Connect your daily actions to your physical well-being. Journal your experiences, receive evidence-based psychosomatic insights, and cultivate a life of conscious balance.
+                The first intelligent journal that uses AI to decode your emotional patterns and reveal their direct impact on your physical well-being.
               </p>
             </div>
           </div>
