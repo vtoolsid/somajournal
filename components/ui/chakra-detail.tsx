@@ -1,8 +1,7 @@
 'use client';
 
 import { ChakraInfo } from '@/lib/chakra-data';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { X } from 'lucide-react';
+import { Dialog, DialogContentWithoutClose, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 interface ChakraDetailProps {
   chakra: ChakraInfo;
@@ -13,7 +12,7 @@ interface ChakraDetailProps {
 export const ChakraDetail = ({ chakra, isOpen, onClose }: ChakraDetailProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent 
+      <DialogContentWithoutClose 
         className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl border-none shadow-2xl transition-all duration-300 ease-out"
         style={{
           boxShadow: `0 25px 50px -12px ${chakra.color}40, 0 0 0 1px ${chakra.color}20`
@@ -38,13 +37,6 @@ export const ChakraDetail = ({ chakra, isOpen, onClose }: ChakraDetailProps) => 
                 <p className="text-sm text-slate-600 italic">{chakra.sanskrit}</p>
               </div>
             </div>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-              aria-label="Close"
-            >
-              <X className="w-5 h-5 text-gray-500" />
-            </button>
           </div>
         </DialogHeader>
 
@@ -150,7 +142,7 @@ export const ChakraDetail = ({ chakra, isOpen, onClose }: ChakraDetailProps) => 
             </p>
           </div>
         </div>
-      </DialogContent>
+      </DialogContentWithoutClose>
     </Dialog>
   );
 };

@@ -136,9 +136,17 @@ export default function Home() {
                 </Button>
                 <Button
                   onClick={() => router.push('/auth/signup')}
-                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium px-5 py-2 rounded-lg text-sm transition-all duration-200 shadow-sm hover:shadow-md"
+                  className="relative overflow-hidden text-white font-medium px-5 py-2 rounded-lg text-sm transition-all duration-200 shadow-sm hover:shadow-md hover:scale-105"
                 >
-                  Get Started
+                  <span 
+                    className="absolute inset-0"
+                    style={{
+                      background: 'linear-gradient(90deg, #22c55e 0%, #10b981 15%, #059669 30%, #10b981 45%, #0ea5e9 60%, #10b981 75%, #059669 85%, #22c55e 100%)',
+                      backgroundSize: '200% 100%',
+                      animation: 'gradient-shine 6s ease infinite'
+                    }}
+                  />
+                  <span className="relative z-10">Get Started</span>
                 </Button>
               </div>
             </div>
