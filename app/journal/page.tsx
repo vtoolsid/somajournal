@@ -16,6 +16,7 @@ import { BreathingLoader } from '@/components/ui/breathing-loader';
 import { FloatingParticles } from '@/components/ui/floating-particles';
 import { PsychosomaticInsights } from '@/components/ui/psychosomatic-insights';
 import { useAppStore } from '@/lib/store';
+import { useSettingsStore } from '@/lib/settings-store';
 import { mockJournalEntries, analyzeJournalEntry } from '@/lib/mock-data';
 import { 
   BookOpen, 
@@ -24,7 +25,6 @@ import {
   Calendar as CalendarIcon,
   List,
   MapPin,
-  Cloud,
   Tag,
   Paperclip,
   Clock,
@@ -37,6 +37,7 @@ import {
 
 export default function JournalPage() {
   const { currentEntry, updateCurrentEntry, addJournalEntry, addJournalEntryWithoutClear, user, journalEntries } = useAppStore();
+  const { locationSharing, updatePrivacy } = useSettingsStore();
   const router = useRouter();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysis, setAnalysis] = useState<any>(null);
@@ -53,6 +54,12 @@ export default function JournalPage() {
   const [emotionPreview, setEmotionPreview] = useState<any>(null);
   const [previewTimeout, setPreviewTimeout] = useState<NodeJS.Timeout | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
+  
+  // Location state management
+  const [locationStatus, setLocationStatus] = useState<'initial' | 'loading' | 'granted' | 'denied' | 'unavailable' | 'error'>('initial');
+  const [currentLocation, setCurrentLocation] = useState<string>('');
+  const [locationError, setLocationError] = useState<string | null>(null);
 
   // ESC key handler for modal
   useEffect(() => {
@@ -73,6 +80,24 @@ export default function JournalPage() {
       document.body.style.overflow = 'unset';
     };
   }, [showDetailModal]);
+
+  // Live timer effect - updates every second
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  // Watch for changes in location sharing setting
+  useEffect(() => {
+    if (!locationSharing && locationStatus === 'granted') {
+      // When user disables location sharing via settings, keep the granted status 
+      // but hide the location data in the UI (handled by conditional rendering)
+      console.log('Location sharing disabled via settings');
+    }
+  }, [locationSharing, locationStatus]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -158,8 +183,7 @@ export default function JournalPage() {
       const newEntry = {
         content: currentEntry,
         userId: user?.id || '',
-        location: 'San Francisco, CA',
-        weather: '☀️ 72°F',
+        location: locationSharing && locationStatus === 'granted' ? currentLocation : undefined,
         tags: tags,
         ...analysisResult,
       };
@@ -275,6 +299,91 @@ export default function JournalPage() {
     const positiveEmotions = ['joy', 'gratitude', 'peace', 'love', 'contentment'];
     const hasPositive = Object.keys(emotions).some(emotion => positiveEmotions.includes(emotion.toLowerCase()));
     return hasPositive ? 'bg-emerald-400' : 'bg-blue-400';
+  };
+
+  // Geolocation functions
+  const reverseGeocode = async (lat: number, lng: number): Promise<string> => {
+    try {
+      // Using BigDataCloud's free API (no API key required)
+      const response = await fetch(
+        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`
+      );
+      
+      if (!response.ok) {
+        throw new Error('Geocoding failed');
+      }
+      
+      const data = await response.json();
+      
+      // Format as "City, State" or "City, Country"
+      const city = data.city || data.locality || 'Unknown City';
+      const region = data.principalSubdivision || data.countryName || 'Unknown Region';
+      
+      return `${city}, ${region}`;
+    } catch (error) {
+      console.error('Reverse geocoding error:', error);
+      return 'Unknown Location';
+    }
+  };
+
+  const requestLocation = async () => {
+    if (!navigator.geolocation) {
+      setLocationStatus('unavailable');
+      setLocationError('Geolocation is not supported by this browser');
+      return;
+    }
+
+    setLocationStatus('loading');
+    setLocationError(null);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          setLocationStatus('granted');
+          const { latitude, longitude } = position.coords;
+          
+          // Get city-level location (not exact coordinates)
+          const locationName = await reverseGeocode(latitude, longitude);
+          setCurrentLocation(locationName);
+          
+          // Enable location sharing in settings when user grants permission
+          updatePrivacy({ locationSharing: true });
+        } catch (error) {
+          console.error('Location processing error:', error);
+          setLocationStatus('error');
+          setLocationError('Failed to get location name');
+        }
+      },
+      (error) => {
+        console.error('Geolocation error:', error);
+        
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            setLocationStatus('denied');
+            setLocationError('Location access denied by user');
+            // Update settings store to reflect permission denial
+            updatePrivacy({ locationSharing: false });
+            break;
+          case error.POSITION_UNAVAILABLE:
+            setLocationStatus('unavailable');
+            setLocationError('Location information unavailable');
+            break;
+          case error.TIMEOUT:
+            setLocationStatus('error');
+            setLocationError('Location request timed out');
+            break;
+          default:
+            setLocationStatus('error');
+            setLocationError('An unknown error occurred');
+            break;
+        }
+      },
+      {
+        enableHighAccuracy: false, // Better for privacy and battery
+        timeout: 10000, // 10 second timeout
+        maximumAge: 300000 // 5 minute cache
+      }
+    );
   };
 
   const getOnThisDayEntry = () => {
@@ -413,7 +522,12 @@ export default function JournalPage() {
               </div>
               
               {/* View Toggle */}
-              <ToggleGroup type="single" value={viewMode} onValueChange={(value) => setViewMode(value as 'list' | 'calendar')} className="hidden lg:flex">
+              <ToggleGroup type="single" value={viewMode} onValueChange={(value) => {
+                setViewMode(value as 'list' | 'calendar');
+                if (value === 'calendar') {
+                  setSelectedEntry(null); // Clear selected entry when switching to calendar
+                }
+              }} className="hidden lg:flex">
                 <ToggleGroupItem value="list" className="flex-1 data-[state=on]:bg-green-100 data-[state=on]:text-green-700 data-[state=on]:border-green-300">
                   <List className="w-4 h-4 mr-2" />
                   List
@@ -438,7 +552,10 @@ export default function JournalPage() {
                 <Button 
                   variant={viewMode === 'calendar' ? 'default' : 'outline'} 
                   size="sm" 
-                  onClick={() => setViewMode('calendar')}
+                  onClick={() => {
+                    setViewMode('calendar');
+                    setSelectedEntry(null); // Clear selected entry when switching to calendar
+                  }}
                   className={`flex-1 ${viewMode === 'calendar' ? 'bg-green-600 hover:bg-green-700 text-white' : 'border-gray-300 text-gray-700 hover:bg-gray-50'}`}
                 >
                   <CalendarIcon className="w-4 h-4 mr-2" />
@@ -578,7 +695,13 @@ export default function JournalPage() {
                                           <h2 className="text-lg font-semibold text-gray-800">
                                             {isToday ? 'Today' : dayName}
                                           </h2>
-                                          <p className="text-sm text-gray-500">{dateStr}</p>
+                                          <p className="text-sm text-gray-500">
+                                            {isToday ? dateStr : selectedDate.toLocaleDateString('en-US', { 
+                                              month: 'long', 
+                                              day: 'numeric',
+                                              year: 'numeric'
+                                            })}
+                                          </p>
                                         </div>
                                         <div className="flex items-center space-x-2">
                                           {dayEntries.length > 0 && (
@@ -729,12 +852,6 @@ export default function JournalPage() {
                           <span>{selectedEntry.location}</span>
                         </div>
                       )}
-                      {selectedEntry.weather && (
-                        <div className="flex items-center space-x-1">
-                          <Cloud className="w-4 h-4" />
-                          <span>{selectedEntry.weather}</span>
-                        </div>
-                      )}
                     </div>
                   </div>
 
@@ -804,15 +921,42 @@ export default function JournalPage() {
                   <div className="flex flex-col lg:flex-row lg:items-center lg:space-x-6 space-y-2 lg:space-y-0 mb-4 lg:mb-6 p-3 lg:p-4 bg-gray-50 rounded-lg">
                     <div className="flex items-center space-x-2 text-sm text-gray-600">
                       <Clock className="w-4 h-4" />
-                      <span>{(selectedDate || new Date()).toLocaleString()}</span>
+                      <span>
+                        {selectedDate && selectedDate.toDateString() !== new Date().toDateString() 
+                          ? selectedDate.toLocaleDateString('en-US', { 
+                              month: 'long', 
+                              day: 'numeric',
+                              year: 'numeric'
+                            })
+                          : currentTime.toLocaleString()
+                        }
+                      </span>
                     </div>
                     <div className="flex items-center space-x-2 text-sm text-gray-600">
                       <MapPin className="w-4 h-4" />
-                      <span>San Francisco, CA</span>
-                    </div>
-                    <div className="flex items-center space-x-2 text-sm text-gray-600">
-                      <Cloud className="w-4 h-4" />
-                      <span>☀️ 72°F</span>
+                      {!locationSharing && locationStatus === 'granted' ? (
+                        <span className="text-gray-500">Location disabled in settings</span>
+                      ) : locationStatus === 'initial' ? (
+                        <button 
+                          onClick={requestLocation}
+                          className="text-green-600 hover:text-green-700 underline decoration-dotted"
+                        >
+                          📍 Enable Location
+                        </button>
+                      ) : locationStatus === 'loading' ? (
+                        <span className="flex items-center space-x-1">
+                          <div className="w-3 h-3 border border-green-500 border-t-transparent rounded-full animate-spin"></div>
+                          <span>Getting location...</span>
+                        </span>
+                      ) : locationStatus === 'granted' && locationSharing ? (
+                        <span>{currentLocation}</span>
+                      ) : locationStatus === 'denied' ? (
+                        <span className="text-gray-500">Location access denied</span>
+                      ) : (
+                        <span className="text-gray-500" title={locationError || undefined}>
+                          Location unavailable
+                        </span>
+                      )}
                     </div>
                   </div>
 

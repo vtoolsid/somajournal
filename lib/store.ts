@@ -19,7 +19,6 @@ export interface JournalEntry {
   symptoms: Record<string, boolean>;
   mediaUrl?: string;
   location?: string;
-  weather?: string;
   tags?: string[];
   // Analysis fields
   analysis?: any;

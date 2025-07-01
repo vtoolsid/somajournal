@@ -1,468 +1,559 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { AppLayout } from '@/components/layout/app-layout';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { FloatingParticles } from '@/components/ui/floating-particles';
 import { useAppStore } from '@/lib/store';
-import { useRouter } from 'next/navigation';
 import { 
-  mockJournalEntries, 
-  analyzePsychosomaticConnection,
-  calculateWellnessMetrics,
-  getTopEmotions,
-  generateInsightMessage,
-  chakraColors
+  mockJournalEntries,
+  analyzeEmotionalTrends,
+  analyzeChakraActivity,
+  analyzeJournalRhythm,
+  generateWellnessInsights,
+  chakraColors,
+  type EmotionalTrend,
+  type ChakraActivity,
+  type JournalRhythm,
+  type WellnessInsight
 } from '@/lib/mock-data';
 import { 
   Heart, 
   Brain, 
-  BarChart3, 
+  Activity, 
+  Sparkles, 
+  TrendingUp, 
+  Calendar,
   Edit3,
+  Target,
   ArrowRight,
-  TrendingUp,
-  TrendingDown,
-  Minus,
-  BookOpen
+  BarChart3,
+  Clock,
+  Flower2,
+  Star,
+  AlertTriangle,
+  Zap,
+  User
 } from 'lucide-react';
-import { RadialBarChart, RadialBar, AreaChart, Area, BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
+import { motion, AnimatePresence } from 'framer-motion';
+import { AreaChart, Area, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis } from 'recharts';
 
 export default function DashboardPage() {
-  const { user } = useAppStore();
+  const { user, journalEntries } = useAppStore();
   const router = useRouter();
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [selectedCard, setSelectedCard] = useState<string | null>(null);
 
-  // Data analysis - objective wellness metrics
-  const psychosomaticData = analyzePsychosomaticConnection(mockJournalEntries);
-  const wellnessMetrics = calculateWellnessMetrics(mockJournalEntries);
-  const topEmotions = getTopEmotions(mockJournalEntries, 4);
-  const insightMessage = generateInsightMessage(psychosomaticData);
+  // Combine user entries with mock data for richer analytics
+  const allEntries = [...journalEntries, ...mockJournalEntries];
 
-  // Helper function to get chakra color
-  const getChakraColor = (chakra: string) => {
-    return chakraColors[chakra as keyof typeof chakraColors] || chakraColors.heart;
-  };
+  // Analytics data
+  const [emotionalTrends, setEmotionalTrends] = useState<EmotionalTrend[]>([]);
+  const [chakraActivity, setChakraActivity] = useState<ChakraActivity[]>([]);
+  const [journalRhythm, setJournalRhythm] = useState<JournalRhythm | null>(null);
+  const [wellnessInsights, setWellnessInsights] = useState<WellnessInsight[]>([]);
 
-  // Helper function to format insight message with bold text
-  const formatInsightMessage = (message: string) => {
-    return message.split('**').map((part, index) => 
-      index % 2 === 1 ? <strong key={index} className="font-semibold text-gray-800">{part}</strong> : part
-    );
-  };
+  // Real-time clock
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
-  // Chart configurations - objective wellness metrics
-  const wellnessChartData = [
+  // Calculate analytics
+  useEffect(() => {
+    if (allEntries.length > 0) {
+      const trends = analyzeEmotionalTrends(allEntries);
+      const chakras = analyzeChakraActivity(allEntries);
+      const rhythm = analyzeJournalRhythm(allEntries);
+      const insights = generateWellnessInsights(trends, chakras, rhythm);
+
+      setEmotionalTrends(trends);
+      setChakraActivity(chakras);
+      setJournalRhythm(rhythm);
+      setWellnessInsights(insights);
+    }
+  }, [allEntries]);
+
+  // Wisdom quotes for cycling
+  const quotes = [
     {
-      name: 'Writing Consistency',
-      value: wellnessMetrics.writingConsistency,
-      fill: '#10B981'
+      text: "Every mental knot has a corresponding physical, muscular knot.",
+      author: "- Satyananda Saraswati"
     },
     {
-      name: 'Emotion Balance',
-      value: Math.max(0, wellnessMetrics.emotionBalance + 10), // Normalize for display
-      fill: '#3B82F6'
+      text: "The body is precious. It is our vehicle for awakening.",
+      author: "- Buddha"
+    },
+    {
+      text: "Your body holds deep wisdom. Trust in that wisdom.",
+      author: "- Anonymous"
     }
   ];
 
-  const emotionChartData = topEmotions.map(emotion => ({
-    emotion: emotion.emotion,
-    count: emotion.count,
-    fill: getChakraColor(emotion.chakra)
+  const [currentQuote, setCurrentQuote] = useState(0);
+
+  useEffect(() => {
+    const quoteTimer = setInterval(() => {
+      setCurrentQuote((prev) => (prev + 1) % quotes.length);
+    }, 8000);
+    return () => clearInterval(quoteTimer);
+  }, [quotes.length]);
+
+  // Emotional trend chart data
+  const trendChartData = emotionalTrends.slice(0, 5).map((trend, index) => ({
+    emotion: trend.emotion,
+    frequency: trend.frequency,
+    intensity: Math.round(trend.intensity * 100),
+    fill: Object.values(chakraColors)[index % Object.values(chakraColors).length]
   }));
 
-  const chartConfig = {
-    count: {
-      label: "Frequency",
-    },
-    value: {
-      label: "Balance",
-    },
-  };
+  // Journal rhythm chart data
+  const rhythmChartData = journalRhythm?.weeklyPattern.map(day => ({
+    day: day.day.slice(0, 3),
+    count: day.count
+  })) || [];
+
+  if (!user) {
+    return (
+      <div className="min-h-screen wellness-container flex items-center justify-center">
+        <FloatingParticles count={20} />
+        <div className="glass-card p-8 text-center max-w-md relative z-10">
+          <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Heart className="w-8 h-8 text-white" />
+          </div>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Welcome to SomaJournal</h2>
+          <p className="text-gray-600 mb-6">Connect with your inner wisdom through mindful journaling and emotion analysis.</p>
+          <Button 
+            onClick={() => router.push('/auth/login')} 
+            className="wellness-button w-full"
+          >
+            Begin Your Journey
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <AppLayout>
       <div className="min-h-screen wellness-container">
-        <FloatingParticles count={8} />
+        <FloatingParticles count={12} />
         
         <div className="relative z-10 p-6 lg:p-8">
-          <div className="max-w-6xl mx-auto">
-            {/* Welcome Header */}
-            <div className="text-center mb-8 lg:mb-12 fade-enter">
-              <h1 className="text-3xl lg:text-4xl font-semibold text-slate-800 mb-2">
-                Welcome back, <span className="text-green-600">{user?.name || 'Friend'}</span>
-              </h1>
-              <p className="text-xl text-slate-600">
-                Your wellness journey at a glance
-              </p>
-              
-              {/* Subtle wellness metrics */}
-              <div className="flex items-center justify-center space-x-6 mt-4 text-sm text-slate-500">
-                <div className="flex items-center space-x-1">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span>Connected</span>
+          <div className="max-w-7xl mx-auto">
+            
+            {/* Hero Section - Welcome & Status */}
+            <div className="dashboard-hero p-8 mb-8 relative z-10">
+              <div className="text-center space-y-6">
+                <div className="flex items-center justify-center space-x-4 mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center breathing-element">
+                    <Flower2 className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h1 className="text-3xl font-semibold text-gray-800">
+                      Welcome back, <span className="text-green-600">{user.name}</span>
+                    </h1>
+                    <p className="text-gray-600">{currentTime.toLocaleDateString('en-US', { 
+                      weekday: 'long', 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })}</p>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-1">
-                  <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" style={{animationDelay: '0.5s'}}></div>
-                  <span>Balanced</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <div className="w-2 h-2 bg-teal-400 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
-                  <span>Growing</span>
+
+                {/* Live Wisdom Quote */}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentQuote}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.8 }}
+                    className="max-w-2xl mx-auto"
+                  >
+                    <blockquote className="text-xl text-gray-700 italic mb-2">
+                      "{quotes[currentQuote].text}"
+                    </blockquote>
+                    <cite className="text-sm text-gray-500">{quotes[currentQuote].author}</cite>
+                  </motion.div>
+                </AnimatePresence>
+
+                {/* Wellness Status Indicators */}
+                <div className="flex items-center justify-center space-x-6 text-sm text-gray-600">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span>Connected</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" style={{animationDelay: '0.5s'}}></div>
+                    <span>Balanced</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-teal-400 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
+                    <span>Growing</span>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* 2x2 Grid Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+            {/* Main Dashboard Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
               
-              {/* Card 1: Mind-Body Insight (Top-Left, PRIMARY) */}
-              <Card className="wellness-card animate-fadeInUp relative overflow-hidden">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center breathing-element">
-                      <Brain className="w-5 h-5 text-green-600" />
-                    </div>
-                    <CardTitle className="text-xl font-semibold text-slate-800">
-                      Mind-Body Connection
-                    </CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent className="pb-4">
-                  {/* Body Outline with Highlighted Areas */}
-                  <div className="flex items-start space-x-4 mb-4">
-                    <div className="flex-1">
-                      <p className="text-slate-600 leading-relaxed text-base mb-3">
-                        {formatInsightMessage(insightMessage.message)}
-                      </p>
-                      {psychosomaticData.detectedSymptoms.length > 0 && (
-                        <div className="p-3 bg-amber-50 rounded-lg border border-amber-200">
-                          <p className="text-sm text-amber-800">
-                            <strong>Physical symptoms detected:</strong> {psychosomaticData.detectedSymptoms.join(', ')}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                    
-                    {/* Body Silhouette with Symptom Mapping */}
-                    <div className="relative flex-shrink-0">
-                      <svg 
-                        width="80" 
-                        height="120" 
-                        viewBox="0 0 80 120" 
-                        className="opacity-60"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <defs>
-                          <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stopColor="#E5E7EB" stopOpacity="0.8"/>
-                            <stop offset="100%" stopColor="#D1D5DB" stopOpacity="0.6"/>
-                          </linearGradient>
-                          <linearGradient id="symptomGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor="#F59E0B" stopOpacity="0.7"/>
-                            <stop offset="100%" stopColor="#EF4444" stopOpacity="0.8"/>
-                          </linearGradient>
-                        </defs>
-                        
-                        {/* Head */}
-                        <ellipse cx="40" cy="15" rx="12" ry="15" fill="url(#bodyGradient)" stroke="#D1D5DB" strokeWidth="1"/>
-                        
-                        {/* Neck */}
-                        <rect x="35" y="28" width="10" height="8" fill="url(#bodyGradient)" stroke="#D1D5DB" strokeWidth="1"/>
-                        
-                        {/* Torso */}
-                        <ellipse cx="40" cy="60" rx="18" ry="25" fill="url(#bodyGradient)" stroke="#D1D5DB" strokeWidth="1"/>
-                        
-                        {/* Arms */}
-                        <ellipse cx="20" cy="50" rx="8" ry="20" fill="url(#bodyGradient)" stroke="#D1D5DB" strokeWidth="1"/>
-                        <ellipse cx="60" cy="50" rx="8" ry="20" fill="url(#bodyGradient)" stroke="#D1D5DB" strokeWidth="1"/>
-                        
-                        {/* Pelvis */}
-                        <ellipse cx="40" cy="85" rx="12" ry="8" fill="url(#bodyGradient)" stroke="#D1D5DB" strokeWidth="1"/>
-                        
-                        {/* Legs */}
-                        <ellipse cx="33" cy="105" rx="6" ry="15" fill="url(#bodyGradient)" stroke="#D1D5DB" strokeWidth="1"/>
-                        <ellipse cx="47" cy="105" rx="6" ry="15" fill="url(#bodyGradient)" stroke="#D1D5DB" strokeWidth="1"/>
-                        
-                        {/* Symptom Highlights */}
-                        {psychosomaticData.detectedSymptoms.includes('headache') && (
-                          <>
-                            <ellipse cx="40" cy="15" rx="14" ry="17" fill="url(#symptomGradient)" opacity="0.4"/>
-                            <circle cx="45" cy="12" r="2" fill="#F59E0B" className="animate-pulse"/>
-                          </>
-                        )}
-                        {psychosomaticData.detectedSymptoms.includes('tension') && (
-                          <>
-                            <rect x="33" y="45" width="14" height="15" rx="7" fill="url(#symptomGradient)" opacity="0.4"/>
-                            <circle cx="40" cy="52" r="2" fill="#EF4444" className="animate-pulse" style={{animationDelay: '0.5s'}}/>
-                          </>
-                        )}
-                        {psychosomaticData.detectedSymptoms.includes('fatigue') && (
-                          <>
-                            <ellipse cx="40" cy="85" rx="14" ry="10" fill="url(#symptomGradient)" opacity="0.4"/>
-                            <circle cx="40" cy="85" r="2" fill="#F59E0B" className="animate-pulse" style={{animationDelay: '1s'}}/>
-                          </>
-                        )}
-                      </svg>
-                      
-                      {/* Gentle Energy Waves */}
-                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <div className="w-20 h-20 border border-green-300 rounded-full animate-ping opacity-20"></div>
-                      </div>
-                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <div className="w-16 h-16 border border-green-400 rounded-full animate-ping opacity-30" style={{animationDelay: '1s'}}></div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Button 
-                    variant="link" 
-                    className="p-0 h-auto text-green-600 hover:text-green-700 font-medium"
-                    onClick={() => router.push('/journal')}
-                  >
-                    Explore in Body Map <ArrowRight className="w-4 h-4 ml-1" />
-                  </Button>
-                </CardFooter>
-              </Card>
-
-              {/* Card 2: Wellness Metrics (Top-Right) */}
-              <Card className="wellness-card animate-fadeInUp animate-delay-200 relative overflow-hidden">
+              {/* Card 1: Emotional Trends */}
+              <Card className={`glass-card-primary animate-fadeInUp cursor-pointer transition-all duration-300 ${
+                selectedCard === 'emotions' ? 'scale-105' : ''
+              }`} onClick={() => setSelectedCard(selectedCard === 'emotions' ? null : 'emotions')}>
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-xl font-semibold text-slate-800">
-                      Wellness Patterns
-                    </CardTitle>
-                    <div className="flex items-center space-x-1 text-sm text-slate-500">
-                      <TrendingUp className="w-4 h-4 text-emerald-500" />
-                      <span>Objective tracking</span>
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center">
+                        <TrendingUp className="w-5 h-5 text-green-600" />
+                      </div>
+                      <CardTitle className="text-xl font-semibold text-gray-800">
+                        Emotional Trends
+                      </CardTitle>
                     </div>
+                    <Badge variant="secondary" className="bg-white/60 text-green-700">
+                      30 days
+                    </Badge>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex flex-col items-center">
-                    <div className="relative w-48 h-48">
-                      {/* Mandala Background Layers */}
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-44 h-44 rounded-full border border-green-100 animate-pulse opacity-40"></div>
-                      </div>
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-40 h-40 rounded-full border border-green-200 animate-pulse opacity-30" style={{animationDelay: '0.5s'}}></div>
-                      </div>
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-36 h-36 rounded-full border border-green-300 animate-pulse opacity-20" style={{animationDelay: '1s'}}></div>
-                      </div>
-                      
-                      {/* Chakra Petals - Decorative elements around the circle */}
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="relative w-48 h-48">
-                          {[0, 45, 90, 135, 180, 225, 270, 315].map((rotation, index) => (
-                            <div
-                              key={index}
-                              className="absolute w-3 h-3 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full opacity-60"
-                              style={{
-                                top: '50%',
-                                left: '50%',
-                                transform: `translate(-50%, -50%) rotate(${rotation}deg) translateY(-90px)`,
-                                animationDelay: `${index * 0.2}s`
+                  {emotionalTrends.length > 0 ? (
+                    <div className="space-y-4">
+                      <div className="h-48 emotion-chart">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <AreaChart data={trendChartData}>
+                            <defs>
+                              <linearGradient id="emotionGradient" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#10B981" stopOpacity={0.8}/>
+                                <stop offset="95%" stopColor="#10B981" stopOpacity={0.1}/>
+                              </linearGradient>
+                            </defs>
+                            <Area 
+                              type="monotone" 
+                              dataKey="frequency" 
+                              stroke="#10B981" 
+                              strokeWidth={2}
+                              fill="url(#emotionGradient)" 
+                            />
+                            <Tooltip 
+                              contentStyle={{
+                                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                border: 'none',
+                                borderRadius: '12px',
+                                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
                               }}
                             />
-                          ))}
-                        </div>
+                          </AreaChart>
+                        </ResponsiveContainer>
                       </div>
-
-                      {/* Main Chart with Enhanced Styling */}
-                      <ChartContainer config={chartConfig} className="w-full h-full">
-                        <RadialBarChart 
-                          cx="50%" 
-                          cy="50%" 
-                          innerRadius="50%" 
-                          outerRadius="70%" 
-                          data={wellnessChartData}
-                          startAngle={90}
-                          endAngle={450}
-                        >
-                          <defs>
-                            <linearGradient id="wellnessGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                              <stop offset="0%" stopColor="#10B981" stopOpacity="0.8"/>
-                              <stop offset="50%" stopColor="#059669" stopOpacity="0.9"/>
-                              <stop offset="100%" stopColor="#047857" stopOpacity="1"/>
-                            </linearGradient>
-                            <filter id="glow">
-                              <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                              <feMerge> 
-                                <feMergeNode in="coloredBlur"/>
-                                <feMergeNode in="SourceGraphic"/>
-                              </feMerge>
-                            </filter>
-                          </defs>
-                          <RadialBar 
-                            dataKey="value" 
-                            cornerRadius={8}
-                            fill="url(#wellnessGradient)"
-                            className="drop-shadow-lg"
-                            style={{filter: 'url(#glow)'}}
-                          />
-                        </RadialBarChart>
-                      </ChartContainer>
                       
-                      {/* Center Content with Enhanced Design */}
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="text-center">
-                          <div className="w-16 h-16 bg-gradient-to-br from-green-50 to-emerald-100 rounded-full flex items-center justify-center mb-3 mx-auto border-2 border-green-200 shadow-lg">
-                            <Heart className="w-6 h-6 text-green-600" />
+                      <div className="space-y-2">
+                        <h4 className="text-sm font-semibold text-gray-700">Top Emotions</h4>
+                        {emotionalTrends.slice(0, 3).map((trend, index) => (
+                          <div key={trend.emotion} className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                              <div 
+                                className="w-3 h-3 rounded-full" 
+                                style={{ backgroundColor: chakraColors[trend.chakra] }}
+                              />
+                              <span className="text-sm capitalize text-gray-700">{trend.emotion}</span>
+                            </div>
+                            <div className="text-right">
+                              <span className="text-sm font-medium text-gray-800">{trend.frequency}x</span>
+                              {trend.physicalManifestations.length > 0 && (
+                                <p className="text-xs text-gray-500">{trend.physicalManifestations[0]}</p>
+                              )}
+                            </div>
                           </div>
-                          <div className="text-2xl font-bold text-emerald-600">
-                            {wellnessMetrics.writingConsistency}
-                          </div>
-                          <div className="text-xs text-slate-500 mt-1 font-medium">
-                            Writing consistency
-                          </div>
-                        </div>
+                        ))}
                       </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <Brain className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                      <p className="text-gray-500">Start journaling to see your emotional patterns</p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
-              {/* Card 3: Emotional Landscape (Bottom-Left) */}
-              <Card className="wellness-card animate-fadeInUp animate-delay-400 relative overflow-hidden">
+              {/* Card 2: Chakra Alignment */}
+              <Card className={`glass-card-secondary animate-fadeInUp animate-delay-200 cursor-pointer transition-all duration-300 ${
+                selectedCard === 'chakras' ? 'scale-105' : ''
+              }`} onClick={() => setSelectedCard(selectedCard === 'chakras' ? null : 'chakras')}>
                 <CardHeader className="pb-3">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full flex items-center justify-center breathing-element">
-                      <Heart className="w-5 h-5 text-emerald-600" />
+                    <div className="w-10 h-10 bg-gradient-to-br from-purple-100 to-indigo-100 rounded-full flex items-center justify-center">
+                      <Zap className="w-5 h-5 text-purple-600" />
                     </div>
-                    <CardTitle className="text-xl font-semibold text-slate-800">
-                      Emotional Flow
+                    <CardTitle className="text-xl font-semibold text-gray-800">
+                      Chakra Alignment
                     </CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="relative">
-                    {/* Emotion Bubbles Layout */}
-                    <div className="h-48 relative flex items-center justify-center">
-                      <div className="relative w-full h-full">
-                        {emotionChartData.map((emotion, index) => {
-                          const maxCount = Math.max(...emotionChartData.map(e => e.count));
-                          const size = 40 + (emotion.count / maxCount) * 60; // Dynamic sizing
-                          const positions = [
-                            { top: '15%', left: '20%' },
-                            { top: '60%', left: '10%' },
-                            { top: '25%', left: '70%' },
-                            { top: '70%', left: '75%' }
-                          ];
+                  {chakraActivity.length > 0 ? (
+                    <div className="space-y-4">
+                      {/* Chakra Wheel Visualization */}
+                      <div className="relative w-48 h-48 mx-auto chakra-wheel">
+                        <div className="absolute inset-0 rounded-full border-2 border-gray-200 opacity-20"></div>
+                        {chakraActivity.slice(0, 7).map((chakra, index) => {
+                          const angle = (index * 360) / 7;
+                          const radius = 80;
+                          const x = Math.cos((angle - 90) * Math.PI / 180) * radius;
+                          const y = Math.sin((angle - 90) * Math.PI / 180) * radius;
                           
                           return (
                             <div
-                              key={emotion.emotion}
-                              className="absolute rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-300 cursor-pointer group"
+                              key={chakra.chakra}
+                              className={`chakra-point absolute w-6 h-6 rounded-full ${
+                                chakra.balanceState === 'balanced' ? 'chakra-point active' : ''
+                              }`}
                               style={{
-                                width: `${size}px`,
-                                height: `${size}px`,
-                                backgroundColor: emotion.fill,
-                                ...positions[index % positions.length],
-                                opacity: 0.8,
-                                transform: `translate(-50%, -50%)`,
-                                animation: `float 3s ease-in-out infinite`,
-                                animationDelay: `${index * 0.5}s`
+                                backgroundColor: chakraColors[chakra.chakra],
+                                left: `calc(50% + ${x}px - 12px)`,
+                                top: `calc(50% + ${y}px - 12px)`,
+                                opacity: chakra.activationLevel / 100
                               }}
-                            >
-                              {/* Emotion Label */}
-                              <div className="text-center text-white">
-                                <div className="text-xs font-medium">
-                                  {emotion.emotion}
-                                </div>
-                                <div className="text-sm font-bold">
-                                  {emotion.count}
-                                </div>
-                              </div>
-                              
-                              {/* Hover Tooltip */}
-                              <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
-                                {emotion.emotion}: {emotion.count} occurrences
-                              </div>
-                              
-                              {/* Gentle Pulse Animation */}
-                              <div 
-                                className="absolute inset-0 rounded-full animate-ping opacity-20"
-                                style={{ backgroundColor: emotion.fill }}
-                              />
-                            </div>
+                              title={`${chakra.chakra} chakra - ${chakra.activationLevel}%`}
+                            />
                           );
                         })}
                         
-                        {/* Ambient Background Pattern */}
-                        <div className="absolute inset-0 opacity-10 pointer-events-none">
-                          <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-gradient-radial from-green-200 to-transparent rounded-full animate-pulse"></div>
-                          <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-gradient-radial from-emerald-200 to-transparent rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
+                        {/* Center point */}
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-gradient-to-br from-white to-gray-100 rounded-full border-2 border-gray-300 flex items-center justify-center">
+                          <Flower2 className="w-4 h-4 text-gray-600" />
                         </div>
                       </div>
+
+                      {/* Top Chakras */}
+                      <div className="space-y-2">
+                        <h4 className="text-sm font-semibold text-gray-700">Energy Centers</h4>
+                        {chakraActivity.slice(0, 3).map((chakra) => (
+                          <div key={chakra.chakra} className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                              <div 
+                                className="w-3 h-3 rounded-full" 
+                                style={{ backgroundColor: chakraColors[chakra.chakra] }}
+                              />
+                              <span className="text-sm capitalize text-gray-700">{chakra.chakra}</span>
+                            </div>
+                            <div className="text-right">
+                              <span className="text-sm font-medium text-gray-800">{chakra.activationLevel}%</span>
+                              <p className="text-xs text-gray-500">{chakra.balanceState}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    
-                    {/* Legend */}
-                    <div className="mt-4 flex flex-wrap gap-2 justify-center">
-                      {emotionChartData.map((emotion, index) => (
-                        <div key={emotion.emotion} className="flex items-center space-x-1 text-xs">
-                          <div 
-                            className="w-3 h-3 rounded-full" 
-                            style={{ backgroundColor: emotion.fill }}
-                          />
-                          <span className="text-slate-600 font-medium">{emotion.emotion}</span>
-                        </div>
-                      ))}
+                  ) : (
+                    <div className="text-center py-8">
+                      <Flower2 className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                      <p className="text-gray-500">Build your energy profile through journaling</p>
                     </div>
-                  </div>
+                  )}
                 </CardContent>
               </Card>
 
-              {/* Card 4: Invitation to Reflect (Bottom-Right) */}
-              <Card className="wellness-card border-2 border-green-200 hover:border-green-300 animate-fadeInUp animate-delay-600 relative overflow-hidden group">
-                {/* Soft background gradient */}
-                <div className="absolute inset-0 bg-gradient-to-br from-green-50/50 to-emerald-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                
-                <CardContent className="flex flex-col items-center justify-center h-full p-8 text-center relative z-10">
+              {/* Card 3: Journal Rhythm */}
+              <Card className={`glass-card animate-fadeInUp animate-delay-400 cursor-pointer transition-all duration-300 ${
+                selectedCard === 'rhythm' ? 'scale-105' : ''
+              }`} onClick={() => setSelectedCard(selectedCard === 'rhythm' ? null : 'rhythm')}>
+                <CardHeader className="pb-3">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full flex items-center justify-center">
+                      <BarChart3 className="w-5 h-5 text-emerald-600" />
+                    </div>
+                    <CardTitle className="text-xl font-semibold text-gray-800">
+                      Journal Rhythm
+                    </CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {journalRhythm ? (
+                    <div className="space-y-4">
+                      {/* Weekly Pattern Chart */}
+                      <div className="h-32">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <BarChart data={rhythmChartData}>
+                            <XAxis dataKey="day" tick={{ fontSize: 12 }} />
+                            <YAxis hide />
+                            <Bar dataKey="count" fill="#10B981" radius={[4, 4, 0, 0]} />
+                            <Tooltip 
+                              contentStyle={{
+                                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                border: 'none',
+                                borderRadius: '12px',
+                                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
+                              }}
+                            />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
+
+                      {/* Rhythm Stats */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-emerald-600">{journalRhythm.writingStreak}</div>
+                          <div className="text-xs text-gray-500">Day Streak</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-emerald-600">{journalRhythm.consistencyScore}%</div>
+                          <div className="text-xs text-gray-500">Consistency</div>
+                        </div>
+                      </div>
+
+                      <div className="text-center">
+                        <p className="text-sm text-gray-600">
+                          Most active during <span className="font-medium text-emerald-600">{journalRhythm.mostActiveTime}</span>
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          Average {journalRhythm.averageWordsPerEntry} words per entry
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                      <p className="text-gray-500">Create entries to see your rhythm</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Card 4: Wellness Insights */}
+              <Card className="glass-card-warning animate-fadeInUp animate-delay-600 col-span-1 lg:col-span-2 xl:col-span-1">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-amber-100 to-orange-100 rounded-full flex items-center justify-center">
+                      <Brain className="w-5 h-5 text-amber-600" />
+                    </div>
+                    <CardTitle className="text-xl font-semibold text-gray-800">
+                      Wellness Insights
+                    </CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {wellnessInsights.length > 0 ? (
+                    <div className="space-y-3">
+                      {wellnessInsights.slice(0, 3).map((insight, index) => (
+                        <div 
+                          key={index}
+                          className={`insight-card priority-${insight.priority} p-3 rounded-lg border-l-4`}
+                        >
+                          <div className="flex items-start space-x-2">
+                            {insight.priority === 'high' && <AlertTriangle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />}
+                            {insight.priority === 'medium' && <Star className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />}
+                            {insight.priority === 'low' && <Heart className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />}
+                            <div className="flex-1">
+                              <h4 className="text-sm font-semibold text-gray-800">{insight.title}</h4>
+                              <p className="text-xs text-gray-600 mt-1">{insight.message}</p>
+                              <p className="text-xs text-gray-500 mt-1 italic">{insight.recommendation}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <Target className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                      <p className="text-gray-500">Insights will appear as you journal</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Card 5: Today's Reflection */}
+              <Card className="glass-card-primary animate-fadeInUp animate-delay-800 border-2 border-green-200 hover:border-green-300">
+                <CardContent className="flex flex-col items-center justify-center h-full p-8 text-center">
                   <div className="mb-6">
-                    {/* Enhanced icon with floating particles */}
                     <div className="relative mb-6">
-                      <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center breathing-element shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+                      <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center breathing-element shadow-lg">
                         <Edit3 className="w-8 h-8 text-green-600" />
                       </div>
                       
-                      {/* Floating sparkles around the icon */}
-                      <div className="absolute -top-2 -right-2 w-3 h-3 bg-green-400 rounded-full animate-bounce opacity-60" style={{animationDelay: '0s'}}></div>
+                      {/* Floating sparkles */}
+                      <div className="absolute -top-2 -right-2 w-3 h-3 bg-green-400 rounded-full animate-bounce opacity-60"></div>
                       <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-emerald-400 rounded-full animate-bounce opacity-60" style={{animationDelay: '1s'}}></div>
                       <div className="absolute top-0 left-0 w-2 h-2 bg-teal-400 rounded-full animate-bounce opacity-60" style={{animationDelay: '2s'}}></div>
                     </div>
                     
-                    <h3 className="text-2xl font-semibold text-slate-800 mb-3 group-hover:text-green-700 transition-colors duration-300">
-                      What&apos;s on your mind?
+                    <h3 className="text-2xl font-semibold text-gray-800 mb-3">
+                      What's on your mind?
                     </h3>
-                    <p className="text-slate-600 text-sm leading-relaxed">
+                    <p className="text-gray-600 text-sm leading-relaxed">
                       Take a moment to reflect and connect with your inner wisdom through mindful journaling
                     </p>
                   </div>
                   
                   <Button 
                     onClick={() => router.push('/journal')}
-                    className="wellness-button w-full py-4 text-lg font-medium transform transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-lg group-hover:shadow-green-200"
+                    className="wellness-button w-full py-4 text-lg font-medium transform transition-all duration-300 hover:scale-105"
                   >
                     <Heart className="w-5 h-5 mr-2 animate-pulse" />
                     Begin Reflection
                   </Button>
-                  
-                  {/* Ambient particles */}
-                  <div className="absolute top-4 right-4 w-1 h-1 bg-green-300 rounded-full animate-ping opacity-40"></div>
-                  <div className="absolute bottom-6 left-6 w-1 h-1 bg-emerald-300 rounded-full animate-ping opacity-40" style={{animationDelay: '1s'}}></div>
                 </CardContent>
               </Card>
 
+              {/* Card 6: Quick Stats */}
+              <Card className="glass-card animate-fadeInUp animate-delay-1000">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-full flex items-center justify-center">
+                      <Activity className="w-5 h-5 text-blue-600" />
+                    </div>
+                    <CardTitle className="text-xl font-semibold text-gray-800">
+                      Your Journey
+                    </CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-blue-600">{allEntries.length}</div>
+                        <div className="text-xs text-gray-500">Total Entries</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-blue-600">{emotionalTrends.length}</div>
+                        <div className="text-xs text-gray-500">Emotions Tracked</div>
+                      </div>
+                    </div>
+                    
+                    <div className="text-center pt-2 border-t border-gray-200">
+                      <p className="text-sm text-gray-600">
+                        Member since {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'Recently'}
+                      </p>
+                    </div>
+
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => router.push('/journal')}
+                      className="w-full border-blue-200 text-blue-700 hover:bg-blue-50"
+                    >
+                      View All Entries
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
-            {/* Optional: Recent Activity Summary */}
-            <div className="mt-8 lg:mt-12 text-center fade-enter">
-              <p className="text-sm text-slate-500">
-                Last updated: {new Date().toLocaleDateString()} • 
-                <span className="ml-1">{mockJournalEntries.length} journal entries analyzed</span>
+            {/* Footer Stats */}
+            <div className="mt-8 text-center">
+              <p className="text-sm text-gray-500">
+                Last updated: {currentTime.toLocaleTimeString()} • 
+                <span className="ml-1">{allEntries.length} journal entries analyzed</span>
               </p>
             </div>
           </div>

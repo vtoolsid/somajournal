@@ -10,7 +10,6 @@ export const mockJournalEntries: JournalEntry[] = [
     emotions: { 'peace': 0.9, 'gratitude': 0.7, 'calm': 0.8 },
     symptoms: { 'tension': false, 'headache': false, 'fatigue': false },
     location: 'San Francisco, CA',
-    weather: '☀️ 72°F',
     tags: ['meditation', 'morning', 'peace'],
   },
   {
@@ -22,7 +21,6 @@ export const mockJournalEntries: JournalEntry[] = [
     emotions: { 'anger': 0.8, 'frustration': 0.9, 'stress': 0.7 },
     symptoms: { 'tension': true, 'headache': true, 'fatigue': true },
     location: 'San Francisco, CA',
-    weather: '☁️ 65°F',
     tags: ['work', 'stress', 'frustration'],
   },
   {
@@ -34,7 +32,6 @@ export const mockJournalEntries: JournalEntry[] = [
     emotions: { 'joy': 0.9, 'love': 0.8, 'gratitude': 0.9 },
     symptoms: { 'tension': false, 'headache': false, 'fatigue': false },
     location: 'San Francisco, CA',
-    weather: '🌤️ 68°F',
     tags: ['family', 'joy', 'gratitude'],
   },
   {
@@ -46,7 +43,6 @@ export const mockJournalEntries: JournalEntry[] = [
     emotions: { 'centered': 0.8, 'motivated': 0.7, 'peaceful': 0.9 },
     symptoms: { 'tension': false, 'headache': false, 'fatigue': false },
     location: 'San Francisco, CA',
-    weather: '🌅 70°F',
     tags: ['yoga', 'morning routine', 'mindfulness'],
   },
   {
@@ -58,7 +54,6 @@ export const mockJournalEntries: JournalEntry[] = [
     emotions: { 'uncomfortable': 0.6, 'authentic': 0.8, 'growth': 0.7 },
     symptoms: { 'tension': true, 'headache': false, 'fatigue': false },
     location: 'San Francisco, CA',
-    weather: '🌙 62°F',
     tags: ['boundaries', 'friendship', 'growth'],
   },
   {
@@ -70,7 +65,6 @@ export const mockJournalEntries: JournalEntry[] = [
     emotions: { 'peaceful': 0.8, 'connected': 0.7, 'wise': 0.6 },
     symptoms: { 'tension': false, 'headache': false, 'fatigue': false },
     location: 'Golden Gate Park, SF',
-    weather: '🌳 74°F',
     tags: ['nature', 'walking', 'perspective'],
   },
   {
@@ -82,7 +76,6 @@ export const mockJournalEntries: JournalEntry[] = [
     emotions: { 'amused': 0.7, 'resilient': 0.6, 'learning': 0.8 },
     symptoms: { 'tension': false, 'headache': false, 'fatigue': false },
     location: 'San Francisco, CA',
-    weather: '🍳 69°F',
     tags: ['cooking', 'resilience', 'humor'],
   },
   {
@@ -94,7 +87,6 @@ export const mockJournalEntries: JournalEntry[] = [
     emotions: { 'regret': 0.8, 'distant': 0.7, 'sad': 0.6 },
     symptoms: { 'tension': true, 'headache': true, 'fatigue': false },
     location: 'San Francisco, CA',
-    weather: '⛅ 66°F',
     tags: ['relationship', 'conflict', 'communication'],
   },
   {
@@ -106,7 +98,6 @@ export const mockJournalEntries: JournalEntry[] = [
     emotions: { 'transformative': 0.9, 'grateful': 0.8, 'nostalgic': 0.6 },
     symptoms: { 'tension': false, 'headache': false, 'fatigue': false },
     location: 'Sonoma, CA',
-    weather: '🧘‍♀️ 78°F',
     tags: ['meditation', 'retreat', 'transformation'],
   },
   {
@@ -118,7 +109,6 @@ export const mockJournalEntries: JournalEntry[] = [
     emotions: { 'hopeful': 0.8, 'intentional': 0.7, 'connected': 0.6 },
     symptoms: { 'tension': false, 'headache': false, 'fatigue': false },
     location: 'San Francisco, CA',
-    weather: '☀️ 75°F',
     tags: ['solstice', 'intentions', 'seasons'],
   },
 ];
@@ -598,6 +588,414 @@ export const getTopEmotions = (entries: JournalEntry[], limit: number = 4) => {
     }))
     .sort((a, b) => b.count - a.count)
     .slice(0, limit);
+};
+
+// Enhanced Analytics for New Dashboard
+
+export interface EmotionalTrend {
+  emotion: string;
+  frequency: number;
+  intensity: number;
+  timePattern: 'morning' | 'afternoon' | 'evening' | 'mixed';
+  triggers: string[];
+  physicalManifestations: string[];
+  chakra: 'root' | 'sacral' | 'solar' | 'heart' | 'throat' | 'third-eye' | 'crown';
+}
+
+export interface ChakraActivity {
+  chakra: 'root' | 'sacral' | 'solar' | 'heart' | 'throat' | 'third-eye' | 'crown';
+  activationLevel: number; // 0-100
+  recentEntries: JournalEntry[];
+  balanceState: 'blocked' | 'balanced' | 'overactive';
+  suggestedPractices: string[];
+  positiveExperiences: string[];
+  challengingExperiences: string[];
+}
+
+export interface JournalRhythm {
+  writingStreak: number;
+  averageWordsPerEntry: number;
+  mostActiveTime: 'morning' | 'afternoon' | 'evening';
+  emotionalDepthTrend: 'increasing' | 'stable' | 'decreasing';
+  consistencyScore: number; // 0-100
+  weeklyPattern: { day: string; count: number }[];
+}
+
+export interface WellnessInsight {
+  type: 'emotional' | 'physical' | 'chakra' | 'growth';
+  priority: 'high' | 'medium' | 'low';
+  title: string;
+  message: string;
+  recommendation: string;
+  chakraFocus?: 'root' | 'sacral' | 'solar' | 'heart' | 'throat' | 'third-eye' | 'crown';
+}
+
+// Emotional Trends Analysis
+export const analyzeEmotionalTrends = (entries: JournalEntry[], days: number = 30): EmotionalTrend[] => {
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - days);
+  
+  const recentEntries = entries.filter(entry => new Date(entry.createdAt) >= cutoffDate);
+  
+  const emotionData: Record<string, {
+    occurrences: number;
+    intensities: number[];
+    times: Date[];
+    contexts: string[];
+  }> = {};
+
+  recentEntries.forEach(entry => {
+    Object.entries(entry.emotions).forEach(([emotion, intensity]) => {
+      if (!emotionData[emotion]) {
+        emotionData[emotion] = {
+          occurrences: 0,
+          intensities: [],
+          times: [],
+          contexts: []
+        };
+      }
+      
+      emotionData[emotion].occurrences++;
+      emotionData[emotion].intensities.push(intensity);
+      emotionData[emotion].times.push(new Date(entry.createdAt));
+      emotionData[emotion].contexts.push(entry.content.substring(0, 100));
+    });
+  });
+
+  const trends: EmotionalTrend[] = Object.entries(emotionData)
+    .map(([emotion, data]) => {
+      const averageIntensity = data.intensities.reduce((a, b) => a + b, 0) / data.intensities.length;
+      
+      // Determine time pattern
+      const timePatterns = data.times.map(time => {
+        const hour = time.getHours();
+        if (hour < 12) return 'morning';
+        if (hour < 18) return 'afternoon';
+        return 'evening';
+      });
+      
+      const patternCounts = timePatterns.reduce((acc, pattern) => {
+        acc[pattern] = (acc[pattern] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+      
+      const dominantPattern = Object.entries(patternCounts)
+        .sort(([,a], [,b]) => b - a)[0]?.[0] as 'morning' | 'afternoon' | 'evening' || 'mixed';
+      
+      // Extract potential triggers from context
+      const triggers = data.contexts
+        .join(' ')
+        .toLowerCase()
+        .split(' ')
+        .filter(word => ['work', 'family', 'relationship', 'health', 'money', 'stress'].includes(word))
+        .filter((word, index, arr) => arr.indexOf(word) === index)
+        .slice(0, 3);
+
+      // Map physical manifestations
+      const emotionSymptomMap: Record<string, string[]> = {
+        'anxiety': ['stomach discomfort', 'shallow breathing', 'tension'],
+        'stress': ['headache', 'muscle tension', 'fatigue'],
+        'anger': ['jaw clenching', 'raised blood pressure', 'tension'],
+        'sadness': ['heavy chest', 'low energy', 'sleep issues'],
+        'fear': ['rapid heartbeat', 'sweating', 'nausea'],
+        'frustration': ['headache', 'neck tension', 'irritability'],
+        'worry': ['stomach upset', 'restlessness', 'insomnia'],
+        'joy': ['light feeling', 'increased energy', 'relaxed muscles'],
+        'love': ['warm chest', 'relaxed breathing', 'peaceful mind'],
+        'gratitude': ['heart opening', 'calm breathing', 'centered feeling']
+      };
+
+      return {
+        emotion,
+        frequency: data.occurrences,
+        intensity: Math.round(averageIntensity * 100) / 100,
+        timePattern: dominantPattern,
+        triggers,
+        physicalManifestations: emotionSymptomMap[emotion] || [],
+        chakra: emotionChakraMapping[emotion] || 'heart'
+      };
+    })
+    .sort((a, b) => b.frequency - a.frequency)
+    .slice(0, 8);
+
+  return trends;
+};
+
+// Chakra Analysis
+export const analyzeChakraActivity = (entries: JournalEntry[], days: number = 30): ChakraActivity[] => {
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - days);
+  
+  const recentEntries = entries.filter(entry => new Date(entry.createdAt) >= cutoffDate);
+  
+  const chakraData: Record<string, {
+    emotionCount: number;
+    intensitySum: number;
+    entries: JournalEntry[];
+    positiveContexts: string[];
+    challengingContexts: string[];
+  }> = {};
+
+  // Initialize all chakras
+  const allChakras: ('root' | 'sacral' | 'solar' | 'heart' | 'throat' | 'third-eye' | 'crown')[] = 
+    ['root', 'sacral', 'solar', 'heart', 'throat', 'third-eye', 'crown'];
+  
+  allChakras.forEach(chakra => {
+    chakraData[chakra] = {
+      emotionCount: 0,
+      intensitySum: 0,
+      entries: [],
+      positiveContexts: [],
+      challengingContexts: []
+    };
+  });
+
+  recentEntries.forEach(entry => {
+    Object.entries(entry.emotions).forEach(([emotion, intensity]) => {
+      const chakra = emotionChakraMapping[emotion] || 'heart';
+      
+      chakraData[chakra].emotionCount++;
+      chakraData[chakra].intensitySum += intensity;
+      chakraData[chakra].entries.push(entry);
+      
+      // Categorize experiences
+      const isPositive = ['joy', 'love', 'gratitude', 'peace', 'confidence', 'creative', 'wisdom'].includes(emotion);
+      const context = entry.content.substring(0, 150);
+      
+      if (isPositive) {
+        chakraData[chakra].positiveContexts.push(context);
+      } else {
+        chakraData[chakra].challengingContexts.push(context);
+      }
+    });
+  });
+
+  const practices: Record<string, string[]> = {
+    root: ['Grounding meditation', 'Walking barefoot', 'Root vegetable nutrition', 'Mountain pose'],
+    sacral: ['Hip circles', 'Creative expression', 'Water meditation', 'Dance movement'],
+    solar: ['Core breathing', 'Sun gazing', 'Confidence affirmations', 'Warrior poses'],
+    heart: ['Loving-kindness meditation', 'Heart opening poses', 'Gratitude practice', 'Green light visualization'],
+    throat: ['Chanting', 'Authentic communication', 'Blue light meditation', 'Neck stretches'],
+    'third-eye': ['Third-eye meditation', 'Intuition exercises', 'Dream journaling', 'Indigo visualization'],
+    crown: ['Crown meditation', 'Spiritual study', 'Violet light practice', 'Silence retreat']
+  };
+
+  return allChakras.map(chakra => {
+    const data = chakraData[chakra];
+    const averageIntensity = data.emotionCount > 0 ? data.intensitySum / data.emotionCount : 0;
+    const activationLevel = Math.min(100, Math.round(averageIntensity * 100 + data.emotionCount * 5));
+    
+    let balanceState: 'blocked' | 'balanced' | 'overactive' = 'balanced';
+    if (activationLevel < 30) balanceState = 'blocked';
+    if (activationLevel > 80) balanceState = 'overactive';
+
+    return {
+      chakra,
+      activationLevel,
+      recentEntries: data.entries.slice(0, 3),
+      balanceState,
+      suggestedPractices: practices[chakra] || [],
+      positiveExperiences: data.positiveContexts.slice(0, 2),
+      challengingExperiences: data.challengingContexts.slice(0, 2)
+    };
+  }).sort((a, b) => b.activationLevel - a.activationLevel);
+};
+
+// Journal Rhythm Analysis
+export const analyzeJournalRhythm = (entries: JournalEntry[], days: number = 30): JournalRhythm => {
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - days);
+  
+  const recentEntries = entries.filter(entry => new Date(entry.createdAt) >= cutoffDate);
+  
+  if (recentEntries.length === 0) {
+    return {
+      writingStreak: 0,
+      averageWordsPerEntry: 0,
+      mostActiveTime: 'morning',
+      emotionalDepthTrend: 'stable',
+      consistencyScore: 0,
+      weeklyPattern: []
+    };
+  }
+
+  // Calculate writing streak
+  let writingStreak = 0;
+  const today = new Date();
+  let checkDate = new Date(today);
+  
+  while (writingStreak < 365) { // Max check 1 year
+    const dayEntries = recentEntries.filter(entry => {
+      const entryDate = new Date(entry.createdAt);
+      return entryDate.toDateString() === checkDate.toDateString();
+    });
+    
+    if (dayEntries.length > 0) {
+      writingStreak++;
+      checkDate.setDate(checkDate.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+
+  // Average words per entry
+  const averageWordsPerEntry = recentEntries.reduce((sum, entry) => {
+    return sum + entry.content.split(' ').length;
+  }, 0) / recentEntries.length;
+
+  // Most active time
+  const timePatterns = recentEntries.map(entry => {
+    const hour = new Date(entry.createdAt).getHours();
+    if (hour < 12) return 'morning';
+    if (hour < 18) return 'afternoon';
+    return 'evening';
+  });
+  
+  const timeCounts = timePatterns.reduce((acc, time) => {
+    acc[time] = (acc[time] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+  
+  const mostActiveTime = Object.entries(timeCounts)
+    .sort(([,a], [,b]) => b - a)[0]?.[0] as 'morning' | 'afternoon' | 'evening' || 'morning';
+
+  // Emotional depth trend (based on number of emotions per entry)
+  const emotionalDepths = recentEntries.map(entry => Object.keys(entry.emotions).length);
+  const firstHalf = emotionalDepths.slice(0, Math.floor(emotionalDepths.length / 2));
+  const secondHalf = emotionalDepths.slice(Math.floor(emotionalDepths.length / 2));
+  
+  const firstAvg = firstHalf.reduce((a, b) => a + b, 0) / firstHalf.length || 0;
+  const secondAvg = secondHalf.reduce((a, b) => a + b, 0) / secondHalf.length || 0;
+  
+  let emotionalDepthTrend: 'increasing' | 'stable' | 'decreasing' = 'stable';
+  if (secondAvg > firstAvg * 1.1) emotionalDepthTrend = 'increasing';
+  if (secondAvg < firstAvg * 0.9) emotionalDepthTrend = 'decreasing';
+
+  // Consistency score
+  const daysWithEntries = new Set(recentEntries.map(entry => 
+    new Date(entry.createdAt).toDateString()
+  )).size;
+  const consistencyScore = Math.round((daysWithEntries / days) * 100);
+
+  // Weekly pattern
+  const weeklyPattern = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    .map(day => {
+      const dayEntries = recentEntries.filter(entry => {
+        const entryDay = new Date(entry.createdAt).toLocaleDateString('en-US', { weekday: 'long' });
+        return entryDay === day;
+      });
+      return { day, count: dayEntries.length };
+    });
+
+  return {
+    writingStreak,
+    averageWordsPerEntry: Math.round(averageWordsPerEntry),
+    mostActiveTime,
+    emotionalDepthTrend,
+    consistencyScore,
+    weeklyPattern
+  };
+};
+
+// Generate Personalized Wellness Insights
+export const generateWellnessInsights = (
+  emotionalTrends: EmotionalTrend[],
+  chakraActivity: ChakraActivity[],
+  journalRhythm: JournalRhythm
+): WellnessInsight[] => {
+  const insights: WellnessInsight[] = [];
+
+  // Emotional insights
+  const dominantEmotion = emotionalTrends[0];
+  if (dominantEmotion && dominantEmotion.frequency > 3) {
+    const isChallengingEmotion = ['stress', 'anxiety', 'anger', 'sadness', 'fear', 'frustration'].includes(dominantEmotion.emotion);
+    
+    if (isChallengingEmotion) {
+      insights.push({
+        type: 'emotional',
+        priority: 'high',
+        title: `Recurring ${dominantEmotion.emotion} patterns`,
+        message: `You've experienced ${dominantEmotion.emotion} ${dominantEmotion.frequency} times recently, often during ${dominantEmotion.timePattern} hours.`,
+        recommendation: `Consider ${dominantEmotion.physicalManifestations[0]} relief techniques and focus on ${dominantEmotion.chakra} chakra healing.`,
+        chakraFocus: dominantEmotion.chakra
+      });
+    } else {
+      insights.push({
+        type: 'emotional',
+        priority: 'medium',
+        title: `Thriving in ${dominantEmotion.emotion}`,
+        message: `Your ${dominantEmotion.emotion} energy is strong with ${dominantEmotion.frequency} recent expressions.`,
+        recommendation: `Continue nurturing this positive state through ${dominantEmotion.chakra} chakra practices.`,
+        chakraFocus: dominantEmotion.chakra
+      });
+    }
+  }
+
+  // Chakra insights
+  const mostActiveChakra = chakraActivity[0];
+  const leastActiveChakra = chakraActivity[chakraActivity.length - 1];
+  
+  if (mostActiveChakra && mostActiveChakra.balanceState === 'overactive') {
+    insights.push({
+      type: 'chakra',
+      priority: 'medium',
+      title: `${mostActiveChakra.chakra} chakra overactivity`,
+      message: `Your ${mostActiveChakra.chakra} chakra is highly active (${mostActiveChakra.activationLevel}%). This may create imbalance.`,
+      recommendation: `Try grounding practices and focus on balancing other energy centers.`,
+      chakraFocus: mostActiveChakra.chakra
+    });
+  }
+  
+  if (leastActiveChakra && leastActiveChakra.balanceState === 'blocked') {
+    insights.push({
+      type: 'chakra',
+      priority: 'high',
+      title: `${leastActiveChakra.chakra} chakra needs attention`,
+      message: `Your ${leastActiveChakra.chakra} chakra shows low activity (${leastActiveChakra.activationLevel}%). This may affect your overall energy flow.`,
+      recommendation: leastActiveChakra.suggestedPractices[0] || `Focus on ${leastActiveChakra.chakra} chakra healing practices.`,
+      chakraFocus: leastActiveChakra.chakra
+    });
+  }
+
+  // Journal rhythm insights
+  if (journalRhythm.writingStreak > 7) {
+    insights.push({
+      type: 'growth',
+      priority: 'low',
+      title: `Amazing ${journalRhythm.writingStreak}-day writing streak!`,
+      message: `Your consistent journaling is creating powerful self-awareness habits.`,
+      recommendation: `Keep up the momentum! Your emotional intelligence is growing with each entry.`
+    });
+  } else if (journalRhythm.consistencyScore < 30) {
+    insights.push({
+      type: 'growth',
+      priority: 'medium',
+      title: 'Building consistency',
+      message: `Your journaling consistency is at ${journalRhythm.consistencyScore}%. Regular practice deepens self-awareness.`,
+      recommendation: `Try setting a daily reminder for your most active time: ${journalRhythm.mostActiveTime}.`
+    });
+  }
+
+  // Physical manifestation insights
+  const physicalConcerns = emotionalTrends
+    .filter(trend => ['stress', 'anxiety', 'anger', 'sadness'].includes(trend.emotion))
+    .flatMap(trend => trend.physicalManifestations)
+    .filter((manifestation, index, arr) => arr.indexOf(manifestation) === index);
+
+  if (physicalConcerns.length > 0) {
+    insights.push({
+      type: 'physical',
+      priority: 'high',
+      title: 'Mind-body connection alert',
+      message: `Your recent emotional patterns may be manifesting as ${physicalConcerns.slice(0, 2).join(' and ')}.`,
+      recommendation: `Consider gentle movement, breathing exercises, and body scan meditations to release stored tension.`
+    });
+  }
+
+  return insights.sort((a, b) => {
+    const priorityOrder = { high: 3, medium: 2, low: 1 };
+    return priorityOrder[b.priority] - priorityOrder[a.priority];
+  }).slice(0, 4);
 };
 
 export const generateInsightMessage = (psychosomaticData: ReturnType<typeof analyzePsychosomaticConnection>) => {
