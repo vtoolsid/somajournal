@@ -16,7 +16,10 @@ import {
   Database,
   Award,
   Users,
-  Quote
+  Quote,
+  HelpCircle,
+  Unlink,
+  BarChart3
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -103,6 +106,30 @@ export default function Home() {
       description: 'Gain personalized insights into your mental and physical health patterns over time.',
       chakra: 'third-eye',
       color: 'from-teal-400 to-cyan-500'
+    },
+  ];
+
+  const problemPoints = [
+    {
+      icon: HelpCircle,
+      title: 'The Physical Mystery',
+      question: 'Why does stress give me headaches?',
+      description: 'You feel the physical symptoms but can\'t connect them to your emotional state. Your body is sending signals, but you don\'t have the map to decode them.',
+      color: 'from-slate-400 to-gray-500'
+    },
+    {
+      icon: Unlink,
+      title: 'The Journaling Gap',
+      question: 'Why doesn\'t journaling give me real insights?',
+      description: 'You write about your feelings, but it feels like venting without understanding. You want to see the deeper patterns and physical connections.',
+      color: 'from-blue-400 to-slate-500'
+    },
+    {
+      icon: BarChart3,
+      title: 'The Shallow Tracking Gap',
+      question: 'Why do mood apps feel so basic?',
+      description: 'Current mood trackers give you basic emotions and simple charts, but they don\'t reveal the deeper mind-body connections. You want to understand WHY you feel certain ways physically.',
+      color: 'from-orange-400 to-slate-500'
     },
   ];
 
@@ -244,6 +271,58 @@ export default function Home() {
             >
               Analyze Your First Entry
             </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Problem Section */}
+      <section className="relative z-10 py-24 px-6 bg-slate-50/30">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16 space-y-6 fade-enter">
+            <h2 className="text-5xl font-bold text-slate-800">
+              You Know{' '}
+              <span className="bg-gradient-to-r from-slate-600 to-gray-600 bg-clip-text text-transparent">
+                Something's Missing
+              </span>
+            </h2>
+            <p className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed font-light">
+              Your mind and body are connected, but you've never had a map to understand how. 
+              Sound familiar?
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {problemPoints.map((problem, index) => {
+              const Icon = problem.icon;
+              return (
+                <Card key={index} className="group border-0 bg-white/50 backdrop-blur-sm hover:bg-white/70 transition-all duration-300 hover:shadow-lg relative overflow-hidden">
+                  <CardContent className="p-8 text-center relative z-10">
+                    <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${problem.color} flex items-center justify-center mb-6 mx-auto opacity-70`}>
+                      <Icon className="w-6 h-6 text-white" />
+                    </div>
+                    
+                    <div className="mb-6">
+                      <h3 className="text-xl font-semibold text-slate-800 mb-3">{problem.title}</h3>
+                      <p className="text-lg font-medium text-slate-700 mb-4 italic">
+                        "{problem.question}"
+                      </p>
+                      <p className="text-slate-600 text-sm leading-relaxed">
+                        {problem.description}
+                      </p>
+                    </div>
+                  </CardContent>
+                  
+                  {/* Subtle muted background */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-slate-100 to-gray-100 opacity-20"></div>
+                </Card>
+              );
+            })}
+          </div>
+          
+          <div className="text-center mt-12 fade-enter">
+            <p className="text-lg text-slate-600 font-medium">
+              There <em>is</em> a way to bridge this gap...
+            </p>
           </div>
         </div>
       </section>
