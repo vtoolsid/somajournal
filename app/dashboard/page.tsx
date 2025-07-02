@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { FloatingParticles } from '@/components/ui/floating-particles';
+import { SomaLogo } from '@/components/ui/soma-logo';
 import { useAppStore } from '@/lib/store';
 import { 
   mockJournalEntries,
@@ -151,9 +152,7 @@ export default function DashboardPage() {
             <div className="dashboard-hero p-8 mb-8 relative z-10">
               <div className="text-center space-y-6">
                 <div className="flex items-center justify-center space-x-4 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center breathing-element">
-                    <Flower2 className="w-6 h-6 text-white" />
-                  </div>
+                  <SomaLogo size="md" className="breathing-element" />
                   <div>
                     <h1 className="text-3xl font-semibold text-gray-800">
                       Welcome back, <span className="text-green-600">{user.name}</span>

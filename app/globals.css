@@ -353,18 +353,39 @@
   /* Gentle Breathing Elements */
   .wellness-container {
     @apply relative overflow-hidden;
+    background: linear-gradient(135deg, 
+      rgba(240, 251, 244, 0.9) 0%, 
+      rgba(220, 252, 231, 0.85) 25%, 
+      rgba(187, 247, 208, 0.8) 50%, 
+      rgba(167, 243, 208, 0.85) 75%, 
+      rgba(240, 251, 244, 0.9) 100%);
+    animation: breathing-gradient 6s ease-in-out infinite;
   }
   
+  @keyframes breathing-gradient {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.97;
+    }
+  }
+  
+  /* Texture overlay */
   .wellness-container::before {
     content: '';
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(34, 197, 94, 0.02) 0%, transparent 70%);
-    animation: gentle-rotation 60s linear infinite;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+      radial-gradient(circle at 3px 3px, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px, 30px 30px;
+    background-position: 0 0, 15px 15px;
     pointer-events: none;
+    z-index: 1;
   }
   
   .breathing-element {
@@ -375,6 +396,112 @@
     animation: energy-pulse 4s ease-in-out infinite;
   }
   
+  /* Enhanced Floating Particles System */
+  .floating-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+  }
+  
+  .floating-particles .particle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.15;
+    pointer-events: none;
+    animation-fill-mode: both;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+  }
+  
+  @keyframes floatUp1 {
+    0% {
+      opacity: 0;
+      transform: translateY(100vh) translateX(0) scale(0.5);
+    }
+    10% {
+      opacity: 0.3;
+      transform: translateY(90vh) translateX(10px) scale(0.7);
+    }
+    50% {
+      opacity: 0.4;
+      transform: translateY(50vh) translateX(-20px) scale(1);
+    }
+    90% {
+      opacity: 0.3;
+      transform: translateY(10vh) translateX(15px) scale(0.8);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-10vh) translateX(0) scale(0.3);
+    }
+  }
+  
+  @keyframes floatUp2 {
+    0% {
+      opacity: 0;
+      transform: translateY(100vh) translateX(0) scale(0.3);
+    }
+    15% {
+      opacity: 0.25;
+      transform: translateY(85vh) translateX(-15px) scale(0.6);
+    }
+    50% {
+      opacity: 0.35;
+      transform: translateY(50vh) translateX(25px) scale(1);
+    }
+    85% {
+      opacity: 0.25;
+      transform: translateY(15vh) translateX(-10px) scale(0.7);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-10vh) translateX(0) scale(0.2);
+    }
+  }
+  
+  @keyframes floatUp3 {
+    0% {
+      opacity: 0;
+      transform: translateY(100vh) translateX(0) scale(0.4);
+    }
+    20% {
+      opacity: 0.3;
+      transform: translateY(80vh) translateX(20px) scale(0.8);
+    }
+    50% {
+      opacity: 0.4;
+      transform: translateY(50vh) translateX(-30px) scale(1);
+    }
+    80% {
+      opacity: 0.3;
+      transform: translateY(20vh) translateX(25px) scale(0.6);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-10vh) translateX(0) scale(0.1);
+    }
+  }
+  
+  /* Accessibility: Reduce motion for users who prefer it */
+  @media (prefers-reduced-motion: reduce) {
+    .floating-particles .particle {
+      animation: none;
+      opacity: 0;
+    }
+    
+    .breathing-gradient {
+      animation: none;
+    }
+    
+    .breathing-element {
+      animation: none;
+    }
+  }
+
   /* Floating Animation for Emotion Bubbles */
   @keyframes float {
     0%, 100% {

@@ -24,40 +24,63 @@ import {
 export default function KarmaPage() {
   const { user, journalEntries } = useAppStore();
 
-  // Calculate karma statistics
+  // Calculate karma statistics from emotions
   const allEntries = [...mockJournalEntries, ...journalEntries];
+  
+  const calculateKarmaValue = (entry: any) => {
+    const emotions = entry.emotions || {};
+    const positiveEmotions = ['joy', 'love', 'gratitude', 'peace', 'excitement', 'optimism'];
+    const negativeEmotions = ['anger', 'sadness', 'fear', 'anxiety', 'frustration', 'disappointment'];
+    
+    let positiveScore = 0;
+    let negativeScore = 0;
+    
+    Object.entries(emotions).forEach(([emotion, intensity]) => {
+      if (positiveEmotions.includes(emotion.toLowerCase())) {
+        positiveScore += Number(intensity) || 0;
+      } else if (negativeEmotions.includes(emotion.toLowerCase())) {
+        negativeScore += Number(intensity) || 0;
+      }
+    });
+    
+    return positiveScore - negativeScore;
+  };
+  
   const currentKarma = allEntries.length > 0 
-    ? allEntries.reduce((sum, entry) => sum + entry.karmicValue, 0) / allEntries.length 
+    ? allEntries.reduce((sum, entry) => sum + calculateKarmaValue(entry), 0) / allEntries.length 
     : 0;
   
   const previousKarma = allEntries.length > 1 
-    ? allEntries.slice(1).reduce((sum, entry) => sum + entry.karmicValue, 0) / (allEntries.length - 1)
+    ? allEntries.slice(1).reduce((sum, entry) => sum + calculateKarmaValue(entry), 0) / (allEntries.length - 1)
     : 0;
   
   const karmaChange = currentKarma - previousKarma;
 
   // Prepare chart data
-  const karmaHistory = allEntries.map((entry, index) => ({
-    date: entry.createdAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-    karma: (entry.karmicValue * 100).toFixed(1),
-    rawKarma: entry.karmicValue,
-    cumulativeKarma: allEntries.slice(0, index + 1).reduce((sum, e) => sum + e.karmicValue, 0) / (index + 1),
-  })).reverse();
+  const karmaHistory = allEntries.map((entry, index) => {
+    const entryKarma = calculateKarmaValue(entry);
+    return {
+      date: entry.createdAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      karma: (entryKarma * 10).toFixed(1), // Scale for display
+      rawKarma: entryKarma,
+      cumulativeKarma: allEntries.slice(0, index + 1).reduce((sum, e) => sum + calculateKarmaValue(e), 0) / (index + 1),
+    };
+  }).reverse();
 
   // Karma distribution data
   const karmaDistribution = [
-    { name: 'Very Positive', value: allEntries.filter(e => e.karmicValue > 0.5).length, color: '#10B981' },
-    { name: 'Positive', value: allEntries.filter(e => e.karmicValue > 0.2 && e.karmicValue <= 0.5).length, color: '#34D399' },
-    { name: 'Neutral', value: allEntries.filter(e => e.karmicValue >= -0.2 && e.karmicValue <= 0.2).length, color: '#A78BFA' },
-    { name: 'Negative', value: allEntries.filter(e => e.karmicValue < -0.2 && e.karmicValue >= -0.5).length, color: '#F87171' },
-    { name: 'Very Negative', value: allEntries.filter(e => e.karmicValue < -0.5).length, color: '#EF4444' },
+    { name: 'Very Positive', value: allEntries.filter(e => calculateKarmaValue(e) > 5).length, color: '#10B981' },
+    { name: 'Positive', value: allEntries.filter(e => calculateKarmaValue(e) > 2 && calculateKarmaValue(e) <= 5).length, color: '#34D399' },
+    { name: 'Neutral', value: allEntries.filter(e => calculateKarmaValue(e) >= -2 && calculateKarmaValue(e) <= 2).length, color: '#A78BFA' },
+    { name: 'Negative', value: allEntries.filter(e => calculateKarmaValue(e) < -2 && calculateKarmaValue(e) >= -5).length, color: '#F87171' },
+    { name: 'Very Negative', value: allEntries.filter(e => calculateKarmaValue(e) < -5).length, color: '#EF4444' },
   ];
 
   const getKarmaLevel = (value: number) => {
-    if (value > 0.5) return { label: 'Enlightened', color: 'text-green-600', icon: Sparkles };
-    if (value > 0.2) return { label: 'Positive', color: 'text-green-500', icon: TrendingUp };
-    if (value > -0.2) return { label: 'Balanced', color: 'text-purple-500', icon: Minus };
-    if (value > -0.5) return { label: 'Challenged', color: 'text-orange-500', icon: TrendingDown };
+    if (value > 5) return { label: 'Enlightened', color: 'text-green-600', icon: Sparkles };
+    if (value > 2) return { label: 'Positive', color: 'text-green-500', icon: TrendingUp };
+    if (value > -2) return { label: 'Balanced', color: 'text-purple-500', icon: Minus };
+    if (value > -5) return { label: 'Challenged', color: 'text-orange-500', icon: TrendingDown };
     return { label: 'Turbulent', color: 'text-red-500', icon: TrendingDown };
   };
 

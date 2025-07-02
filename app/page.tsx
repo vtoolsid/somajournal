@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { FloatingParticles } from '@/components/ui/floating-particles';
+import { SomaLogo } from '@/components/ui/soma-logo';
 import { useRouter } from 'next/navigation';
 import { 
   Heart, 
@@ -11,7 +12,9 @@ import {
   ArrowRight, 
   Brain, 
   Activity,
-  Flower2
+  Shield,
+  Database,
+  Award
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -110,15 +113,13 @@ export default function Home() {
       <header className="relative z-10 border-b border-white/20 bg-white/20 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-green-500 via-emerald-600 to-teal-500 rounded-2xl flex items-center justify-center breathing-element">
-                <Flower2 className="w-7 h-7 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                  SomaJournal
+            <div className="flex items-center space-x-1">
+              <SomaLogo size="lg" className="breathing-element -mt-1" priority />
+              <div className="flex flex-col justify-center -mt-0.5">
+                <h1 className="text-2xl font-bold leading-tight">
+                  <span className="text-gray-900">Soma</span><span style={{color: '#5a8db4'}}>Journal</span>
                 </h1>
-                <p className="text-sm text-slate-500 font-medium">Your AI Mind-Body Analyst</p>
+                <p className="text-sm text-slate-500 font-medium -mt-0.5">Your AI Mind-Body Analyst</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -194,8 +195,29 @@ export default function Home() {
               onClick={() => router.push('/auth/signup')}
               className="wellness-button text-xl px-16 py-8 text-lg font-semibold"
             >
-              Begin the Journey
+              Decode Your Body's Message
             </Button>
+          </div>
+          
+          {/* Validation Badges */}
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-6 mt-6 fade-enter">
+            {/* Dataset Badge */}
+            <div className="flex items-center space-x-2 px-3 py-2 bg-blue-50/80 backdrop-blur-sm rounded-full border border-blue-200/60 shadow-sm">
+              <Database className="w-4 h-4 text-blue-600" />
+              <span className="text-sm text-blue-600 font-medium">Built on 58,000+ emotional expressions</span>
+            </div>
+            
+            {/* Clinical Validation Badge */}
+            <div className="flex items-center space-x-2 px-3 py-2 bg-slate-50/80 backdrop-blur-sm rounded-full border border-slate-200/60 shadow-sm">
+              <Shield className="w-4 h-4 text-slate-600" />
+              <span className="text-sm text-slate-600 font-medium">Validated by clinical research</span>
+            </div>
+            
+            {/* Evidence-Based Badge */}
+            <div className="flex items-center space-x-2 px-3 py-2 bg-green-50/80 backdrop-blur-sm rounded-full border border-green-200/60 shadow-sm">
+              <Award className="w-4 h-4 text-green-600" />
+              <span className="text-sm text-green-600 font-medium">Evidence-based analysis</span>
+            </div>
           </div>
         </div>
       </section>
@@ -299,9 +321,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center breathing-element">
-                <Flower2 className="w-5 h-5 text-white" />
-              </div>
+              <SomaLogo size="sm" className="breathing-element" />
               <div>
                 <span className="text-lg font-semibold text-slate-800">SomaJournal</span>
                 <p className="text-xs text-slate-500">Mindful journaling companion</p>

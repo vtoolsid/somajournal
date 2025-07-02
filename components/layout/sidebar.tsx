@@ -2,6 +2,7 @@
 
 import { useAppStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
+import { SomaLogo } from '@/components/ui/soma-logo';
 import { useRouter, usePathname } from 'next/navigation';
 import { Home, BookOpen, Heart, LogOut, Settings } from 'lucide-react';
 
@@ -26,9 +27,7 @@ export function Sidebar() {
       {/* Logo */}
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
-            <Heart className="w-6 h-6 text-white" />
-          </div>
+          <SomaLogo size="sm" />
           <div>
             <h1 className="text-xl font-semibold text-gray-900">SomaJournal</h1>
             <p className="text-xs text-gray-500">Mindful journaling companion</p>

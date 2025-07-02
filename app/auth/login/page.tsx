@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Flower2 } from 'lucide-react';
+import { SomaLogo } from '@/components/ui/soma-logo';
 import Link from 'next/link';
 import { ChakraRing } from '@/components/ui/chakra-ring';
 
@@ -40,9 +40,7 @@ export default function LoginPage() {
           <div className="mb-12">
             {/* Simple Brand Identity */}
             <div className="flex justify-center mb-12">
-              <div className="w-20 h-20 flex items-center justify-center">
-                <Flower2 className="w-16 h-16 text-black" strokeWidth={1.5} />
-              </div>
+              <SomaLogo size="xl" priority />
             </div>
             
             <div className="text-center">
