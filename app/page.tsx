@@ -22,7 +22,9 @@ import {
   BarChart3,
   CheckCircle,
   Target,
-  Lightbulb
+  Lightbulb,
+  Edit3,
+  Play
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -157,6 +159,33 @@ export default function Home() {
       benefit: 'Get personalized mind-body intelligence',
       result: 'Understand what to do about your emotional patterns',
       color: 'from-blue-500 to-indigo-600'
+    },
+  ];
+
+  const howItWorksSteps = [
+    {
+      icon: Edit3,
+      title: 'Journal Freely',
+      description: 'Write about your day, your feelings, and your thoughts. No prompts, no rules.',
+      technical: 'Advanced AI processes your natural writing to understand emotional context',
+      position: 'top-right',
+      color: 'from-blue-500 to-indigo-600'
+    },
+    {
+      icon: Brain,
+      title: 'Proprietary AI Analysis',
+      description: 'Our machine learning system analyzes your text using proprietary algorithms trained on extensive emotion research.',
+      technical: 'Clinical-grade accuracy identifies complex emotional patterns in real-time',
+      position: 'bottom-left',
+      color: 'from-purple-500 to-pink-600'
+    },
+    {
+      icon: Heart,
+      title: 'Body Mapping Intelligence',
+      description: 'Research-backed algorithms translate emotions into personalized body maps with actionable wellness insights.',
+      technical: 'Combines multiple clinical studies with advanced AI for personalized recommendations',
+      position: 'bottom-right',
+      color: 'from-green-500 to-teal-600'
     },
   ];
 
@@ -401,6 +430,74 @@ export default function Home() {
             <p className="text-lg text-slate-700 font-semibold">
               While other apps ask how you feel, SomaJournal shows you exactly where you feel it—and what to do about it.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="relative z-10 py-24 px-6 bg-gradient-to-br from-slate-50/50 to-gray-50/50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12 space-y-6 fade-enter">
+            <h2 className="text-5xl font-bold text-slate-800">
+              How It{' '}
+              <span className="bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
+                Works
+              </span>
+            </h2>
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-light">
+              Three simple steps to decode your body's messages
+            </p>
+          </div>
+          
+          {/* Horizontal Step Flow Layout */}
+          <div className="max-w-6xl mx-auto fade-enter">
+            {/* Step Numbers Row with Single Continuous Line */}
+            <div className="relative mb-8">
+              {/* Continuous connecting line */}
+              <div className="hidden lg:block absolute top-8 left-[16.67%] right-[16.67%] h-0.5 bg-gradient-to-r from-green-300 via-teal-400 to-green-300 transform -translate-y-1/2"></div>
+              
+              {/* Step Numbers */}
+              <div className="grid grid-cols-3 gap-8 relative z-10">
+                {howItWorksSteps.map((step, index) => (
+                  <div key={index} className="flex justify-center">
+                    <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                      {index + 1}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* Step Cards Row */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {howItWorksSteps.map((step, index) => {
+                const Icon = step.icon;
+                return (
+                  <Card key={index} className="border-0 bg-white/80 backdrop-blur-sm hover:bg-white/95 hover:shadow-lg transition-all duration-300 h-full w-full">
+                    <CardContent className="p-6 text-center h-full flex flex-col">
+                      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${step.color} flex items-center justify-center mb-4 mx-auto shadow-lg`}>
+                        <Icon className="w-6 h-6 text-white" />
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-800 mb-3">{step.title}</h3>
+                      <p className="text-slate-700 leading-relaxed mb-3 font-medium flex-grow">{step.description}</p>
+                      <p className="text-sm text-slate-500 leading-relaxed italic">{step.technical}</p>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+          
+          {/* CTA Button */}
+          <div className="text-center mt-12 fade-enter">
+            <Button
+              size="lg"
+              onClick={() => router.push('/auth/signup')}
+              className="wellness-button text-lg px-12 py-6 font-semibold"
+            >
+              <Play className="w-5 h-5 mr-2" />
+              Start Your Healing Journey
+            </Button>
           </div>
         </div>
       </section>
