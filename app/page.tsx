@@ -14,7 +14,9 @@ import {
   Activity,
   Shield,
   Database,
-  Award
+  Award,
+  Users,
+  Quote
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -104,6 +106,30 @@ export default function Home() {
     },
   ];
 
+  const testimonials = [
+    {
+      name: 'Sarah',
+      age: 28,
+      quote: 'Finally understand why stress gives me headaches',
+      icon: Brain,
+      color: 'from-purple-400 to-indigo-500'
+    },
+    {
+      name: 'Mike',
+      age: 31,
+      quote: 'My anxiety stomach pain makes sense now',
+      icon: Activity,
+      color: 'from-orange-400 to-red-500'
+    },
+    {
+      name: 'Lisa',
+      age: 26,
+      quote: 'Stopped my tension headaches by addressing root emotions',
+      icon: Heart,
+      color: 'from-green-400 to-teal-500'
+    },
+  ];
+
 
   return (
     <div className="min-h-screen wellness-container">
@@ -185,39 +211,39 @@ export default function Home() {
               <p className="text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-light">
                 The first intelligent journal that uses AI to decode your emotional patterns and reveal their direct impact on your physical well-being.
               </p>
+              
+              {/* Trust Badges - Under Subtitle */}
+              <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 mt-8 fade-enter">
+                {/* User Count Badge */}
+                <div className="flex items-center space-x-3 px-6 py-3 bg-green-50/90 backdrop-blur-sm rounded-full border border-green-200/80 shadow-md">
+                  <Heart className="w-5 h-5 text-green-600" />
+                  <span className="text-base text-green-700 font-semibold">Join 1,200+ users</span>
+                </div>
+                
+                {/* Dataset Badge */}
+                <div className="flex items-center space-x-3 px-6 py-3 bg-blue-50/90 backdrop-blur-sm rounded-full border border-blue-200/80 shadow-md">
+                  <Database className="w-5 h-5 text-blue-600" />
+                  <span className="text-base text-blue-700 font-semibold">Built on 58,000+ emotional expressions</span>
+                </div>
+                
+                {/* Clinical Badge */}
+                <div className="flex items-center space-x-3 px-6 py-3 bg-slate-50/90 backdrop-blur-sm rounded-full border border-slate-200/80 shadow-md">
+                  <Shield className="w-5 h-5 text-slate-600" />
+                  <span className="text-base text-slate-700 font-semibold">Clinically validated</span>
+                </div>
+              </div>
             </div>
           </div>
           
           
-          <div className="flex justify-center pt-0 fade-enter">
+          <div className="flex justify-center pt-8 fade-enter">
             <Button
               size="lg"
               onClick={() => router.push('/auth/signup')}
               className="wellness-button text-xl px-16 py-8 text-lg font-semibold"
             >
-              Decode Your Body's Message
+              Analyze Your First Entry
             </Button>
-          </div>
-          
-          {/* Validation Badges */}
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-6 mt-6 fade-enter">
-            {/* Dataset Badge */}
-            <div className="flex items-center space-x-2 px-3 py-2 bg-blue-50/80 backdrop-blur-sm rounded-full border border-blue-200/60 shadow-sm">
-              <Database className="w-4 h-4 text-blue-600" />
-              <span className="text-sm text-blue-600 font-medium">Built on 58,000+ emotional expressions</span>
-            </div>
-            
-            {/* Clinical Validation Badge */}
-            <div className="flex items-center space-x-2 px-3 py-2 bg-slate-50/80 backdrop-blur-sm rounded-full border border-slate-200/60 shadow-sm">
-              <Shield className="w-4 h-4 text-slate-600" />
-              <span className="text-sm text-slate-600 font-medium">Validated by clinical research</span>
-            </div>
-            
-            {/* Evidence-Based Badge */}
-            <div className="flex items-center space-x-2 px-3 py-2 bg-green-50/80 backdrop-blur-sm rounded-full border border-green-200/60 shadow-sm">
-              <Award className="w-4 h-4 text-green-600" />
-              <span className="text-sm text-green-600 font-medium">Evidence-based analysis</span>
-            </div>
           </div>
         </div>
       </section>
@@ -238,7 +264,7 @@ export default function Home() {
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
@@ -262,6 +288,56 @@ export default function Home() {
                       </Button>
                     </div>
                   </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="relative z-10 py-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16 space-y-6 fade-enter">
+            <div className="flex items-center justify-center space-x-3 mb-4">
+              <Users className="w-8 h-8 text-green-600" />
+              <h2 className="text-5xl font-bold text-slate-800">
+                Real people,{' '}
+                <span className="bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
+                  real healing
+                </span>
+              </h2>
+            </div>
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-light">
+              Discover how our users uncovered the hidden connections between their emotions and physical symptoms
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {testimonials.map((testimonial, index) => {
+              const Icon = testimonial.icon;
+              return (
+                <Card key={index} className="group border-0 bg-white/70 backdrop-blur-sm hover:bg-white/90 transition-all duration-300 hover:shadow-xl relative overflow-hidden">
+                  <CardContent className="p-8 text-center relative z-10">
+                    {/* Quote Icon */}
+                    <div className="flex justify-center mb-6">
+                      <Quote className="w-8 h-8 text-slate-400" />
+                    </div>
+                    
+                    {/* Testimonial Quote */}
+                    <blockquote className="text-lg font-medium text-slate-800 mb-6 leading-relaxed">
+                      "{testimonial.quote}"
+                    </blockquote>
+                    
+                    {/* User Info */}
+                    <div className="text-center">
+                      <p className="font-semibold text-slate-800">{testimonial.name}</p>
+                      <p className="text-sm text-slate-500">Age {testimonial.age}</p>
+                    </div>
+                  </CardContent>
+                  
+                  {/* Subtle background gradient */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${testimonial.color} opacity-5 group-hover:opacity-10 transition-opacity duration-300`}></div>
                 </Card>
               );
             })}
