@@ -19,7 +19,10 @@ import {
   Quote,
   HelpCircle,
   Unlink,
-  BarChart3
+  BarChart3,
+  CheckCircle,
+  Target,
+  Lightbulb
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -130,6 +133,30 @@ export default function Home() {
       question: 'Why do mood apps feel so basic?',
       description: 'Current mood trackers give you basic emotions and simple charts, but they don\'t reveal the deeper mind-body connections. You want to understand WHY you feel certain ways physically.',
       color: 'from-orange-400 to-slate-500'
+    },
+  ];
+
+  const solutionCards = [
+    {
+      icon: CheckCircle,
+      title: 'Decode Physical Mysteries',
+      benefit: 'No more wondering why stress gives you headaches',
+      result: 'Get clear connections between your emotions and physical symptoms',
+      color: 'from-green-500 to-emerald-600'
+    },
+    {
+      icon: Target,
+      title: 'Transform Journaling Into Insights',
+      benefit: 'Turn venting into actionable body awareness',
+      result: 'See exactly where your emotions live in your body',
+      color: 'from-teal-500 to-cyan-600'
+    },
+    {
+      icon: Lightbulb,
+      title: 'Go Beyond Basic Mood Tracking',
+      benefit: 'Get personalized mind-body intelligence',
+      result: 'Understand what to do about your emotional patterns',
+      color: 'from-blue-500 to-indigo-600'
     },
   ];
 
@@ -322,6 +349,57 @@ export default function Home() {
           <div className="text-center mt-12 fade-enter">
             <p className="text-lg text-slate-600 font-medium">
               There <em>is</em> a way to bridge this gap...
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Solution Section */}
+      <section className="relative z-10 py-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16 space-y-6 fade-enter">
+            <h2 className="text-5xl font-bold text-slate-800">
+              Here's How We{' '}
+              <span className="bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
+                Bridge That Gap
+              </span>
+            </h2>
+            <p className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed font-light">
+              SomaJournal is the first intelligent journal that translates your emotions into a visual map of your body, using AI trained on clinical research to reveal exactly how your feelings manifest physically.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {solutionCards.map((solution, index) => {
+              const Icon = solution.icon;
+              return (
+                <Card key={index} className="group border-0 bg-white/80 backdrop-blur-sm hover:bg-white/95 transition-all duration-300 hover:shadow-xl relative overflow-hidden">
+                  <CardContent className="p-8 text-center relative z-10">
+                    <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${solution.color} flex items-center justify-center mb-6 mx-auto shadow-lg`}>
+                      <Icon className="w-7 h-7 text-white" />
+                    </div>
+                    
+                    <div className="mb-6">
+                      <h3 className="text-xl font-bold text-slate-800 mb-3">{solution.title}</h3>
+                      <p className="text-lg font-semibold text-green-700 mb-4">
+                        {solution.benefit}
+                      </p>
+                      <p className="text-slate-600 text-sm leading-relaxed">
+                        {solution.result}
+                      </p>
+                    </div>
+                  </CardContent>
+                  
+                  {/* Bright background gradient */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${solution.color} opacity-5 group-hover:opacity-10 transition-opacity duration-300`}></div>
+                </Card>
+              );
+            })}
+          </div>
+          
+          <div className="text-center mt-12 fade-enter">
+            <p className="text-lg text-slate-700 font-semibold">
+              While other apps ask how you feel, SomaJournal shows you exactly where you feel it—and what to do about it.
             </p>
           </div>
         </div>
