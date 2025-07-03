@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { FloatingParticles } from '@/components/ui/floating-particles';
 import { SomaLogo } from '@/components/ui/soma-logo';
+import { WellnessGradientBackground } from '@/components/ui/wellness-gradient-background';
 import { useRouter } from 'next/navigation';
 import { 
   Heart, 
@@ -224,6 +225,7 @@ export default function Home() {
 
   return (
     <main className="opal-wrapper min-h-screen">
+      <WellnessGradientBackground intensity="vibrant" cycleDuration={12} />
       <FloatingParticles count={20} />
       
       {/* Header */}
@@ -300,23 +302,23 @@ export default function Home() {
                 </span>
               </h1>
               
-              <p className="text-2xl text-slate-600 max-w-2xl mx-auto leading-[1.4] font-light">
+              <p className="text-2xl text-white max-w-2xl mx-auto leading-[1.4] font-light drop-shadow-lg">
                 The first intelligent journal that uses AI to decode your emotional patterns and reveal their direct impact on your physical well-being.
               </p>
               
               {/* Trust Badges */}
               <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 mt-8">
-                <div className="flex items-center space-x-3 px-6 py-3 bg-green-50/90 backdrop-blur-sm rounded-full border border-green-200/80 shadow-md">
+                <div className="flex items-center space-x-3 px-6 py-3 bg-white/95 backdrop-blur-sm rounded-full border border-white/40 shadow-lg">
                   <Heart className="w-5 h-5 text-green-600" />
                   <span className="text-lg text-green-700 font-semibold">Join 1,200+ users</span>
                 </div>
                 
-                <div className="flex items-center space-x-3 px-6 py-3 bg-blue-50/90 backdrop-blur-sm rounded-full border border-blue-200/80 shadow-md">
+                <div className="flex items-center space-x-3 px-6 py-3 bg-white/95 backdrop-blur-sm rounded-full border border-white/40 shadow-lg">
                   <Database className="w-5 h-5 text-blue-600" />
                   <span className="text-lg text-blue-700 font-semibold">Built on 58,000+ emotional expressions</span>
                 </div>
                 
-                <div className="flex items-center space-x-3 px-6 py-3 bg-slate-50/90 backdrop-blur-sm rounded-full border border-slate-200/80 shadow-md">
+                <div className="flex items-center space-x-3 px-6 py-3 bg-white/95 backdrop-blur-sm rounded-full border border-white/40 shadow-lg">
                   <Shield className="w-5 h-5 text-slate-600" />
                   <span className="text-lg text-slate-700 font-semibold">Clinically validated</span>
                 </div>
@@ -711,8 +713,6 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* Wellness Background Overlay */}
-      <div className="fixed inset-0 pointer-events-none z-0 wellness-container"></div>
     </main>
   );
 }

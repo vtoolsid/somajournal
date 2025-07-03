@@ -323,14 +323,14 @@
   .gradient-text-shine {
     background: linear-gradient(
       90deg,
-      #22c55e 0%,
-      #10b981 15%,
-      #059669 30%,
-      #10b981 45%,
-      #0ea5e9 60%,
-      #10b981 75%,
-      #059669 85%,
-      #22c55e 100%
+      #ffffff 0%,
+      #f8fafc 15%,
+      #e2e8f0 30%,
+      #f1f5f9 45%,
+      #cbd5e1 60%,
+      #f8fafc 75%,
+      #e2e8f0 85%,
+      #ffffff 100%
     );
     background-size: 200% 100%;
     background-clip: text;
@@ -1659,11 +1659,67 @@
   }
 }
 
+/* Wellness Gradient Animations */
+@keyframes wellness-blob {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  25% {
+    transform: translate(60px, -40px) scale(1.2) rotate(90deg);
+  }
+  50% {
+    transform: translate(-40px, 60px) scale(0.8) rotate(180deg);
+  }
+  75% {
+    transform: translate(-60px, -20px) scale(1.1) rotate(270deg);
+  }
+  100% {
+    transform: translate(0, 0) scale(1) rotate(360deg);
+  }
+}
+
+@keyframes wellness-blob-reverse {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  25% {
+    transform: translate(-50px, 30px) scale(0.9) rotate(-90deg);
+  }
+  50% {
+    transform: translate(50px, -50px) scale(1.15) rotate(-180deg);
+  }
+  75% {
+    transform: translate(40px, 40px) scale(0.85) rotate(-270deg);
+  }
+  100% {
+    transform: translate(0, 0) scale(1) rotate(-360deg);
+  }
+}
+
 /* CSS @property for smooth text reveal animation */
 @property --progress {
   syntax: "<percentage>";
   inherits: false;
   initial-value: 0%;
+}
+
+/* CSS @property for smooth gradient transitions */
+@property --gradient-color-a {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #f8fafc;
+}
+
+@property --gradient-color-b {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #e2e8f0;
+}
+
+@property --gradient-color-c {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #cbd5e1;
 }
 
 /* OPAL-Style Grid System */
@@ -1996,13 +2052,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, 
-      rgba(248, 250, 252, 0.95) 0%, 
-      rgba(241, 245, 249, 0.9) 25%, 
-      rgba(236, 254, 255, 0.85) 50%, 
-      rgba(243, 244, 246, 0.9) 75%, 
-      rgba(250, 250, 255, 0.95) 100%);
-    background-attachment: fixed;
+    background: transparent;
     view-timeline-name: --hero-wrapper;
   }
 
@@ -2076,6 +2126,77 @@
     .opal-scroll-section .sticky-content {
       position: static;
       min-height: auto;
+    }
+  }
+
+  /* Wellness Gradient Background */
+  .wellness-gradient-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: linear-gradient(
+      135deg,
+      var(--gradient-color-a) 0%,
+      var(--gradient-color-b) 50%,
+      var(--gradient-color-c) 100%
+    );
+    transition: --gradient-color-a 4s ease-in-out,
+                --gradient-color-b 4s ease-in-out,
+                --gradient-color-c 4s ease-in-out;
+    overflow: hidden;
+  }
+
+  .wellness-gradient-bg::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 20%;
+    width: 70%;
+    height: 50%;
+    background: linear-gradient(
+      45deg,
+      var(--gradient-color-a),
+      var(--gradient-color-b)
+    );
+    border-radius: 50%;
+    filter: blur(40px) brightness(1.3);
+    opacity: 0.6;
+    animation: wellness-blob 18s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045);
+    transform-origin: center;
+  }
+
+  .wellness-gradient-bg::after {
+    content: '';
+    position: absolute;
+    top: 30%;
+    right: 15%;
+    width: 60%;
+    height: 70%;
+    background: linear-gradient(
+      -45deg,
+      var(--gradient-color-b),
+      var(--gradient-color-c)
+    );
+    border-radius: 50%;
+    filter: blur(50px) brightness(1.4);
+    opacity: 0.5;
+    animation: wellness-blob-reverse 20s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+    transform-origin: center;
+  }
+
+  /* Reduced motion support for gradients */
+  @media (prefers-reduced-motion: reduce) {
+    .wellness-gradient-bg {
+      transition: none;
+    }
+    
+    .wellness-gradient-bg::before,
+    .wellness-gradient-bg::after {
+      animation: none;
+      transform: none;
     }
   }
 }
