@@ -509,58 +509,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section className="relative z-10 py-24 px-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16 space-y-6 fade-enter">
-            <div className="flex items-center justify-center space-x-3 mb-4">
-              <HelpCircle className="w-8 h-8 text-green-600" />
-              <h2 className="text-5xl font-bold text-slate-800">
-                Frequently Asked{' '}
-                <span className="bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
-                  Questions
-                </span>
-              </h2>
-            </div>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-light">
-              Everything you need to know about SomaJournal
-            </p>
-          </div>
-          
-          <div className="space-y-4 fade-enter">
-            {faqItems.map((faq, index) => (
-              <Card key={index} className="border border-slate-200 bg-white/80 backdrop-blur-sm hover:bg-white/95 transition-all duration-200">
-                <CardContent className="p-0">
-                  <button
-                    onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
-                    className="w-full p-6 text-left flex items-center justify-between hover:bg-slate-50/50 transition-colors duration-200"
-                  >
-                    <h3 className="text-lg font-semibold text-slate-800 pr-4">
-                      {faq.question}
-                    </h3>
-                    {openFAQ === index ? (
-                      <ChevronUp className="w-5 h-5 text-slate-500 flex-shrink-0" />
-                    ) : (
-                      <ChevronDown className="w-5 h-5 text-slate-500 flex-shrink-0" />
-                    )}
-                  </button>
-                  
-                  {openFAQ === index && (
-                    <div className="px-6 pb-6 pt-0">
-                      <p className="text-slate-600 leading-relaxed">
-                        {faq.answer}
-                      </p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Testimonials Section */}
-      <section className="relative z-10 py-24 px-6">
+      <section className="relative z-10 py-32 px-6 bg-gradient-to-b from-white to-slate-50/50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16 space-y-6 fade-enter">
             <div className="flex items-center justify-center space-x-3 mb-4">
@@ -605,6 +555,56 @@ export default function Home() {
                 </Card>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="relative z-10 py-32 px-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-16 space-y-6 fade-enter">
+            <div className="flex items-center justify-center space-x-3 mb-4">
+              <HelpCircle className="w-8 h-8 text-green-600" />
+              <h2 className="text-5xl font-bold text-slate-800">
+                Frequently Asked{' '}
+                <span className="bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
+                  Questions
+                </span>
+              </h2>
+            </div>
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-light">
+              Everything you need to know about SomaJournal
+            </p>
+          </div>
+          
+          <div className="space-y-4 fade-enter">
+            {faqItems.map((faq, index) => (
+              <Card key={index} className="border border-slate-200 bg-white/80 backdrop-blur-sm hover:bg-white/95 transition-all duration-200">
+                <CardContent className="p-0">
+                  <button
+                    onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
+                    className="w-full p-6 text-left flex items-center justify-between hover:bg-slate-50/50 transition-colors duration-200"
+                  >
+                    <h3 className="text-lg font-semibold text-slate-800 pr-4">
+                      {faq.question}
+                    </h3>
+                    {openFAQ === index ? (
+                      <ChevronUp className="w-5 h-5 text-slate-500 flex-shrink-0" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5 text-slate-500 flex-shrink-0" />
+                    )}
+                  </button>
+                  
+                  {openFAQ === index && (
+                    <div className="px-6 pb-6 pt-0">
+                      <p className="text-slate-600 leading-relaxed">
+                        {faq.answer}
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
