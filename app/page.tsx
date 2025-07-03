@@ -223,11 +223,11 @@ export default function Home() {
 
 
   return (
-    <div className="min-h-screen wellness-container">
+    <main className="opal-wrapper min-h-screen">
       <FloatingParticles count={20} />
       
       {/* Header */}
-      <header className="relative z-10 border-b border-white/20 bg-white/20 backdrop-blur-sm">
+      <header className="relative z-10 border-b border-white/20 bg-white/20 backdrop-blur-sm full-bleed">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-1">
@@ -272,24 +272,25 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative z-10 py-32 px-6">
-        <div className="max-w-6xl mx-auto text-center space-y-16">
-          <div className="fade-enter">
-            {/* Chakra Mandala */}
-            <div className="relative inline-flex items-center justify-center mb-16">
-              <div className="absolute inset-0 animate-spin-slow">
+      {/* OPAL Hero Section - Full Screen */}
+      <div className="opal-hero-container full-bleed relative z-10">
+        <div className="opal-wrapper w-full">
+          <div className="flex flex-col items-center text-center space-y-16">
+            {/* Chakra Mandala with Parallax */}
+            <div className="opal-parallax-wrapper relative inline-flex items-center justify-center mb-16">
+              <div className="opal-parallax-element absolute inset-0 animate-spin-slow" style={{ "--movement": "20px" } as React.CSSProperties}>
                 <div className="w-32 h-32 rounded-full border-2 border-gradient-to-r from-green-200 via-emerald-200 to-teal-200 opacity-30"></div>
               </div>
-              <div className="w-28 h-28 bg-gradient-to-br from-green-500 via-emerald-600 to-teal-500 rounded-full flex items-center justify-center breathing-element shadow-2xl">
+              <div className="opal-parallax-element w-28 h-28 bg-gradient-to-br from-green-500 via-emerald-600 to-teal-500 rounded-full flex items-center justify-center breathing-element shadow-2xl" style={{ "--movement": "15px" } as React.CSSProperties}>
                 <div className="w-20 h-20 bg-gradient-to-br from-white/20 to-white/5 rounded-full flex items-center justify-center">
                   <Sparkles className="w-10 h-10 text-white" />
                 </div>
               </div>
             </div>
             
-            <div className="space-y-8">
-              <h1 className="text-7xl font-medium text-slate-800 leading-tight">
+            <div className="space-y-8 max-w-6xl">
+              {/* Main Heading with OPAL reveal effect */}
+              <h1 className="text-7xl font-medium leading-tight">
                 <span className="gradient-text-shine">
                   Map Your Mind.
                 </span>
@@ -303,41 +304,50 @@ export default function Home() {
                 The first intelligent journal that uses AI to decode your emotional patterns and reveal their direct impact on your physical well-being.
               </p>
               
-              {/* Trust Badges - Under Subtitle */}
-              <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 mt-8 fade-enter">
-                {/* User Count Badge */}
+              {/* Trust Badges */}
+              <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 mt-8">
                 <div className="flex items-center space-x-3 px-6 py-3 bg-green-50/90 backdrop-blur-sm rounded-full border border-green-200/80 shadow-md">
                   <Heart className="w-5 h-5 text-green-600" />
                   <span className="text-base text-green-700 font-semibold">Join 1,200+ users</span>
                 </div>
                 
-                {/* Dataset Badge */}
                 <div className="flex items-center space-x-3 px-6 py-3 bg-blue-50/90 backdrop-blur-sm rounded-full border border-blue-200/80 shadow-md">
                   <Database className="w-5 h-5 text-blue-600" />
                   <span className="text-base text-blue-700 font-semibold">Built on 58,000+ emotional expressions</span>
                 </div>
                 
-                {/* Clinical Badge */}
                 <div className="flex items-center space-x-3 px-6 py-3 bg-slate-50/90 backdrop-blur-sm rounded-full border border-slate-200/80 shadow-md">
                   <Shield className="w-5 h-5 text-slate-600" />
                   <span className="text-base text-slate-700 font-semibold">Clinically validated</span>
                 </div>
               </div>
             </div>
-          </div>
-          
-          
-          <div className="flex justify-center pt-8 fade-enter">
-            <Button
-              size="lg"
-              onClick={() => router.push('/auth/signup')}
-              className="wellness-button text-xl px-16 py-8 text-lg font-semibold"
-            >
-              Analyze Your First Entry
-            </Button>
+            
+            <div className="flex justify-center pt-8">
+              <Button
+                size="lg"
+                onClick={() => router.push('/auth/signup')}
+                className="wellness-button text-xl px-16 py-8 text-lg font-semibold"
+              >
+                Analyze Your First Entry
+              </Button>
+            </div>
           </div>
         </div>
-      </section>
+      </div>
+
+      {/* OPAL Scroll-Triggered Text Reveal Section */}
+      <div className="opal-scroll-section">
+        <div className="sticky-content">
+          <div className="opal-wrapper">
+            <div className="text-center full-bleed px-8 md:px-16 lg:px-24">
+              <h2 className="opal-reveal-text wellness-theme supports-[animation-timeline]:text-2xl md:text-3xl lg:text-4xl lg:leading-[1.3] font-medium">
+                Your body feels off but you can't figure out why. Journaling and mood tracking apps don't reveal what's really going on. It's time to connect the dots—and take back control of your mind, body, and daily life.
+              </h2>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Problem Section */}
       <section className="relative z-10 py-24 px-6 bg-slate-50/30">
@@ -700,6 +710,9 @@ export default function Home() {
           </div>
         </div>
       </footer>
-    </div>
+
+      {/* Wellness Background Overlay */}
+      <div className="fixed inset-0 pointer-events-none z-0 wellness-container"></div>
+    </main>
   );
 }

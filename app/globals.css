@@ -1638,6 +1638,61 @@
   }
 }
 
+/* OPAL-Style Scroll Animations */
+@keyframes opal-fill-text {
+  to {
+    --progress: 100%;
+  }
+}
+
+@keyframes opal-parallax-movement {
+  to {
+    transform: translateY(var(--movement));
+  }
+}
+
+/* CSS @property for smooth text reveal animation */
+@property --progress {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+/* OPAL-Style Grid System */
+@layer base {
+  .opal-wrapper {
+    --col-width: 130px;
+    
+    @apply grid w-full gap-2 md:gap-4;
+    grid-template-columns:
+      [full-start]
+      minmax(0, 100%)
+      [wide-start]
+      repeat(2, minmax(0, var(--col-width)))
+      [narrow-start]
+      repeat(8, minmax(0, var(--col-width)))
+      [narrow-end]
+      repeat(2, minmax(0, var(--col-width)))
+      [wide-end]
+      minmax(0, 100%)
+      [full-end];
+  }
+
+  .opal-wrapper > * {
+    grid-column: wide;
+  }
+
+  .opal-wrapper > .full-bleed {
+    grid-column: full;
+  }
+
+  @media (min-width: theme("screens.md")) {
+    .opal-wrapper > * {
+      grid-column: narrow;
+    }
+  }
+}
+
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
   .breathing-element,
@@ -1892,4 +1947,125 @@
   }
 
   /* Move to reduced motion section - these rules are breaking the collapsible functionality */
+}
+
+@layer components {
+  /* OPAL Scroll-Triggered Text Reveal */
+  .opal-reveal-text {
+    --faded-color: #e2e8f0;
+    --highlighted-color: #0f172a;
+    --progress: 0%;
+    background-image: linear-gradient(
+      to right,
+      var(--highlighted-color),
+      var(--highlighted-color) var(--progress),
+      var(--faded-color) var(--progress),
+      var(--faded-color)
+    );
+    background-clip: text;
+    background-repeat: no-repeat;
+    color: transparent;
+    display: inline;
+    animation: opal-fill-text linear both;
+    animation-timeline: --reveal-wrapper;
+    animation-range: entry 200% cover 80%;
+  }
+
+  /* OPAL Parallax Elements */
+  .opal-parallax-element {
+    transform: translateY(0px);
+    animation: opal-parallax-movement linear both;
+    animation-timeline: --parallax-wrapper;
+    animation-range: entry 25% cover 80%;
+  }
+
+  /* OPAL Hero Container */
+  .opal-hero-container {
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, 
+      rgba(248, 250, 252, 0.95) 0%, 
+      rgba(241, 245, 249, 0.9) 25%, 
+      rgba(236, 254, 255, 0.85) 50%, 
+      rgba(243, 244, 246, 0.9) 75%, 
+      rgba(250, 250, 255, 0.95) 100%);
+    background-attachment: fixed;
+    view-timeline-name: --hero-wrapper;
+  }
+
+  /* OPAL Scroll-Triggered Section */
+  .opal-scroll-section {
+    min-height: 400vh;
+    view-timeline-name: --reveal-wrapper;
+  }
+
+  .opal-scroll-section .sticky-content {
+    position: sticky;
+    top: 0;
+    display: flex;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Wellness-themed OPAL reveal text */
+  .opal-reveal-text.wellness-theme {
+    --faded-color: #94a3b8;
+    --highlighted-color: #0f172a;
+  }
+
+  /* OPAL Parallax wrapper for elements */
+  .opal-parallax-wrapper {
+    view-timeline-name: --parallax-wrapper;
+  }
+
+  /* Mobile Optimizations for OPAL */
+  @media (max-width: 768px) {
+    .opal-hero-container {
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    .opal-scroll-section {
+      min-height: 200vh; /* Reduced for mobile */
+    }
+
+    .opal-reveal-text {
+      font-size: 2.5rem !important;
+      line-height: 1.2 !important;
+    }
+
+    /* Disable parallax on mobile for performance */
+    .opal-parallax-element {
+      animation: none;
+      transform: none;
+    }
+  }
+
+  /* Fallback for browsers without view-timeline support */
+  @supports not (animation-timeline: --reveal-wrapper) {
+    .opal-reveal-text {
+      background-image: none;
+      color: var(--highlighted-color);
+      animation: none;
+    }
+
+    .opal-parallax-element {
+      animation: none;
+      transform: none;
+    }
+
+    .opal-scroll-section {
+      min-height: auto;
+      padding: 4rem 0;
+    }
+
+    .opal-scroll-section .sticky-content {
+      position: static;
+      min-height: auto;
+    }
+  }
 }
