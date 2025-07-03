@@ -340,9 +340,9 @@ export default function Home() {
       <div className="opal-scroll-section">
         <div className="sticky-content">
           <div className="opal-wrapper">
-            <div className="text-center full-bleed px-8 md:px-16 lg:px-24">
-              <h2 className="opal-reveal-text wellness-theme supports-[animation-timeline]:text-2xl md:text-3xl lg:text-4xl lg:leading-[1.3] font-medium">
-                Your body feels off but you can't figure out why. Journaling and mood tracking apps don't reveal what's really going on. It's time to connect the dots—and take back control of your mind, body, and daily life.
+            <div className="text-center full-bleed px-7 md:px-14 lg:px-20">
+              <h2 className="opal-reveal-text wellness-theme supports-[animation-timeline]:text-2xl md:text-3xl lg:text-4xl lg:leading-[1.3]">
+                Your body feels off but you can't figure out why. Apps track moods but miss the real connections. It's time to understand what your body is telling you.
               </h2>
             </div>
           </div>
