@@ -24,7 +24,9 @@ import {
   Target,
   Lightbulb,
   Edit3,
-  Play
+  Play,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -32,6 +34,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function Home() {
   const router = useRouter();
   const [showSanskrit, setShowSanskrit] = useState(true);
+  const [openFAQ, setOpenFAQ] = useState<number | null>(null);
 
   // Meditative quotes for cycling
   const quotes = [
@@ -90,29 +93,6 @@ export default function Home() {
     </svg>
   );
 
-  const features = [
-    {
-      icon: Heart,
-      title: 'Emotional Awareness',
-      description: 'Track and understand your emotional patterns through mindful journaling and reflection.',
-      chakra: 'heart',
-      color: 'from-green-400 to-emerald-500'
-    },
-    {
-      icon: Activity,
-      title: 'Mind-Body Connection',
-      description: 'Discover how your emotions manifest as physical symptoms and learn to heal holistically.',
-      chakra: 'solar',
-      color: 'from-yellow-400 to-orange-500'
-    },
-    {
-      icon: Brain,
-      title: 'Wellness Insights',
-      description: 'Gain personalized insights into your mental and physical health patterns over time.',
-      chakra: 'third-eye',
-      color: 'from-teal-400 to-cyan-500'
-    },
-  ];
 
   const problemPoints = [
     {
@@ -187,6 +167,33 @@ export default function Home() {
       position: 'bottom-right',
       color: 'from-green-500 to-teal-600'
     },
+  ];
+
+  const faqItems = [
+    {
+      question: "Is my journal data private and secure?",
+      answer: "Your privacy is our top priority. We use Supabase with end-to-end encryption to ensure your journal entries remain completely private. Your data is encrypted before it leaves your device, and only you have the decryption key."
+    },
+    {
+      question: "How accurate is the AI analysis?",
+      answer: "Our AI is powered by a fine-tuned model trained on extensive emotional research. While it provides clinical-grade insights with high accuracy, it continuously learns and improves from aggregate patterns. Think of it as a highly educated assistant that gets better over time."
+    },
+    {
+      question: "Is this a replacement for medical advice?",
+      answer: "No. SomaJournal is a wellness tool designed for self-awareness and emotional understanding. While it can help you identify patterns between emotions and physical symptoms, it is not a medical diagnostic tool and should not replace professional medical advice."
+    },
+    {
+      question: "How quickly will I see results?",
+      answer: "Most users report gaining valuable insights within their first week of consistent journaling. The AI needs just a few entries to start identifying patterns, but deeper insights emerge with regular use over 2-3 weeks."
+    },
+    {
+      question: "What makes this different from other journaling apps?",
+      answer: "Unlike basic mood trackers or traditional journals, SomaJournal uses advanced AI to reveal the hidden connections between your emotions and physical symptoms. It's the only app that provides psychosomatic insights backed by clinical research."
+    },
+    {
+      question: "Can I export my data?",
+      answer: "Yes! You own your data. You can export all your journal entries, analyses, and insights at any time in multiple formats including PDF and CSV."
+    }
   ];
 
   const testimonials = [
@@ -502,49 +509,52 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* FAQ Section */}
       <section className="relative z-10 py-24 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12 space-y-8 fade-enter">
-            <h2 className="text-6xl font-bold text-slate-800">
-              Illuminate your{' '}
-              <span className="bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
-                spiritual essence
-              </span>
-            </h2>
-            <p className="text-2xl text-slate-600 max-w-4xl mx-auto leading-relaxed font-light">
-              Discover the divine technology that bridges ancient wisdom with modern consciousness, 
-              creating a harmonious space for your soul&apos;s evolution.
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-16 space-y-6 fade-enter">
+            <div className="flex items-center justify-center space-x-3 mb-4">
+              <HelpCircle className="w-8 h-8 text-green-600" />
+              <h2 className="text-5xl font-bold text-slate-800">
+                Frequently Asked{' '}
+                <span className="bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
+                  Questions
+                </span>
+              </h2>
+            </div>
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-light">
+              Everything you need to know about SomaJournal
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {features.map((feature, index) => {
-              const Icon = feature.icon;
-              return (
-                <Card key={index} className="group border-0 bg-white/60 backdrop-blur-sm hover:bg-white/80 transition-all duration-300 hover:shadow-lg text-left">
-                  <CardContent className="p-6 text-left">
-                    <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4`}>
-                      <Icon className="w-6 h-6 text-white" />
-                    </div>
-                    
-                    <div className="mb-2 text-left">
-                      <h3 className="text-xl font-semibold text-slate-900 mb-2 text-left">{feature.title}</h3>
-                      <p className="text-slate-600 text-sm leading-relaxed mb-4 text-left">
-                        {feature.description}
+          <div className="space-y-4 fade-enter">
+            {faqItems.map((faq, index) => (
+              <Card key={index} className="border border-slate-200 bg-white/80 backdrop-blur-sm hover:bg-white/95 transition-all duration-200">
+                <CardContent className="p-0">
+                  <button
+                    onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
+                    className="w-full p-6 text-left flex items-center justify-between hover:bg-slate-50/50 transition-colors duration-200"
+                  >
+                    <h3 className="text-lg font-semibold text-slate-800 pr-4">
+                      {faq.question}
+                    </h3>
+                    {openFAQ === index ? (
+                      <ChevronUp className="w-5 h-5 text-slate-500 flex-shrink-0" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5 text-slate-500 flex-shrink-0" />
+                    )}
+                  </button>
+                  
+                  {openFAQ === index && (
+                    <div className="px-6 pb-6 pt-0">
+                      <p className="text-slate-600 leading-relaxed">
+                        {faq.answer}
                       </p>
                     </div>
-                    
-                    <div className="text-left">
-                      <Button variant="ghost" size="sm" className="justify-start text-green-600 hover:text-green-700 hover:bg-green-50 p-0 h-auto font-medium text-left">
-                        Learn more
-                        <ArrowRight className="w-4 h-4 ml-1" />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                  )}
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
