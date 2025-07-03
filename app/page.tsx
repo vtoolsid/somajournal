@@ -36,6 +36,7 @@ export default function Home() {
   const [showSanskrit, setShowSanskrit] = useState(true);
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
 
+
   // Meditative quotes for cycling
   const quotes = [
     {
@@ -391,46 +392,67 @@ export default function Home() {
       </section>
 
       {/* Solution Section */}
-      <section className="relative z-10 py-24 px-6">
+      <section className="relative z-10 py-16 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16 space-y-6 fade-enter">
-            <h2 className="text-5xl font-bold text-slate-800">
-              Here's How We{' '}
-              <span className="bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
-                Bridge That Gap
-              </span>
-            </h2>
-            <p className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed font-light">
-              SomaJournal is the first intelligent journal that translates your emotions into a visual map of your body, using AI trained on clinical research to reveal exactly how your feelings manifest physically.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {solutionCards.map((solution, index) => {
-              const Icon = solution.icon;
-              return (
-                <Card key={index} className="group border-0 bg-white/80 backdrop-blur-sm hover:bg-white/95 transition-all duration-300 hover:shadow-xl relative overflow-hidden">
-                  <CardContent className="p-8 text-center relative z-10">
-                    <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${solution.color} flex items-center justify-center mb-6 mx-auto shadow-lg`}>
-                      <Icon className="w-7 h-7 text-white" />
-                    </div>
-                    
-                    <div className="mb-6">
-                      <h3 className="text-xl font-bold text-slate-800 mb-3">{solution.title}</h3>
-                      <p className="text-lg font-semibold text-green-700 mb-4">
-                        {solution.benefit}
-                      </p>
-                      <p className="text-slate-600 text-sm leading-relaxed">
-                        {solution.result}
-                      </p>
+          {/* Two Column Layout */}
+          <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto items-start">
+            {/* Left Column - Video Placeholder */}
+            <div className="fade-enter">
+              <div className="relative group cursor-pointer">
+                {/* Video Card */}
+                <Card className="border-0 bg-white/80 backdrop-blur-sm hover:bg-white/95 transition-all duration-300 hover:shadow-xl overflow-hidden">
+                  <CardContent className="p-0">
+                    {/* Placeholder Video Background */}
+                    <div className="relative h-[300px] bg-gradient-to-br from-green-50 to-teal-50 flex items-center justify-center">
+                      {/* Abstract pattern background */}
+                      <div className="absolute inset-0 opacity-10">
+                        <div className="absolute top-10 left-10 w-32 h-32 bg-green-200 rounded-full blur-3xl"></div>
+                        <div className="absolute bottom-10 right-10 w-40 h-40 bg-teal-200 rounded-full blur-3xl"></div>
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-emerald-200 rounded-full blur-3xl"></div>
+                      </div>
+                      
+                      {/* Play Button */}
+                      <div className="relative z-10 w-24 h-24 bg-white rounded-full shadow-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <Play className="w-10 h-10 text-green-600 ml-1 fill-current" />
+                      </div>
+                      
+                      {/* Video Duration Badge */}
+                      <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-md text-sm font-medium">
+                        2:45
+                      </div>
                     </div>
                   </CardContent>
-                  
-                  {/* Bright background gradient */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${solution.color} opacity-5 group-hover:opacity-10 transition-opacity duration-300`}></div>
                 </Card>
-              );
-            })}
+                
+                {/* TODO: Implement video modal on click
+                   * 1. Add state for modal visibility
+                   * 2. Create modal component with video embed
+                   * 3. Add click handler to open modal
+                   * 4. Support YouTube/Vimeo embed or custom video player
+                   */}
+              </div>
+              
+              <p className="text-center mt-4 text-sm text-slate-600">
+                Watch how SomaJournal transforms your journaling experience
+              </p>
+            </div>
+            
+            {/* Right Column - Content */}
+            <div className="fade-enter text-center lg:text-left">
+              <div>
+                <h3 className="text-3xl font-bold text-slate-800 mb-4">
+                  What is SomaJournal?
+                </h3>
+                <div className="space-y-4 text-slate-600">
+                  <p className="text-lg leading-relaxed">
+                    SomaJournal is an intelligent journaling app that reveals the hidden connections between your emotions and physical symptoms. Write about your day, and instantly see which emotions are affecting your body and where.
+                  </p>
+                  <p className="text-lg leading-relaxed">
+                    Get personalized body maps, track emotional patterns, and receive evidence-based recommendations to break negative cycles—all through simple daily journaling.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
           
           <div className="text-center mt-12 fade-enter">

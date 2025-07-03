@@ -1173,6 +1173,7 @@
     opacity: 0.4;
   }
 
+
   /* Utility classes */
   .animate-spin-slow {
     animation: animate-spin-slow 8s linear infinite;
