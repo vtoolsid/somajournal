@@ -236,7 +236,7 @@ export default function Home() {
                 <h1 className="text-2xl font-bold leading-tight">
                   <span className="text-gray-900">Soma</span><span style={{color: '#5a8db4'}}>Journal</span>
                 </h1>
-                <p className="text-sm text-slate-500 font-medium -mt-0.5">Your AI Mind-Body Analyst</p>
+                <p className="text-lg text-slate-500 font-medium -mt-0.5">Your AI Mind-Body Analyst</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -248,13 +248,13 @@ export default function Home() {
                 <Button
                   variant="ghost"
                   onClick={() => router.push('/auth/login')}
-                  className="text-slate-700 hover:text-slate-900 hover:bg-slate-100/80 rounded-lg px-4 py-2 font-medium transition-all duration-200 text-sm"
+                  className="text-slate-700 hover:text-slate-900 hover:bg-slate-100/80 rounded-lg px-4 py-2 font-medium transition-all duration-200 text-lg"
                 >
                   Sign In
                 </Button>
                 <Button
                   onClick={() => router.push('/auth/signup')}
-                  className="relative overflow-hidden text-white font-medium px-5 py-2 rounded-lg text-sm transition-all duration-200 shadow-sm hover:shadow-md hover:scale-105"
+                  className="relative overflow-hidden text-white font-medium px-5 py-2 rounded-lg text-lg transition-all duration-200 shadow-sm hover:shadow-md hover:scale-105"
                 >
                   <span 
                     className="absolute inset-0"
@@ -277,7 +277,7 @@ export default function Home() {
         <div className="opal-wrapper w-full">
           <div className="flex flex-col items-center text-center space-y-16">
             {/* Chakra Mandala with Parallax */}
-            <div className="opal-parallax-wrapper relative inline-flex items-center justify-center mb-16">
+            <div className="opal-parallax-wrapper relative inline-flex items-center justify-center mb-12">
               <div className="opal-parallax-element absolute inset-0 animate-spin-slow" style={{ "--movement": "20px" } as React.CSSProperties}>
                 <div className="w-32 h-32 rounded-full border-2 border-gradient-to-r from-green-200 via-emerald-200 to-teal-200 opacity-30"></div>
               </div>
@@ -290,7 +290,7 @@ export default function Home() {
             
             <div className="space-y-8 max-w-6xl">
               {/* Main Heading with OPAL reveal effect */}
-              <h1 className="text-7xl font-medium leading-tight">
+              <h1 className="text-7xl font-medium leading-[1.1] tracking-tight">
                 <span className="gradient-text-shine">
                   Map Your Mind.
                 </span>
@@ -300,30 +300,30 @@ export default function Home() {
                 </span>
               </h1>
               
-              <p className="text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-light">
+              <p className="text-2xl text-slate-600 max-w-2xl mx-auto leading-[1.4] font-light">
                 The first intelligent journal that uses AI to decode your emotional patterns and reveal their direct impact on your physical well-being.
               </p>
               
               {/* Trust Badges */}
-              <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 mt-8">
+              <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 mt-8">
                 <div className="flex items-center space-x-3 px-6 py-3 bg-green-50/90 backdrop-blur-sm rounded-full border border-green-200/80 shadow-md">
                   <Heart className="w-5 h-5 text-green-600" />
-                  <span className="text-base text-green-700 font-semibold">Join 1,200+ users</span>
+                  <span className="text-lg text-green-700 font-semibold">Join 1,200+ users</span>
                 </div>
                 
                 <div className="flex items-center space-x-3 px-6 py-3 bg-blue-50/90 backdrop-blur-sm rounded-full border border-blue-200/80 shadow-md">
                   <Database className="w-5 h-5 text-blue-600" />
-                  <span className="text-base text-blue-700 font-semibold">Built on 58,000+ emotional expressions</span>
+                  <span className="text-lg text-blue-700 font-semibold">Built on 58,000+ emotional expressions</span>
                 </div>
                 
                 <div className="flex items-center space-x-3 px-6 py-3 bg-slate-50/90 backdrop-blur-sm rounded-full border border-slate-200/80 shadow-md">
                   <Shield className="w-5 h-5 text-slate-600" />
-                  <span className="text-base text-slate-700 font-semibold">Clinically validated</span>
+                  <span className="text-lg text-slate-700 font-semibold">Clinically validated</span>
                 </div>
               </div>
             </div>
             
-            <div className="flex justify-center pt-8">
+            <div className="flex justify-center pt-6">
               <Button
                 size="lg"
                 onClick={() => router.push('/auth/signup')}
@@ -342,7 +342,7 @@ export default function Home() {
           <div className="opal-wrapper">
             <div className="text-center full-bleed px-7 md:px-14 lg:px-20">
               <h2 className="opal-reveal-text wellness-theme supports-[animation-timeline]:text-2xl md:text-3xl lg:text-4xl lg:leading-[1.3]">
-                Your body feels off but you can't figure out why. Apps track moods but miss the real connections. It's time to understand what your body is telling you.
+                Your body feels off but you can't figure out why. Apps track your thoughts but miss the real connections. It's time to understand what your body is telling you.
               </h2>
             </div>
           </div>
@@ -352,35 +352,35 @@ export default function Home() {
       {/* Problem Section */}
       <section className="relative z-10 py-24 px-6 bg-slate-50/30">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16 space-y-6 fade-enter">
-            <h2 className="text-5xl font-bold text-slate-800">
+          <div className="text-center mb-12 space-y-6 fade-enter">
+            <h2 className="text-5xl font-bold text-slate-800 tracking-tight">
               You Know{' '}
               <span className="bg-gradient-to-r from-slate-600 to-gray-600 bg-clip-text text-transparent">
                 Something's Missing
               </span>
             </h2>
-            <p className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed font-light">
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-[1.4] font-light">
               Your mind and body are connected, but you've never had a map to understand how. 
               Sound familiar?
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {problemPoints.map((problem, index) => {
               const Icon = problem.icon;
               return (
                 <Card key={index} className="group border-0 bg-white/50 backdrop-blur-sm hover:bg-white/70 transition-all duration-300 hover:shadow-lg relative overflow-hidden">
-                  <CardContent className="p-8 text-center relative z-10">
-                    <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${problem.color} flex items-center justify-center mb-6 mx-auto opacity-70`}>
+                  <CardContent className="p-8 text-left relative z-10">
+                    <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${problem.color} flex items-center justify-center mb-6 opacity-70`}>
                       <Icon className="w-6 h-6 text-white" />
                     </div>
                     
                     <div className="mb-6">
                       <h3 className="text-xl font-semibold text-slate-800 mb-3">{problem.title}</h3>
-                      <p className="text-lg font-medium text-slate-700 mb-4 italic">
+                      <p className="text-lg font-medium text-slate-700 mb-4 italic text-center">
                         "{problem.question}"
                       </p>
-                      <p className="text-slate-600 text-sm leading-relaxed">
+                      <p className="text-slate-600 text-lg leading-[1.4]">
                         {problem.description}
                       </p>
                     </div>
@@ -393,7 +393,7 @@ export default function Home() {
             })}
           </div>
           
-          <div className="text-center mt-12 fade-enter">
+          <div className="text-center mt-8 fade-enter">
             <p className="text-lg text-slate-600 font-medium">
               There <em>is</em> a way to bridge this gap...
             </p>
@@ -405,7 +405,7 @@ export default function Home() {
       <section className="relative z-10 py-16 px-6">
         <div className="max-w-7xl mx-auto">
           {/* Two Column Layout */}
-          <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto items-start">
+          <div className="grid lg:grid-cols-2 gap-6 max-w-6xl mx-auto items-start">
             {/* Left Column - Video Placeholder */}
             <div className="fade-enter">
               <div className="relative group cursor-pointer">
@@ -427,7 +427,7 @@ export default function Home() {
                       </div>
                       
                       {/* Video Duration Badge */}
-                      <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-md text-sm font-medium">
+                      <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-md text-lg font-medium">
                         2:45
                       </div>
                     </div>
@@ -442,7 +442,7 @@ export default function Home() {
                    */}
               </div>
               
-              <p className="text-center mt-4 text-sm text-slate-600">
+              <p className="text-center mt-4 text-lg text-slate-600">
                 Watch how SomaJournal transforms your journaling experience
               </p>
             </div>
@@ -450,14 +450,14 @@ export default function Home() {
             {/* Right Column - Content */}
             <div className="fade-enter text-center lg:text-left">
               <div>
-                <h3 className="text-3xl font-bold text-slate-800 mb-4">
+                <h3 className="text-3xl font-bold text-slate-800 tracking-tight mb-4">
                   What is SomaJournal?
                 </h3>
                 <div className="space-y-4 text-slate-600">
-                  <p className="text-lg leading-relaxed">
+                  <p className="text-lg leading-[1.4]">
                     SomaJournal is an intelligent journaling app that reveals the hidden connections between your emotions and physical symptoms. Write about your day, and instantly see which emotions are affecting your body and where.
                   </p>
-                  <p className="text-lg leading-relaxed">
+                  <p className="text-lg leading-[1.4]">
                     Get personalized body maps, track emotional patterns, and receive evidence-based recommendations to break negative cycles—all through simple daily journaling.
                   </p>
                 </div>
@@ -465,7 +465,7 @@ export default function Home() {
             </div>
           </div>
           
-          <div className="text-center mt-12 fade-enter">
+          <div className="text-center mt-8 fade-enter">
             <p className="text-lg text-slate-700 font-semibold">
               While other apps ask how you feel, SomaJournal shows you exactly where you feel it—and what to do about it.
             </p>
@@ -477,13 +477,13 @@ export default function Home() {
       <section className="relative z-10 py-24 px-6 bg-gradient-to-br from-slate-50/50 to-gray-50/50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12 space-y-6 fade-enter">
-            <h2 className="text-5xl font-bold text-slate-800">
+            <h2 className="text-5xl font-bold text-slate-800 tracking-tight">
               How It{' '}
               <span className="bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
                 Works
               </span>
             </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-light">
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-[1.4] font-light">
               Three simple steps to decode your body's messages
             </p>
           </div>
@@ -496,7 +496,7 @@ export default function Home() {
               <div className="hidden lg:block absolute top-8 left-[16.67%] right-[16.67%] h-0.5 bg-gradient-to-r from-green-300 via-teal-400 to-green-300 transform -translate-y-1/2"></div>
               
               {/* Step Numbers */}
-              <div className="grid grid-cols-3 gap-8 relative z-10">
+              <div className="grid grid-cols-3 gap-6 relative z-10">
                 {howItWorksSteps.map((step, index) => (
                   <div key={index} className="flex justify-center">
                     <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">
@@ -508,7 +508,7 @@ export default function Home() {
             </div>
             
             {/* Step Cards Row */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {howItWorksSteps.map((step, index) => {
                 const Icon = step.icon;
                 return (
@@ -517,9 +517,9 @@ export default function Home() {
                       <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${step.color} flex items-center justify-center mb-4 mx-auto shadow-lg`}>
                         <Icon className="w-6 h-6 text-white" />
                       </div>
-                      <h3 className="text-xl font-bold text-slate-800 mb-3">{step.title}</h3>
-                      <p className="text-slate-700 leading-relaxed mb-3 font-medium flex-grow">{step.description}</p>
-                      <p className="text-sm text-slate-500 leading-relaxed italic">{step.technical}</p>
+                      <h3 className="text-xl font-bold text-slate-800 tracking-tight mb-3">{step.title}</h3>
+                      <p className="text-slate-700 leading-[1.4] mb-3 font-medium flex-grow">{step.description}</p>
+                      <p className="text-lg text-slate-500 leading-[1.4] italic">{step.technical}</p>
                     </CardContent>
                   </Card>
                 );
@@ -528,7 +528,7 @@ export default function Home() {
           </div>
           
           {/* CTA Button */}
-          <div className="text-center mt-12 fade-enter">
+          <div className="text-center mt-8 fade-enter">
             <Button
               size="lg"
               onClick={() => router.push('/auth/signup')}
@@ -544,22 +544,22 @@ export default function Home() {
       {/* Testimonials Section */}
       <section className="relative z-10 py-32 px-6 bg-gradient-to-b from-white to-slate-50/50">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16 space-y-6 fade-enter">
+          <div className="text-center mb-12 space-y-6 fade-enter">
             <div className="flex items-center justify-center space-x-3 mb-4">
               <Users className="w-8 h-8 text-green-600" />
-              <h2 className="text-5xl font-bold text-slate-800">
+              <h2 className="text-5xl font-bold text-slate-800 tracking-tight">
                 Real people,{' '}
                 <span className="bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
                   real healing
                 </span>
               </h2>
             </div>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-light">
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-[1.4] font-light">
               Discover how our users uncovered the hidden connections between their emotions and physical symptoms
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {testimonials.map((testimonial, index) => {
               const Icon = testimonial.icon;
               return (
@@ -571,14 +571,14 @@ export default function Home() {
                     </div>
                     
                     {/* Testimonial Quote */}
-                    <blockquote className="text-lg font-medium text-slate-800 mb-6 leading-relaxed">
+                    <blockquote className="text-lg font-medium text-slate-800 mb-6 leading-[1.4]">
                       "{testimonial.quote}"
                     </blockquote>
                     
                     {/* User Info */}
                     <div className="text-center">
                       <p className="font-semibold text-slate-800">{testimonial.name}</p>
-                      <p className="text-sm text-slate-500">Age {testimonial.age}</p>
+                      <p className="text-lg text-slate-500">Age {testimonial.age}</p>
                     </div>
                   </CardContent>
                   
@@ -594,17 +594,17 @@ export default function Home() {
       {/* FAQ Section */}
       <section className="relative z-10 py-32 px-6">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16 space-y-6 fade-enter">
+          <div className="text-center mb-12 space-y-6 fade-enter">
             <div className="flex items-center justify-center space-x-3 mb-4">
               <HelpCircle className="w-8 h-8 text-green-600" />
-              <h2 className="text-5xl font-bold text-slate-800">
+              <h2 className="text-5xl font-bold text-slate-800 tracking-tight">
                 Frequently Asked{' '}
                 <span className="bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
                   Questions
                 </span>
               </h2>
             </div>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-light">
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-[1.4] font-light">
               Everything you need to know about SomaJournal
             </p>
           </div>
@@ -629,7 +629,7 @@ export default function Home() {
                   
                   {openFAQ === index && (
                     <div className="px-6 pb-6 pt-0">
-                      <p className="text-slate-600 leading-relaxed">
+                      <p className="text-slate-600 leading-[1.4] max-w-lg">
                         {faq.answer}
                       </p>
                     </div>
@@ -655,7 +655,7 @@ export default function Home() {
                 onMouseLeave={() => setShowSanskrit(true)}
               >
                 <blockquote 
-                  className="text-4xl leading-relaxed font-medium text-slate-800 max-w-4xl"
+                  className="text-4xl leading-[1.4] font-medium text-slate-800 max-w-4xl"
                   style={{ fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif' }}
                 >
                   {quotes[0].text}
@@ -671,7 +671,7 @@ export default function Home() {
                 onMouseLeave={() => setShowSanskrit(true)}
               >
                 <blockquote 
-                  className="text-4xl leading-relaxed mb-6 font-medium text-slate-800 max-w-4xl"
+                  className="text-4xl leading-[1.4] mb-6 font-medium text-slate-800 max-w-4xl"
                   style={{ fontFamily: '"Poppins", "Noto Sans Devanagari", sans-serif' }}
                 >
                   {quotes[1].text}
@@ -699,13 +699,13 @@ export default function Home() {
                 <p className="text-xs text-slate-500">Mindful journaling companion</p>
               </div>
             </div>
-            <div className="flex space-x-8 text-sm text-slate-500">
+            <div className="flex space-x-8 text-lg text-slate-500">
               <a href="#" className="hover:text-slate-700 transition-colors">About</a>
               <a href="#" className="hover:text-slate-700 transition-colors">Privacy Policy</a>
               <a href="#" className="hover:text-slate-700 transition-colors">Terms of Service</a>
             </div>
           </div>
-          <div className="mt-8 pt-8 border-t border-white/20 text-center text-sm text-slate-500">
+          <div className="mt-8 pt-6 border-t border-white/20 text-center text-lg text-slate-500">
             © 2024 SomaJournal. Crafted with love and intention for your journaling journey.
           </div>
         </div>
