@@ -528,17 +528,6 @@ export default function Home() {
             </div>
           </div>
           
-          {/* CTA Button */}
-          <div className="text-center mt-8 fade-enter">
-            <Button
-              size="lg"
-              onClick={() => router.push('/auth/signup')}
-              className="wellness-button text-lg px-12 py-6 font-semibold"
-            >
-              <Play className="w-5 h-5 mr-2" />
-              Start Your Healing Journey
-            </Button>
-          </div>
         </div>
       </section>
 
@@ -689,25 +678,89 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="relative z-10 border-t border-white/20 bg-white/20 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="flex items-center space-x-3">
-              <SomaLogo size="sm" className="breathing-element" />
-              <div>
-                <span className="text-lg font-semibold text-slate-800">SomaJournal</span>
-                <p className="text-xs text-slate-500">Mindful journaling companion</p>
-              </div>
+      {/* Bottom CTA Section */}
+      <section className="relative z-10 py-24 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="space-y-8 fade-enter">
+            <div className="space-y-4">
+              <h2 className="text-5xl font-bold text-white drop-shadow-lg tracking-tight">
+                Ready to understand your{' '}
+                <span className="bg-gradient-to-r from-green-200 to-teal-200 bg-clip-text text-transparent">
+                  mind-body connection?
+                </span>
+              </h2>
+              <p className="text-xl text-white/95 max-w-2xl mx-auto leading-[1.4] font-light drop-shadow-md">
+                Join thousands who've discovered the hidden patterns between their emotions and physical well-being. Start your journey today.
+              </p>
             </div>
-            <div className="flex space-x-8 text-lg text-slate-500">
-              <a href="#" className="hover:text-slate-700 transition-colors">About</a>
-              <a href="#" className="hover:text-slate-700 transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-slate-700 transition-colors">Terms of Service</a>
+            
+            <div className="pt-4">
+              <Button
+                size="lg"
+                onClick={() => router.push('/auth/signup')}
+                className="bg-white text-slate-900 hover:bg-gray-50 text-xl px-16 py-8 font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
+              >
+                <Play className="w-6 h-6 mr-3" />
+                Start Your Healing Journey
+              </Button>
             </div>
           </div>
-          <div className="mt-8 pt-6 border-t border-white/20 text-center text-lg text-slate-500">
-            © 2024 SomaJournal. Crafted with love and intention for your journaling journey.
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="relative bg-gradient-to-t from-slate-900/90 via-slate-800/60 to-transparent backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          {/* Main Footer Content */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Company Section */}
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <SomaLogo size="sm" className="breathing-element" />
+                <div>
+                  <span className="text-xl font-bold text-white">SomaJournal</span>
+                </div>
+              </div>
+              <p className="text-white/80 text-sm leading-relaxed">
+                The first intelligent journal that uses AI to decode your emotional patterns and reveal their direct impact on your physical well-being.
+              </p>
+            </div>
+
+            {/* Product Column */}
+            <div className="space-y-4">
+              <h3 className="text-white font-semibold text-lg">Product</h3>
+              <ul className="space-y-3">
+                <li><a href="#" className="text-white/70 hover:text-white transition-colors duration-200">Features</a></li>
+                <li><a href="#" className="text-white/70 hover:text-white transition-colors duration-200">Use Cases</a></li>
+                <li><a href="#" className="text-white/70 hover:text-white transition-colors duration-200">Pricing</a></li>
+                <li><a href="#" className="text-white/70 hover:text-white transition-colors duration-200">Documentation</a></li>
+                <li><a href="#" className="text-white/70 hover:text-white transition-colors duration-200">Support</a></li>
+              </ul>
+            </div>
+
+            {/* Contact Column */}
+            <div className="space-y-4">
+              <h3 className="text-white font-semibold text-lg">Contact</h3>
+              <ul className="space-y-3">
+                <li><a href="#" className="text-white/70 hover:text-white transition-colors duration-200">Discord</a></li>
+                <li><a href="#" className="text-white/70 hover:text-white transition-colors duration-200">Twitter</a></li>
+                <li><a href="#" className="text-white/70 hover:text-white transition-colors duration-200">GitHub</a></li>
+                <li><a href="#" className="text-white/70 hover:text-white transition-colors duration-200">Email</a></li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Footer Bottom */}
+          <div className="mt-12 pt-8 border-t border-white/20">
+            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+              <p className="text-white/60 text-sm">
+                Copyright © 2025 SomaJournal. All rights reserved.
+              </p>
+              <div className="flex space-x-6">
+                <a href="#" className="text-white/60 hover:text-white transition-colors duration-200 text-sm">Privacy Policy</a>
+                <a href="#" className="text-white/60 hover:text-white transition-colors duration-200 text-sm">Terms of Service</a>
+              </div>
+            </div>
           </div>
         </div>
       </footer>
