@@ -40,11 +40,21 @@ export default function Home() {
 
   // Handle scroll for dynamic navbar
   useEffect(() => {
+    // Check initial scroll position to prevent flash
+    const checkInitialScroll = () => {
+      if (typeof window !== 'undefined') {
+        setIsScrolled(window.scrollY > 50);
+      }
+    };
+
     const handleScroll = () => {
       const scrollTop = window.scrollY;
       setIsScrolled(scrollTop > 50);
     };
 
+    // Set initial state
+    checkInitialScroll();
+    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -240,66 +250,66 @@ export default function Home() {
       <FloatingParticles count={20} />
       
       {/* Dynamic Navbar */}
-      <header className="dimension-header fixed top-0 left-0 right-0 z-100 w-full" style={{ padding: '22px 24px' }}>
+      <header className="fixed top-0 left-0 right-0 z-100 w-full" style={{ padding: '22px 24px' }}>
         <div className="max-w-6xl mx-auto relative z-10">
-          <div className="flex items-center justify-between">
-            {/* Logo Section - Only show when not scrolled */}
-            {!isScrolled && (
-              <div className="flex items-center space-x-2">
-                <SomaLogo size="sm" className="breathing-element" priority />
-                <div className="flex flex-col justify-center">
-                  <h1 className="text-lg font-bold leading-tight">
-                    <span className="text-slate-800">Soma</span><span className="text-slate-700">Journal</span>
-                  </h1>
-                </div>
+          <div className="relative grid grid-cols-[1fr_2fr_1fr] items-center">
+            {/* Logo Section - Fade out on scroll */}
+            <div className={`flex items-center space-x-2 justify-self-start transition-opacity duration-700 ease-out ${
+              isScrolled ? 'opacity-0 pointer-events-none' : 'opacity-100'
+            }`}>
+              <SomaLogo size="sm" className="breathing-element" priority />
+              <div className="flex flex-col justify-center">
+                <h1 className="text-lg font-bold leading-tight">
+                  <span className="text-slate-800">Soma</span><span className="text-slate-700">Journal</span>
+                </h1>
               </div>
-            )}
+            </div>
 
             {/* Navigation Pill - Always centered */}
-            <div className={`transition-all duration-700 ease-out ${
-              isScrolled ? 'mx-auto max-w-xl' : 'mx-auto max-w-lg'
+            <div className={`justify-self-center transition-[max-width] duration-700 ease-out ${
+              isScrolled ? 'max-w-2xl' : 'max-w-xl'
             }`}>
-              <nav className="bg-white/15 backdrop-blur-[12px] border border-white/20 rounded-full px-6 py-3">
+              <nav className="bg-white/15 backdrop-blur-[12px] border border-white/20 rounded-full px-6 py-2">
                 <div className="flex items-center justify-between">
-                  {/* Navigation Items */}
-                  <div className="flex items-center flex-1 justify-evenly">
+                  {/* Navigation Items - Always grouped on left */}
+                  <div className="flex items-center space-x-6">
                     <a href="#" className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-medium">Our Story</a>
-                    <a href="#" className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-medium">Use Cases</a>
+                    <a href="#" className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-medium">Testimonials</a>
                     <a href="#" className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-medium">Features</a>
                     <a href="#" className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-medium">Pricing</a>
                   </div>
 
-                  {/* Get Started Button - Only show when scrolled */}
+                  {/* Get Started Button - Positioned outside pill when scrolled */}
                   {isScrolled && (
-                    <Button
+                    <button
                       onClick={() => router.push('/auth/signup')}
-                      className="relative overflow-hidden bg-white text-slate-900 font-semibold rounded-full transition-all duration-700 ease-out hover:shadow-lg hover:scale-105 px-4 py-2 text-sm ml-4"
+                      className="relative overflow-hidden bg-white text-slate-900 hover:bg-gray-50 font-semibold rounded-full transition-colors duration-200 px-4 text-sm ml-6 h-8 flex items-center justify-center"
                     >
                       <span className="relative z-10">Get Started</span>
-                    </Button>
+                    </button>
                   )}
                 </div>
               </nav>
             </div>
 
-            {/* Right Actions - Only show when not scrolled */}
-            {!isScrolled && (
-              <div className="flex items-center space-x-4">
-                <Button
-                  variant="ghost"
-                  onClick={() => router.push('/auth/login')}
-                  className="hidden sm:inline-flex text-slate-700 hover:text-slate-900 hover:bg-slate-900/10 rounded-full px-4 py-2 font-medium transition-all duration-200 text-sm"
-                >
-                  Sign In
-                </Button>
-                <Button
-                  onClick={() => router.push('/auth/signup')}
-                  className="relative overflow-hidden bg-white text-slate-900 font-semibold rounded-full transition-all duration-700 ease-out hover:shadow-lg hover:scale-105 px-4 py-2 text-sm"
-                >
-                  <span className="relative z-10">Get Started</span>
-                </Button>
-              </div>
-            )}
+            {/* Right Actions - Fade out on scroll */}
+            <div className={`flex items-center space-x-4 justify-self-end transition-opacity duration-700 ease-out ${
+              isScrolled ? 'opacity-0 pointer-events-none' : 'opacity-100'
+            }`}>
+              <Button
+                variant="ghost"
+                onClick={() => router.push('/auth/login')}
+                className="hidden sm:inline-flex text-slate-700 hover:text-slate-900 hover:bg-slate-900/10 rounded-full px-4 py-2 font-medium transition-all duration-200 text-sm"
+              >
+                Sign In
+              </Button>
+              <Button
+                onClick={() => router.push('/auth/signup')}
+                className="relative overflow-hidden bg-white text-slate-900 font-semibold rounded-full transition-colors duration-200 px-4 py-2 text-sm"
+              >
+                <span className="relative z-10">Get Started</span>
+              </Button>
+            </div>
           </div>
         </div>
       </header>
