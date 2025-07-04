@@ -2143,9 +2143,7 @@
       var(--gradient-color-b) 50%,
       var(--gradient-color-c) 100%
     );
-    transition: --gradient-color-a 4s ease-in-out,
-                --gradient-color-b 4s ease-in-out,
-                --gradient-color-c 4s ease-in-out;
+    /* Static gradient - no color transitions */
     overflow: hidden;
   }
 

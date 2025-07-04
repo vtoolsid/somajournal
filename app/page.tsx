@@ -225,57 +225,56 @@ export default function Home() {
 
   return (
     <main className="opal-wrapper min-h-screen">
-      <WellnessGradientBackground intensity="vibrant" cycleDuration={12} />
+      <WellnessGradientBackground intensity="vibrant" />
       <FloatingParticles count={20} />
       
-      {/* Header */}
-      <header className="relative z-10 border-b border-white/20 bg-white/20 backdrop-blur-sm full-bleed">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-1">
-              <SomaLogo size="lg" className="breathing-element -mt-1" priority />
-              <div className="flex flex-col justify-center -mt-0.5">
-                <h1 className="text-2xl font-bold leading-tight">
-                  <span className="text-gray-900">Soma</span><span style={{color: '#5a8db4'}}>Journal</span>
-                </h1>
-                <p className="text-lg text-slate-500 font-medium -mt-0.5">Your AI Mind-Body Analyst</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Badge variant="secondary" className="hidden sm:flex bg-white/60 text-slate-600 border-white/40">
-                <Sparkles className="w-3 h-3 mr-1" />
-                Beta
-              </Badge>
+      {/* Modern Curved Navbar */}
+      <header className="fixed top-0 left-0 right-0 z-50 px-4 py-3">
+        <nav className="max-w-6xl mx-auto bg-white/10 backdrop-blur-md rounded-full shadow-lg border border-white/20">
+          <div className="pl-6 pr-2 py-2">
+            <div className="flex justify-between items-center">
+              {/* Logo Section */}
               <div className="flex items-center space-x-2">
+                <SomaLogo size="sm" className="breathing-element" priority />
+                <div className="flex flex-col justify-center">
+                  <h1 className="text-lg font-bold leading-tight">
+                    <span className="text-slate-800">Soma</span><span className="text-slate-700">Journal</span>
+                  </h1>
+                </div>
+              </div>
+
+              {/* Center Navigation (Optional - hidden on mobile) */}
+              <div className="hidden lg:flex items-center space-x-8">
+                <a href="#" className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-medium">Our Story</a>
+                <a href="#" className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-medium">Use Cases</a>
+                <a href="#" className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-medium">Features</a>
+                <a href="#" className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-medium">Pricing</a>
+                <a href="#" className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-medium">Support</a>
+              </div>
+
+              {/* Right Actions */}
+              <div className="flex items-center space-x-3">
                 <Button
                   variant="ghost"
                   onClick={() => router.push('/auth/login')}
-                  className="text-slate-700 hover:text-slate-900 hover:bg-slate-100/80 rounded-lg px-4 py-2 font-medium transition-all duration-200 text-lg"
+                  className="hidden sm:inline-flex text-slate-700 hover:text-slate-900 hover:bg-slate-900/10 rounded-full px-5 py-1.5 font-medium transition-all duration-200"
                 >
                   Sign In
                 </Button>
                 <Button
                   onClick={() => router.push('/auth/signup')}
-                  className="relative overflow-hidden text-white font-medium px-5 py-2 rounded-lg text-lg transition-all duration-200 shadow-sm hover:shadow-md hover:scale-105"
+                  className="relative overflow-hidden bg-white text-slate-900 font-semibold px-10 py-4 rounded-full transition-all duration-200 hover:shadow-lg hover:scale-105 ml-auto text-lg"
                 >
-                  <span 
-                    className="absolute inset-0"
-                    style={{
-                      background: 'linear-gradient(90deg, #22c55e 0%, #10b981 15%, #059669 30%, #10b981 45%, #0ea5e9 60%, #10b981 75%, #059669 85%, #22c55e 100%)',
-                      backgroundSize: '200% 100%',
-                      animation: 'gradient-shine 6s ease infinite'
-                    }}
-                  />
                   <span className="relative z-10">Get Started</span>
                 </Button>
               </div>
             </div>
           </div>
-        </div>
+        </nav>
       </header>
 
       {/* OPAL Hero Section - Full Screen */}
-      <div className="opal-hero-container full-bleed relative z-10">
+      <div className="opal-hero-container full-bleed relative z-10 pt-20">
         <div className="opal-wrapper w-full">
           <div className="flex flex-col items-center text-center space-y-16">
             {/* Chakra Mandala with Parallax */}
