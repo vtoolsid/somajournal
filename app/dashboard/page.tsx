@@ -8,7 +8,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { FloatingParticles } from '@/components/ui/floating-particles';
 import { SomaLogo } from '@/components/ui/soma-logo';
+import { WeeklyEmotionalJourney } from '@/components/dashboard/weekly-emotional-journey';
+import { PsychosomaticPatterns } from '@/components/dashboard/psychosomatic-patterns';
 import { useAppStore } from '@/lib/store';
+import { addWeeks, subWeeks } from 'date-fns';
 import { 
   mockJournalEntries,
   analyzeEmotionalTrends,
@@ -47,6 +50,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
+  const [currentWeek, setCurrentWeek] = useState(new Date());
 
   // Combine user entries with mock data for richer analytics
   const allEntries = [...journalEntries, ...mockJournalEntries];
@@ -104,6 +108,11 @@ export default function DashboardPage() {
     }, 8000);
     return () => clearInterval(quoteTimer);
   }, [quotes.length]);
+
+  // Handle week navigation
+  const handleWeekChange = (direction: 'prev' | 'next') => {
+    setCurrentWeek(prev => direction === 'next' ? addWeeks(prev, 1) : subWeeks(prev, 1));
+  };
 
   // Emotional trend chart data
   const trendChartData = emotionalTrends.slice(0, 5).map((trend, index) => ({
@@ -201,8 +210,15 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Main Dashboard Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
+            {/* Weekly Emotional Journey - Primary Focus */}
+            <WeeklyEmotionalJourney 
+              entries={allEntries}
+              currentWeek={currentWeek}
+              onWeekChange={handleWeekChange}
+            />
+
+            {/* Secondary Grid - Supporting Analytics */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8 mt-8">
               
               {/* Card 1: Emotional Trends */}
               <Card className={`glass-card-primary animate-fadeInUp cursor-pointer transition-all duration-300 ${
@@ -284,7 +300,10 @@ export default function DashboardPage() {
                 </CardContent>
               </Card>
 
-              {/* Card 2: Chakra Alignment */}
+              {/* Card 2: Psychosomatic Patterns */}
+              <PsychosomaticPatterns entries={allEntries} />
+
+              {/* Card 3: Chakra Alignment */}
               <Card className={`glass-card-secondary animate-fadeInUp animate-delay-200 cursor-pointer transition-all duration-300 ${
                 selectedCard === 'chakras' ? 'scale-105' : ''
               }`} onClick={() => setSelectedCard(selectedCard === 'chakras' ? null : 'chakras')}>
@@ -362,88 +381,37 @@ export default function DashboardPage() {
                 </CardContent>
               </Card>
 
-              {/* Card 3: Journal Rhythm */}
-              <Card className={`glass-card animate-fadeInUp animate-delay-400 cursor-pointer transition-all duration-300 ${
-                selectedCard === 'rhythm' ? 'scale-105' : ''
-              }`} onClick={() => setSelectedCard(selectedCard === 'rhythm' ? null : 'rhythm')}>
-                <CardHeader className="pb-3">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full flex items-center justify-center">
-                      <BarChart3 className="w-5 h-5 text-emerald-600" />
-                    </div>
-                    <CardTitle className="text-xl font-semibold text-gray-800">
-                      Journal Rhythm
-                    </CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  {journalRhythm ? (
-                    <div className="space-y-4">
-                      {/* Weekly Pattern Chart */}
-                      <div className="h-32">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <BarChart data={rhythmChartData}>
-                            <XAxis dataKey="day" tick={{ fontSize: 12 }} />
-                            <YAxis hide />
-                            <Bar dataKey="count" fill="#10B981" radius={[4, 4, 0, 0]} />
-                            <Tooltip 
-                              contentStyle={{
-                                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                                border: 'none',
-                                borderRadius: '12px',
-                                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
-                              }}
-                            />
-                          </BarChart>
-                        </ResponsiveContainer>
-                      </div>
-
-                      {/* Rhythm Stats */}
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-emerald-600">{journalRhythm.writingStreak}</div>
-                          <div className="text-xs text-gray-500">Day Streak</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-emerald-600">{journalRhythm.consistencyScore}%</div>
-                          <div className="text-xs text-gray-500">Consistency</div>
-                        </div>
-                      </div>
-
-                      <div className="text-center">
-                        <p className="text-sm text-gray-600">
-                          Most active during <span className="font-medium text-emerald-600">{journalRhythm.mostActiveTime}</span>
-                        </p>
-                        <p className="text-xs text-gray-500 mt-1">
-                          Average {journalRhythm.averageWordsPerEntry} words per entry
-                        </p>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="text-center py-8">
-                      <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                      <p className="text-gray-500">Create entries to see your rhythm</p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Card 4: Wellness Insights */}
-              <Card className="glass-card-warning animate-fadeInUp animate-delay-600 col-span-1 lg:col-span-2 xl:col-span-1">
+              {/* Card 4: Enhanced Insights */}
+              <Card className="glass-card-warning animate-fadeInUp animate-delay-600">
                 <CardHeader className="pb-3">
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-gradient-to-br from-amber-100 to-orange-100 rounded-full flex items-center justify-center">
                       <Brain className="w-5 h-5 text-amber-600" />
                     </div>
                     <CardTitle className="text-xl font-semibold text-gray-800">
-                      Wellness Insights
+                      Enhanced Insights
                     </CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
                   {wellnessInsights.length > 0 ? (
                     <div className="space-y-3">
-                      {wellnessInsights.slice(0, 3).map((insight, index) => (
+                      {/* Weekly Focus Insights */}
+                      <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-3 border border-green-200 mb-4">
+                        <div className="flex items-start space-x-2">
+                          <Sparkles className="w-4 h-4 text-green-600 mt-0.5" />
+                          <div>
+                            <h5 className="text-sm font-semibold text-gray-800">Weekly Focus</h5>
+                            <p className="text-xs text-gray-600">
+                              Your emotional patterns show {emotionalTrends[0]?.emotion} as the dominant theme this week.
+                              {journalRhythm && ` You're most reflective during ${journalRhythm.mostActiveTime}.`}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Traditional Insights */}
+                      {wellnessInsights.slice(0, 2).map((insight, index) => (
                         <div 
                           key={index}
                           className={`insight-card priority-${insight.priority} p-3 rounded-lg border-l-4`}
@@ -460,6 +428,19 @@ export default function DashboardPage() {
                           </div>
                         </div>
                       ))}
+
+                      {/* Journal Rhythm Summary */}
+                      {journalRhythm && (
+                        <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                              <BarChart3 className="w-4 h-4 text-gray-600" />
+                              <span className="text-sm font-medium text-gray-800">Writing Streak</span>
+                            </div>
+                            <span className="text-sm font-bold text-emerald-600">{journalRhythm.writingStreak} days</span>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <div className="text-center py-8">
@@ -470,40 +451,39 @@ export default function DashboardPage() {
                 </CardContent>
               </Card>
 
-              {/* Card 5: Today's Reflection */}
-              <Card className="glass-card-primary animate-fadeInUp animate-delay-800 border-2 border-green-200 hover:border-green-300">
-                <CardContent className="flex flex-col items-center justify-center h-full p-8 text-center">
-                  <div className="mb-6">
-                    <div className="relative mb-6">
-                      <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center breathing-element shadow-lg">
-                        <Edit3 className="w-8 h-8 text-green-600" />
+              {/* Card 5: Quick Reflection */}
+              <Card className="glass-card-primary animate-fadeInUp animate-delay-800 border-2 border-green-200 hover:border-green-300 col-span-1 lg:col-span-2 xl:col-span-1">
+                <CardContent className="flex flex-col items-center justify-center h-full p-6 text-center">
+                  <div className="mb-4">
+                    <div className="relative mb-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center breathing-element shadow-lg">
+                        <Edit3 className="w-6 h-6 text-green-600" />
                       </div>
                       
                       {/* Floating sparkles */}
-                      <div className="absolute -top-2 -right-2 w-3 h-3 bg-green-400 rounded-full animate-bounce opacity-60"></div>
-                      <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-emerald-400 rounded-full animate-bounce opacity-60" style={{animationDelay: '1s'}}></div>
-                      <div className="absolute top-0 left-0 w-2 h-2 bg-teal-400 rounded-full animate-bounce opacity-60" style={{animationDelay: '2s'}}></div>
+                      <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-bounce opacity-60"></div>
+                      <div className="absolute -bottom-0 -left-0 w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce opacity-60" style={{animationDelay: '1s'}}></div>
                     </div>
                     
-                    <h3 className="text-2xl font-semibold text-gray-800 mb-3">
-                      What's on your mind?
+                    <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                      Continue Your Journey
                     </h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                      Take a moment to reflect and connect with your inner wisdom through mindful journaling
+                    <p className="text-gray-600 text-xs leading-relaxed">
+                      Add today's reflection to enhance your weekly patterns
                     </p>
                   </div>
                   
                   <Button 
                     onClick={() => router.push('/journal')}
-                    className="wellness-button w-full py-4 text-lg font-medium transform transition-all duration-300 hover:scale-105"
+                    className="wellness-button w-full py-3 text-sm font-medium transform transition-all duration-300 hover:scale-105"
                   >
-                    <Heart className="w-5 h-5 mr-2 animate-pulse" />
+                    <Heart className="w-4 h-4 mr-2 animate-pulse" />
                     Begin Reflection
                   </Button>
                 </CardContent>
               </Card>
 
-              {/* Card 6: Quick Stats */}
+              {/* Card 6: Journey Stats */}
               <Card className="glass-card animate-fadeInUp animate-delay-1000">
                 <CardHeader className="pb-3">
                   <div className="flex items-center space-x-3">
