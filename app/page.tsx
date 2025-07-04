@@ -36,7 +36,18 @@ export default function Home() {
   const router = useRouter();
   const [showSanskrit, setShowSanskrit] = useState(true);
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
 
+  // Handle scroll for dynamic navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Meditative quotes for cycling
   const quotes = [
@@ -228,12 +239,12 @@ export default function Home() {
       <WellnessGradientBackground intensity="vibrant" />
       <FloatingParticles count={20} />
       
-      {/* Modern Curved Navbar */}
-      <header className="fixed top-0 left-0 right-0 z-50 px-4 py-3">
-        <nav className="max-w-6xl mx-auto bg-white/10 backdrop-blur-md rounded-full shadow-lg border border-white/20">
-          <div className="pl-6 pr-2 py-2">
-            <div className="flex justify-between items-center">
-              {/* Logo Section */}
+      {/* Dynamic Navbar */}
+      <header className="dimension-header fixed top-0 left-0 right-0 z-100 w-full" style={{ padding: '22px 24px' }}>
+        <div className="max-w-6xl mx-auto relative z-10">
+          <div className="flex items-center justify-between">
+            {/* Logo Section - Only show when not scrolled */}
+            {!isScrolled && (
               <div className="flex items-center space-x-2">
                 <SomaLogo size="sm" className="breathing-element" priority />
                 <div className="flex flex-col justify-center">
@@ -242,39 +253,59 @@ export default function Home() {
                   </h1>
                 </div>
               </div>
+            )}
 
-              {/* Center Navigation (Optional - hidden on mobile) */}
-              <div className="hidden lg:flex items-center space-x-8">
-                <a href="#" className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-medium">Our Story</a>
-                <a href="#" className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-medium">Use Cases</a>
-                <a href="#" className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-medium">Features</a>
-                <a href="#" className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-medium">Pricing</a>
-                <a href="#" className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-medium">Support</a>
-              </div>
+            {/* Navigation Pill - Always centered */}
+            <div className={`transition-all duration-700 ease-out ${
+              isScrolled ? 'mx-auto max-w-xl' : 'mx-auto max-w-lg'
+            }`}>
+              <nav className="bg-white/15 backdrop-blur-[12px] border border-white/20 rounded-full px-6 py-3">
+                <div className="flex items-center justify-between">
+                  {/* Navigation Items */}
+                  <div className="flex items-center flex-1 justify-evenly">
+                    <a href="#" className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-medium">Our Story</a>
+                    <a href="#" className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-medium">Use Cases</a>
+                    <a href="#" className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-medium">Features</a>
+                    <a href="#" className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-medium">Pricing</a>
+                  </div>
 
-              {/* Right Actions */}
-              <div className="flex items-center space-x-3">
+                  {/* Get Started Button - Only show when scrolled */}
+                  {isScrolled && (
+                    <Button
+                      onClick={() => router.push('/auth/signup')}
+                      className="relative overflow-hidden bg-white text-slate-900 font-semibold rounded-full transition-all duration-700 ease-out hover:shadow-lg hover:scale-105 px-4 py-2 text-sm ml-4"
+                    >
+                      <span className="relative z-10">Get Started</span>
+                    </Button>
+                  )}
+                </div>
+              </nav>
+            </div>
+
+            {/* Right Actions - Only show when not scrolled */}
+            {!isScrolled && (
+              <div className="flex items-center space-x-4">
                 <Button
                   variant="ghost"
                   onClick={() => router.push('/auth/login')}
-                  className="hidden sm:inline-flex text-slate-700 hover:text-slate-900 hover:bg-slate-900/10 rounded-full px-5 py-1.5 font-medium transition-all duration-200"
+                  className="hidden sm:inline-flex text-slate-700 hover:text-slate-900 hover:bg-slate-900/10 rounded-full px-4 py-2 font-medium transition-all duration-200 text-sm"
                 >
                   Sign In
                 </Button>
                 <Button
                   onClick={() => router.push('/auth/signup')}
-                  className="relative overflow-hidden bg-white text-slate-900 font-semibold px-10 py-4 rounded-full transition-all duration-200 hover:shadow-lg hover:scale-105 ml-auto text-lg"
+                  className="relative overflow-hidden bg-white text-slate-900 font-semibold rounded-full transition-all duration-700 ease-out hover:shadow-lg hover:scale-105 px-4 py-2 text-sm"
                 >
                   <span className="relative z-10">Get Started</span>
                 </Button>
               </div>
-            </div>
+            )}
           </div>
-        </nav>
+        </div>
       </header>
 
       {/* OPAL Hero Section - Full Screen */}
-      <div className="opal-hero-container full-bleed relative z-10 pt-20">
+      <div className="opal-hero-container full-bleed relative z-10 pt-24">
         <div className="opal-wrapper w-full">
           <div className="flex flex-col items-center text-center space-y-16">
             {/* Chakra Mandala with Parallax */}

@@ -85,6 +85,9 @@ const config: Config = {
         'opal-fill-text': 'opal-fill-text linear both',
         'opal-parallax': 'opal-parallax-movement linear both',
       },
+      zIndex: {
+        '100': '100',
+      },
     },
   },
   plugins: [require('tailwindcss-animate')],
