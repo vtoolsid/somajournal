@@ -143,7 +143,7 @@ export function QuickSymptomEntry({ onEntryAdded }: QuickSymptomEntryProps) {
   };
 
   return (
-    <div className="grid lg:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
       {/* Quick Entry Interface */}
       <Card className="quick-symptom-entry glass-card animate-fadeInUp">
         <CardHeader className="pb-4">

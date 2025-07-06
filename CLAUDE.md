@@ -175,3 +175,38 @@ interface JournalEntry {
 - Uses `@/*` for root-level imports (configured in tsconfig.json)
 - Strict TypeScript with Next.js plugin integration
 - All wellness models properly typed with emotion and chakra mappings
+
+### Dynamic Navigation Architecture
+
+**CSS Grid-Based Header System**: 
+- Uses `grid-cols-[1fr_2fr_1fr]` for stable layout without flash
+- Three sections: Logo (left), Navigation Pill (center), Actions (right)
+- Prevents layout shifts during scroll transitions with `justify-self-*` positioning
+
+**Scroll-Responsive Design**:
+- `isScrolled` state triggers at 50px scroll with initial position check
+- Logo/actions fade with `opacity-0 pointer-events-none` (700ms duration)
+- Navigation pill transitions from `max-w-xl` to `max-w-2xl` (700ms)
+- Get Started button appears in pill with `hover:bg-gray-50` matching header style
+
+**OPAL-Style Grid System** (in globals.css):
+- Custom grid with named lines: `[full-start]`, `[wide-start]`, `[narrow-start]`
+- Responsive breakpoints: mobile (wide), desktop (narrow)
+- Use `.opal-wrapper` for layout, `.full-bleed` for full-width elements
+
+### UI Design System Notes
+
+**Glassmorphic Navigation**:
+- Pill uses `bg-white/15 backdrop-blur-[12px] border-white/20`
+- Rounded-full design with consistent `px-6 py-2` spacing
+- Smooth transitions prevent visual artifacts
+
+**Button Consistency**:
+- Header buttons: `hover:bg-gray-50` for cream/beige hover effect
+- Maintain `transition-colors duration-200` for smooth interactions
+- Use `relative overflow-hidden` structure for advanced effects
+
+**Animation Performance**:
+- All transitions use `ease-out` timing for natural feel
+- Synchronized durations (700ms) prevent layout conflicts
+- Initial scroll position check prevents flash on page load

@@ -69,5 +69,5 @@ export function FloatingParticles({ count = 15 }: FloatingParticlesProps) {
     };
   }, [count]);
 
-  return <div ref={containerRef} className="floating-particles" />;
+  return <div ref={containerRef} className="floating-particles" style={{ pointerEvents: 'none' }} />;
 }

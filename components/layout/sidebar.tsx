@@ -18,12 +18,40 @@ export function Sidebar() {
   const pathname = usePathname();
 
   const handleLogout = () => {
-    logout();
-    router.push('/');
+    console.log('🚪 Logout initiated');
+    
+    try {
+      // Clear authentication state first
+      logout();
+      console.log('✅ State cleared successfully');
+      
+      // Use immediate navigation to home page
+      window.location.href = '/';
+      console.log('🏠 Navigating to home page');
+    } catch (error) {
+      console.error('❌ Logout error:', error);
+      // Fallback navigation
+      window.location.href = '/';
+    }
+  };
+
+  const handleNavigation = (href: string, name: string) => {
+    console.log(`🔍 Navigation clicked: ${name} -> ${href}`);
+    
+    try {
+      // Primary navigation method
+      router.push(href);
+      console.log(`✅ Router navigation successful: ${href}`);
+    } catch (error) {
+      console.error(`❌ Router navigation failed for ${href}:`, error);
+      // Fallback navigation method
+      console.log(`🔄 Using fallback navigation for ${href}`);
+      window.location.href = href;
+    }
   };
 
   return (
-    <div className="w-64 bg-white border-r border-gray-200 flex flex-col h-full">
+    <div className="sidebar-modern w-64 bg-white border-r border-gray-200 flex flex-col h-full">
       {/* Logo */}
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center space-x-3">
@@ -60,15 +88,38 @@ export function Sidebar() {
             <Button
               key={item.name}
               variant={isActive ? 'secondary' : 'ghost'}
-              className={`w-full justify-start mb-2 ${
+              className={`w-full justify-start mb-2 relative z-[1001] cursor-pointer ${
                 isActive 
                   ? 'bg-green-50 text-green-700 hover:text-green-700 hover:bg-green-100' 
                   : 'text-gray-700 hover:text-gray-700 hover:bg-gray-50'
               }`}
-              onClick={() => router.push(item.href)}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log(`🎯 Button click event fired for ${item.name}`);
+                handleNavigation(item.href, item.name);
+              }}
+              onMouseDown={(e) => {
+                console.log(`🖱️ Mouse down on ${item.name}`);
+              }}
+              style={{ 
+                pointerEvents: 'auto', 
+                position: 'relative', 
+                zIndex: 1001,
+                cursor: 'pointer'
+              }}
             >
               <Icon className="w-5 h-5 mr-3" />
               <span className="font-medium">{item.name}</span>
+              {/* Emergency fallback navigation */}
+              <a 
+                href={item.href} 
+                className="absolute inset-0 opacity-0 pointer-events-none"
+                aria-hidden="true"
+                tabIndex={-1}
+              >
+                {item.name}
+              </a>
             </Button>
           );
         })}

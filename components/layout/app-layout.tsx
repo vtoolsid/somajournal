@@ -15,9 +15,11 @@ export function AppLayout({ children }: AppLayoutProps) {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      router.push('/');
+      console.log('🔐 AppLayout: User not authenticated, redirecting to home');
+      // Use immediate navigation to prevent intermediate screens
+      window.location.href = '/';
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated]);
 
   if (!isAuthenticated) {
     return null;

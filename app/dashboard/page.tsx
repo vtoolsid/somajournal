@@ -132,24 +132,8 @@ export default function DashboardPage() {
   })) || [];
 
   if (!user) {
-    return (
-      <div className="min-h-screen wellness-container flex items-center justify-center">
-        <FloatingParticles count={20} />
-        <div className="glass-card p-8 text-center max-w-md relative z-10">
-          <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Heart className="w-8 h-8 text-white" />
-          </div>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Welcome to SomaJournal</h2>
-          <p className="text-gray-600 mb-6">Connect with your inner wisdom through mindful journaling and emotion analysis.</p>
-          <Button 
-            onClick={() => router.push('/auth/login')} 
-            className="wellness-button w-full"
-          >
-            Begin Your Journey
-          </Button>
-        </div>
-      </div>
-    );
+    // Let AppLayout handle authentication redirects - don't render custom screen
+    return null;
   }
 
   return (
@@ -157,11 +141,11 @@ export default function DashboardPage() {
       <div className="min-h-screen wellness-container">
         <FloatingParticles count={12} />
         
-        <div className="relative z-10 p-6 lg:p-8">
+        <div className="relative z-1 p-6 lg:p-8">
           <div className="max-w-7xl mx-auto psychosomatic-grid">
             
             {/* Hero Section - Welcome & Status */}
-            <div className="dashboard-hero p-4 mb-4 relative z-10">
+            <div className="dashboard-hero p-4 mb-4 relative z-1">
               <div className="text-center space-y-3">
                 <div className="flex items-center justify-center space-x-4 mb-2">
                   <SomaLogo size="md" className="breathing-element" />
@@ -217,7 +201,7 @@ export default function DashboardPage() {
             <PsychosomaticBodyMapHero entries={allEntries} />
 
             {/* SECONDARY: Weekly Psychosomatic Flow (25% of dashboard) */}
-            <div className="mt-4">
+            <div>
               <WeeklyPsychosomaticFlow 
                 entries={allEntries}
                 currentWeek={currentWeek}
@@ -226,12 +210,12 @@ export default function DashboardPage() {
             </div>
 
             {/* TERTIARY: Quick Entry & Supporting Elements (15% of dashboard) */}
-            <div className="mt-4">
+            <div>
               <QuickSymptomEntry onEntryAdded={() => {/* Refresh analysis */}} />
             </div>
 
             {/* Collapsed/Expandable Supporting Analytics */}
-            <details className="mt-4">
+            <details>
               <summary className="cursor-pointer p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-gray-800">Additional Wellness Tracking</h3>
