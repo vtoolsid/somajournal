@@ -9,11 +9,10 @@ import { ProgressBar } from '@/components/wellbeing/progress-bar';
 import { SkipButton } from '@/components/wellbeing/skip-button';
 import { DEQQuestion } from '@/components/wellbeing/deq-question';
 import { SSSTable } from '@/components/wellbeing/sss-table';
-import { MotivationalMessage } from '@/components/wellbeing/motivational-message';
 import { calculateDEQScores } from '@/lib/wellbeing/deq-scoring';
 import { calculateSSSScores } from '@/lib/wellbeing/sss-scoring';
 import { WellbeingAssessment } from '@/lib/store';
-import { Sparkles, Heart } from 'lucide-react';
+import { Sparkles, Heart, ChevronLeft, ChevronRight, Brain, Target, Zap, ArrowRight } from 'lucide-react';
 
 interface AssessmentAnswers {
   q1_feeling?: 1 | 2 | 3 | 4 | 5;
@@ -34,9 +33,9 @@ export default function WellbeingAssessmentPage() {
   const router = useRouter();
   const { setWellbeingAssessment } = useAppStore();
   
+  const [showWelcome, setShowWelcome] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [answers, setAnswers] = useState<AssessmentAnswers>({});
-  const [showMotivation, setShowMotivation] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const totalQuestions = 6;
@@ -47,15 +46,24 @@ export default function WellbeingAssessmentPage() {
       ...prev,
       [questionKey]: value
     }));
-    
-    // Show motivational message
-    setShowMotivation(true);
-    setTimeout(() => {
-      setShowMotivation(false);
-      if (currentQuestion < totalQuestions) {
-        setCurrentQuestion(prev => prev + 1);
-      }
-    }, 1500);
+    // Answer selection only - no auto-advance
+    // User must click "Next" button to proceed (industry standard)
+  };
+
+  const handleNext = () => {
+    if (currentQuestion < totalQuestions && canProceed()) {
+      setCurrentQuestion(prev => prev + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentQuestion > 1) {
+      setCurrentQuestion(prev => prev - 1);
+    }
+  };
+
+  const handleBeginAssessment = () => {
+    setShowWelcome(false);
   };
 
   const handleSubmit = async () => {
@@ -117,6 +125,116 @@ export default function WellbeingAssessmentPage() {
 
   const isComplete = currentQuestion > totalQuestions;
 
+  // Show welcome screen first
+  if (showWelcome) {
+    return (
+      <div className="space-y-8">
+        {/* Glassmorphic Welcome Hero */}
+        <div className="relative overflow-hidden">
+          {/* Main Welcome Card */}
+          <div className="glass-card p-12 text-center relative backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl">
+            {/* Floating Elements Background */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <div className="absolute top-4 left-8 w-3 h-3 bg-green-400/20 rounded-full animate-pulse"></div>
+              <div className="absolute top-16 right-12 w-2 h-2 bg-emerald-400/30 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+              <div className="absolute bottom-8 left-16 w-4 h-4 bg-teal-400/20 rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
+              <div className="absolute bottom-16 right-8 w-3 h-3 bg-cyan-400/25 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+            </div>
+
+            {/* Content */}
+            <div className="relative z-10 space-y-8">
+              {/* Icon & Title */}
+              <div className="space-y-6">
+                <div className="flex justify-center">
+                  <div className="relative">
+                    <div className="w-20 h-20 bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500 rounded-full flex items-center justify-center shadow-2xl">
+                      <Brain className="w-10 h-10 text-white" />
+                    </div>
+                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full flex items-center justify-center">
+                      <Heart className="w-4 h-4 text-white" />
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 bg-clip-text text-transparent leading-tight">
+                    Welcome to Your Initial
+                    <br />
+                    <span className="bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                      Mind-Body Scan
+                    </span>
+                  </h1>
+                  
+                  <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                    Discover the hidden connections between your emotions and physical well-being through our scientifically-backed assessment.
+                  </p>
+                </div>
+              </div>
+
+              {/* Benefits Grid */}
+              <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+                <div className="flex items-start space-x-4 text-left">
+                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Brain className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-800 mb-1">Map Your Emotional Landscape</h3>
+                    <p className="text-gray-600 text-sm">Understand your current emotional patterns and triggers</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-4 text-left">
+                  <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Target className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-800 mb-1">Identify Physical Patterns</h3>
+                    <p className="text-gray-600 text-sm">Discover how emotions manifest in your body</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-4 text-left">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Zap className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-800 mb-1">Personalized Insights</h3>
+                    <p className="text-gray-600 text-sm">Receive tailored recommendations for your wellness journey</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-4 text-left">
+                  <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Sparkles className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-800 mb-1">Create Your Baseline</h3>
+                    <p className="text-gray-600 text-sm">Establish your starting point for tracking progress</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Call to Action */}
+              <div className="space-y-4 flex flex-col items-center">
+                <p className="text-gray-500 text-sm">
+                  ⏱️ Takes just 3-4 minutes • 📊 Scientifically validated • 🔒 Completely private
+                </p>
+                
+                <Button
+                  onClick={handleBeginAssessment}
+                  className="wellness-button text-xl px-12 py-6 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 flex items-center space-x-3"
+                >
+                  <span>Begin Your Journey</span>
+                  <ArrowRight className="w-6 h-6" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header with Skip Button */}
@@ -135,13 +253,6 @@ export default function WellbeingAssessmentPage() {
 
       {/* Progress Bar */}
       <ProgressBar progress={progress} currentStep={currentQuestion} totalSteps={totalQuestions} />
-
-      {/* Motivational Message Overlay */}
-      {showMotivation && (
-        <MotivationalMessage 
-          message={currentQuestion === totalQuestions ? "Amazing work! 🎉" : "Great job! 👍"} 
-        />
-      )}
 
       {/* Question Content */}
       <Card className="glass-card">
@@ -258,15 +369,28 @@ export default function WellbeingAssessmentPage() {
         </CardContent>
       </Card>
 
-      {/* Next Button */}
+      {/* Navigation Buttons */}
       {!isComplete && (
-        <div className="flex justify-end">
+        <div className="flex justify-between items-center">
+          {/* Previous Button */}
           <Button
-            onClick={() => setCurrentQuestion(prev => prev + 1)}
-            disabled={!canProceed()}
-            className="wellness-button px-6 py-2"
+            onClick={handlePrevious}
+            disabled={currentQuestion === 1}
+            variant="outline"
+            className="px-6 py-2 flex items-center space-x-2"
           >
-            {currentQuestion === totalQuestions ? 'Complete Assessment' : 'Next Question →'}
+            <ChevronLeft className="w-4 h-4" />
+            <span>Previous</span>
+          </Button>
+
+          {/* Next Button */}
+          <Button
+            onClick={handleNext}
+            disabled={!canProceed()}
+            className="wellness-button px-6 py-2 flex items-center space-x-2"
+          >
+            <span>{currentQuestion === totalQuestions ? 'Complete Assessment' : 'Next Question'}</span>
+            <ChevronRight className="w-4 h-4" />
           </Button>
         </div>
       )}
