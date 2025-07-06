@@ -64,7 +64,8 @@ export default function ManualSignUpPage() {
       };
       
       login(mockUser);
-      router.push('/onboarding');
+      console.log('🎯 New user signup completed, redirecting to wellbeing assessment');
+      router.push('/wellbeing-assessment');
       setIsLoading(false);
     }, 1000);
   };

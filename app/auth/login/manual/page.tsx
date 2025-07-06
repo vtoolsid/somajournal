@@ -32,7 +32,9 @@ export default function ManualLoginPage() {
       };
       
       login(mockUser);
-      router.push('/dashboard');
+      console.log('🔐 User login completed, redirecting to wellbeing assessment for first-time completion');
+      // For now, all users go to assessment - in production, check assessment status
+      router.push('/wellbeing-assessment');
       setIsLoading(false);
     }, 1000);
   };
