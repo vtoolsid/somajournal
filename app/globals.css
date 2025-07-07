@@ -257,6 +257,7 @@
     min-height: 100vh;
     position: relative;
     overflow-x: hidden;
+    overscroll-behavior: none; /* Prevent overscroll artifacts */
   }
   
   body::before {

@@ -19,8 +19,6 @@ import {
   Users,
   Quote,
   HelpCircle,
-  Unlink,
-  BarChart3,
   CheckCircle,
   Target,
   Lightbulb,
@@ -117,29 +115,6 @@ export default function Home() {
   );
 
 
-  const problemPoints = [
-    {
-      icon: HelpCircle,
-      title: 'The Physical Mystery',
-      question: 'Why does stress give me headaches?',
-      description: 'You feel the physical symptoms but can\'t connect them to your emotional state. Your body is sending signals, but you don\'t have the map to decode them.',
-      color: 'from-slate-400 to-gray-500'
-    },
-    {
-      icon: Unlink,
-      title: 'The Journaling Gap',
-      question: 'Why doesn\'t journaling give me real insights?',
-      description: 'You write about your feelings, but it feels like venting without understanding. You want to see the deeper patterns and physical connections.',
-      color: 'from-blue-400 to-slate-500'
-    },
-    {
-      icon: BarChart3,
-      title: 'The Shallow Tracking Gap',
-      question: 'Why do mood apps feel so basic?',
-      description: 'Current mood trackers give you basic emotions and simple charts, but they don\'t reveal the deeper mind-body connections. You want to understand WHY you feel certain ways physically.',
-      color: 'from-orange-400 to-slate-500'
-    },
-  ];
 
   const solutionCards = [
     {
@@ -245,9 +220,10 @@ export default function Home() {
 
 
   return (
-    <main className="opal-wrapper min-h-screen">
-      <WellnessGradientBackground intensity="vibrant" />
-      <FloatingParticles count={20} />
+    <>
+      <main className="opal-wrapper min-h-screen">
+        <WellnessGradientBackground intensity="vibrant" />
+        <FloatingParticles count={20} />
       
       {/* Dynamic Navbar */}
       <header className="fixed top-0 left-0 right-0 z-100 w-full" style={{ padding: '22px 24px' }}>
@@ -269,23 +245,23 @@ export default function Home() {
             <div className={`justify-self-center transition-[max-width] duration-700 ease-out ${
               isScrolled ? 'max-w-2xl' : 'max-w-xl'
             }`}>
-              <nav className="bg-white/15 backdrop-blur-[12px] border border-white/20 rounded-full px-6 py-2">
-                <div className="flex items-center justify-between">
-                  {/* Navigation Items - Always grouped on left */}
-                  <div className="flex items-center space-x-6">
+              <nav className="bg-white/15 backdrop-blur-[12px] border border-white/20 rounded-full pl-2 pr-1.5 py-1.5">
+                <div className="flex items-center h-full">
+                  {/* Navigation Items */}
+                  <div className="flex items-center space-x-6 px-6">
                     <a href="#" className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-medium">Our Story</a>
                     <a href="#" className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-medium">Testimonials</a>
                     <a href="#" className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-medium">Features</a>
                     <a href="#" className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-medium">Pricing</a>
                   </div>
 
-                  {/* Get Started Button - Positioned outside pill when scrolled */}
+                  {/* Get Started Button - Inside pill when scrolled */}
                   {isScrolled && (
                     <button
                       onClick={() => router.push('/auth/signup')}
-                      className="relative overflow-hidden bg-white text-slate-900 hover:bg-gray-50 font-semibold rounded-full transition-colors duration-200 px-4 text-sm ml-6 h-8 flex items-center justify-center"
+                      className="ml-auto bg-white text-slate-900 hover:bg-amber-50 hover:shadow-md font-bold rounded-r-full rounded-l-3xl transition-all duration-200 px-6 py-2.5 text-sm -mr-1.5 -my-1.5"
                     >
-                      <span className="relative z-10">Get Started</span>
+                      Get Started
                     </button>
                   )}
                 </div>
@@ -391,61 +367,19 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Problem Section */}
-      <section className="relative z-10 py-24 px-6 bg-slate-50/30">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12 space-y-6 fade-enter">
-            <h2 className="text-5xl font-bold text-slate-800 tracking-tight">
-              You Know{' '}
-              <span className="bg-gradient-to-r from-slate-600 to-gray-600 bg-clip-text text-transparent">
-                Something's Missing
-              </span>
-            </h2>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-[1.4] font-light">
-              Your mind and body are connected, but you've never had a map to understand how. 
-              Sound familiar?
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {problemPoints.map((problem, index) => {
-              const Icon = problem.icon;
-              return (
-                <Card key={index} className="group border-0 bg-white/50 backdrop-blur-sm hover:bg-white/70 transition-all duration-300 hover:shadow-lg relative overflow-hidden">
-                  <CardContent className="p-8 text-left relative z-10">
-                    <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${problem.color} flex items-center justify-center mb-6 opacity-70`}>
-                      <Icon className="w-6 h-6 text-white" />
-                    </div>
-                    
-                    <div className="mb-6">
-                      <h3 className="text-xl font-semibold text-slate-800 mb-3">{problem.title}</h3>
-                      <p className="text-lg font-medium text-slate-700 mb-4 italic text-center">
-                        "{problem.question}"
-                      </p>
-                      <p className="text-slate-600 text-lg leading-[1.4]">
-                        {problem.description}
-                      </p>
-                    </div>
-                  </CardContent>
-                  
-                  {/* Subtle muted background */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-slate-100 to-gray-100 opacity-20"></div>
-                </Card>
-              );
-            })}
-          </div>
-          
-          <div className="text-center mt-8 fade-enter">
-            <p className="text-lg text-slate-600 font-medium">
-              There <em>is</em> a way to bridge this gap...
-            </p>
-          </div>
-        </div>
-      </section>
 
       {/* Solution Section */}
-      <section className="relative z-10 py-16 px-6">
+      <section className="relative z-10 py-24 px-6">
         <div className="max-w-7xl mx-auto">
+          {/* Centered Introducing Badge */}
+          <div className="text-center mb-8 fade-enter">
+            <div className="inline-flex items-center px-6 py-2 bg-white/80 backdrop-blur-sm border border-white/20 rounded-full shadow-lg">
+              <span className="text-sm font-semibold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
+                Introducing SomaJournal
+              </span>
+            </div>
+          </div>
+          
           {/* Two Column Layout */}
           <div className="grid lg:grid-cols-2 gap-6 max-w-6xl mx-auto items-start">
             {/* Left Column - Video Placeholder */}
@@ -749,11 +683,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="relative bg-gradient-to-t from-slate-900/90 via-slate-800/60 to-transparent backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          {/* Main Footer Content */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      </main>
+
+      {/* Footer - moved outside opal-wrapper for full-width background */}
+      <footer className="relative w-full bg-gradient-to-t from-slate-900/90 via-slate-800/60 to-transparent backdrop-blur-sm">
+        <div className="max-w-6xl mx-auto py-16">
+          {/* Use same grid layout as header */}
+          <div className="grid grid-cols-[1fr_2fr_1fr] items-start">
+            {/* Main Footer Content - spans all columns */}
+            <div className="col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Company Section */}
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
@@ -789,23 +727,23 @@ export default function Home() {
                 <li><a href="#" className="text-white/70 hover:text-white transition-colors duration-200">Email</a></li>
               </ul>
             </div>
-          </div>
-
-          {/* Footer Bottom */}
-          <div className="mt-12 pt-8 border-t border-white/20">
-            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-              <p className="text-white/60 text-sm">
-                Copyright © 2025 SomaJournal. All rights reserved.
-              </p>
-              <div className="flex space-x-6">
-                <a href="#" className="text-white/60 hover:text-white transition-colors duration-200 text-sm">Privacy Policy</a>
-                <a href="#" className="text-white/60 hover:text-white transition-colors duration-200 text-sm">Terms of Service</a>
+            </div>
+            
+            {/* Footer Bottom - also spans all columns */}
+            <div className="col-span-3 mt-12 pt-8 border-t border-white/20">
+              <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                <p className="text-white/60 text-sm">
+                  Copyright © 2025 SomaJournal. All rights reserved.
+                </p>
+                <div className="flex space-x-6">
+                  <a href="#" className="text-white/60 hover:text-white transition-colors duration-200 text-sm">Privacy Policy</a>
+                  <a href="#" className="text-white/60 hover:text-white transition-colors duration-200 text-sm">Terms of Service</a>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </footer>
-
-    </main>
+    </>
   );
 }
