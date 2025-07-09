@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
@@ -22,17 +22,25 @@ export function SkipButton() {
   const { skipWellbeingAssessment } = useAppStore();
   const [isSkipping, setIsSkipping] = useState(false);
 
+  useEffect(() => {
+    window.console.log('🎯 SkipButton component mounted');
+  }, []);
+
   const handleSkip = async () => {
+    window.console.log('🔄 Skip button clicked - initiating skip process');
     setIsSkipping(true);
     
     try {
       // Mark assessment as skipped in store
+      window.console.log('📝 Calling skipWellbeingAssessment()');
       skipWellbeingAssessment();
       
       // Navigate to results page
-      router.push('/wellbeing-assessment/results');
+      window.console.log('🚀 Navigating to results page');
+      await router.push('/wellbeing-assessment/results');
+      window.console.log('✅ Navigation complete');
     } catch (error) {
-      console.error('Skip assessment error:', error);
+      window.console.error('Skip assessment error:', error);
     } finally {
       setIsSkipping(false);
     }
@@ -45,6 +53,7 @@ export function SkipButton() {
           variant="ghost" 
           size="sm"
           className="text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+          onClick={() => window.console.log('👆 Initial Skip button clicked - opening dialog')}
         >
           <SkipForward className="w-4 h-4 mr-2" />
           Skip for now

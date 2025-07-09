@@ -54,9 +54,7 @@ export default function DashboardPage() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
   const [currentWeek, setCurrentWeek] = useState(new Date());
-
-  // Combine user entries with mock data for richer analytics
-  const allEntries = [...journalEntries, ...mockJournalEntries];
+  const [allEntries, setAllEntries] = useState([...journalEntries, ...mockJournalEntries]);
 
   // Analytics data
   const [emotionalTrends, setEmotionalTrends] = useState<EmotionalTrend[]>([]);
@@ -71,6 +69,11 @@ export default function DashboardPage() {
     }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+  // Update combined entries when journalEntries changes
+  useEffect(() => {
+    setAllEntries([...journalEntries, ...mockJournalEntries]);
+  }, [journalEntries]);
 
   // Calculate analytics
   useEffect(() => {

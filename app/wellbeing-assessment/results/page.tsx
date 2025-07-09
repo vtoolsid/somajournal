@@ -16,9 +16,19 @@ export default function AssessmentResultsPage() {
   const [showConfetti, setShowConfetti] = useState(true);
 
   useEffect(() => {
+    window.console.log('🎆 Assessment Results Page loaded');
+    window.console.log('📋 Assessment data:', wellbeingAssessment ? 'Present' : 'Missing');
+    
     if (!wellbeingAssessment) {
+      window.console.log('⚠️ No assessment data found, redirecting to assessment page');
       router.push('/wellbeing-assessment');
       return;
+    }
+    
+    if (wellbeingAssessment.skipped) {
+      window.console.log('⏭️ User skipped assessment - showing skipped results');
+    } else {
+      window.console.log('✅ User completed assessment - showing full results');
     }
 
     // Hide confetti after 3 seconds

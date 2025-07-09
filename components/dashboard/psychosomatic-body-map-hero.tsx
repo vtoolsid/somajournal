@@ -400,7 +400,7 @@ export function PsychosomaticBodyMapHero({ entries }: PsychosomaticBodyMapHeroPr
         
         return (
           <motion.path
-            key={`${connection.emotion}-${connection.symptom}`}
+            key={`${connection.emotion}-${connection.symptom}-${connection.bodyRegion}-${index}`}
             d={`M ${startX} ${startY} Q ${(startX + endX) / 2} ${(startY + endY) / 2 - 10} ${endX} ${endY}`}
             stroke={CHAKRA_COLORS[(ENHANCED_BODY_MAP as any)[region.id]?.chakra as keyof typeof CHAKRA_COLORS] || '#10B981'}
             strokeWidth={Math.max(0.5, connection.strength / 50)}

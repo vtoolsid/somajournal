@@ -151,8 +151,15 @@ export const useAppStore = create<AppState>()(
       isDarkMode: false,
       
       // Actions
-      login: (user) => set({ isAuthenticated: true, user }),
-      logout: () => set({ isAuthenticated: false, user: null, journalEntries: [], moodEntries: [] }),
+      login: (user) => {
+        console.log('🔑 Store: User login action triggered');
+        console.log('👤 User data:', { id: user.id, name: user.name, email: user.email });
+        set({ isAuthenticated: true, user });
+      },
+      logout: () => {
+        console.log('🚪 Store: User logout action triggered');
+        set({ isAuthenticated: false, user: null, journalEntries: [], moodEntries: [] });
+      },
       
       addJournalEntry: (entry) => {
         const newEntry: JournalEntry = {
@@ -194,23 +201,31 @@ export const useAppStore = create<AppState>()(
       toggleTheme: () => set((state) => ({ isDarkMode: !state.isDarkMode })),
       
       // Wellbeing Assessment Actions
-      setWellbeingAssessment: (assessment) => set({ 
-        wellbeingAssessment: assessment,
-        hasCompletedWellbeingAssessment: true 
-      }),
+      setWellbeingAssessment: (assessment) => {
+        console.log('📋 Store: Wellbeing assessment completed');
+        console.log('✅ Setting hasCompletedWellbeingAssessment to true');
+        set({ 
+          wellbeingAssessment: assessment,
+          hasCompletedWellbeingAssessment: true 
+        });
+      },
       
-      skipWellbeingAssessment: () => set({ 
-        hasCompletedWellbeingAssessment: true,
-        wellbeingAssessment: {
-          emotionalResponses: { q1_feeling: 1, q2_stress_response: 1, q3_physical_sensations: [], q4_ease: 1, q5_desires: 1 },
-          physicalSymptoms: { trouble_sleeping: 1, low_energy: 1, headaches: 1, chest_pain_breath: 1, digestive_problems: 1 },
-          emotionScores: { happiness: 0, sadness: 0, anger: 0, fear: 0, anxiety: 0, disgust: 0, relaxation: 0, desire: 0 },
-          physicalBurden: { totalScore: 5, category: 'minimal', flaggedSymptoms: [] },
-          completedAt: new Date(),
-          skipped: true,
-          version: '1.0'
-        }
-      }),
+      skipWellbeingAssessment: () => {
+        window.console.log('⏭️ Store: Wellbeing assessment skipped');
+        window.console.log('✅ Setting hasCompletedWellbeingAssessment to true');
+        set({ 
+          hasCompletedWellbeingAssessment: true,
+          wellbeingAssessment: {
+            emotionalResponses: { q1_feeling: 1, q2_stress_response: 1, q3_physical_sensations: [], q4_ease: 1, q5_desires: 1 },
+            physicalSymptoms: { trouble_sleeping: 1, low_energy: 1, headaches: 1, chest_pain_breath: 1, digestive_problems: 1 },
+            emotionScores: { happiness: 0, sadness: 0, anger: 0, fear: 0, anxiety: 0, disgust: 0, relaxation: 0, desire: 0 },
+            physicalBurden: { totalScore: 5, category: 'minimal', flaggedSymptoms: [] },
+            completedAt: new Date(),
+            skipped: true,
+            version: '1.0'
+          }
+        });
+      },
       
       resetWellbeingAssessment: () => set({ 
         hasCompletedWellbeingAssessment: false,
