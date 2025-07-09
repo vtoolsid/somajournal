@@ -65,20 +65,22 @@ export function SkipButton() {
             <span className="text-2xl">🤔</span>
             <span>Skip Assessment?</span>
           </AlertDialogTitle>
-          <AlertDialogDescription className="space-y-3">
-            <p>
-              We understand if you'd prefer to skip this assessment for now. 
-              You can always take it later from your settings.
-            </p>
-            <div className="bg-blue-50 p-3 rounded-lg">
-              <p className="text-sm text-blue-700">
-                💡 <strong>Why we recommend taking it:</strong>
+          <AlertDialogDescription asChild>
+            <div className="space-y-3">
+              <p>
+                We understand if you'd prefer to skip this assessment for now. 
+                You can always take it later from your settings.
               </p>
-              <ul className="text-sm text-blue-600 mt-1 space-y-1">
-                <li>• Personalized wellness insights</li>
-                <li>• Better journal analysis</li>
-                <li>• Targeted recommendations</li>
-              </ul>
+              <div className="bg-blue-50 p-3 rounded-lg">
+                <p className="text-sm text-blue-700">
+                  💡 <strong>Why we recommend taking it:</strong>
+                </p>
+                <div className="text-sm text-blue-600 mt-1 space-y-1">
+                  <div>• Personalized wellness insights</div>
+                  <div>• Better journal analysis</div>
+                  <div>• Targeted recommendations</div>
+                </div>
+              </div>
             </div>
           </AlertDialogDescription>
         </AlertDialogHeader>

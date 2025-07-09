@@ -16,10 +16,13 @@ import {
   Search,
   ChevronRight,
   Info,
-  ExternalLink
+  ExternalLink,
+  LogOut
 } from 'lucide-react';
 import Link from 'next/link';
 import { useSettingsStore } from '@/lib/settings-store';
+import { useAppStore } from '@/lib/store';
+import { useRouter } from 'next/navigation';
 
 const settingsCategories = [
   {
@@ -68,6 +71,22 @@ const settingsCategories = [
 export default function SettingsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const { theme, locationSharing, emailNotifications, autoSave } = useSettingsStore();
+  const { logout } = useAppStore();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    console.log('🚪 Logout initiated from settings');
+    
+    try {
+      logout();
+      console.log('✅ State cleared successfully');
+      window.location.href = '/';
+      console.log('🏠 Navigating to home page');
+    } catch (error) {
+      console.error('❌ Logout error:', error);
+      window.location.href = '/';
+    }
+  };
 
   const filteredCategories = settingsCategories.filter(category =>
     category.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -197,9 +216,34 @@ export default function SettingsPage() {
             )}
           </div>
 
+          {/* Logout Section */}
+          <Card className="border-red-200 bg-red-50">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                    <LogOut className="w-5 h-5 text-red-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-red-900">Sign Out</h3>
+                    <p className="text-sm text-red-700">Sign out of your SomaJournal account</p>
+                  </div>
+                </div>
+                <Button
+                  onClick={handleLogout}
+                  variant="destructive"
+                  className="bg-red-600 hover:bg-red-700"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sign Out
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Footer Info */}
           {!searchQuery && (
-            <div className="mt-12 p-6 bg-white rounded-lg border border-gray-200">
+            <div className="mt-8 p-6 bg-white rounded-lg border border-gray-200">
               <div className="flex items-start space-x-3">
                 <Info className="w-5 h-5 text-blue-500 mt-0.5" />
                 <div>

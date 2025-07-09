@@ -256,7 +256,6 @@
       rgb(250 250 255) 100%);
     min-height: 100vh;
     position: relative;
-    overflow-x: hidden;
     overscroll-behavior: none; /* Prevent overscroll artifacts */
   }
   
@@ -380,7 +379,7 @@
 
   /* Gentle Breathing Elements */
   .wellness-container {
-    @apply relative overflow-hidden;
+    @apply relative;
     background: linear-gradient(135deg, 
       rgba(240, 251, 244, 0.9) 0%, 
       rgba(220, 252, 231, 0.85) 25%, 

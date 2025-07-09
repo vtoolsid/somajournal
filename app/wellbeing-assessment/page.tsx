@@ -51,7 +51,7 @@ export default function WellbeingAssessmentPage() {
   };
 
   const handleNext = () => {
-    if (currentQuestion < totalQuestions && canProceed()) {
+    if (currentQuestion <= totalQuestions && canProceed()) {
       setCurrentQuestion(prev => prev + 1);
     }
   };

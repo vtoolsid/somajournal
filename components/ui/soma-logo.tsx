@@ -27,6 +27,7 @@ export function SomaLogo({ size = 'md', className, priority = false }: SomaLogoP
         height={size === 'xs' ? 24 : size === 'sm' ? 32 : size === 'md' ? 48 : size === 'lg' ? 64 : 80}
         priority={priority}
         className="object-contain w-full h-full"
+        style={{ width: 'auto', height: 'auto' }}
       />
     </div>
   );

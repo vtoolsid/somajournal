@@ -97,12 +97,15 @@ export function AppLayout({ children }: AppLayoutProps) {
     return null;
   }
 
+  // Determine if TopNavigation should be shown
+  const shouldShowTopNavigation = isAuthenticated && hasCompletedWellbeingAssessment;
+
   return (
-    <div className="flex flex-col h-screen bg-background">
-      <TopNavigation />
-      <main className="main-content flex-1 overflow-y-auto">
+    <>
+      {shouldShowTopNavigation && <TopNavigation />}
+      <main className="main-content bg-background">
         {children}
       </main>
-    </div>
+    </>
   );
 }
