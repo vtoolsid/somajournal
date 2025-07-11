@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/lib/store';
+import { useAuth } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ProgressBar } from '@/components/wellbeing/progress-bar';
@@ -32,6 +33,7 @@ interface AssessmentAnswers {
 export default function WellbeingAssessmentPage() {
   const router = useRouter();
   const { setWellbeingAssessment } = useAppStore();
+  const { isSignedIn, isLoaded } = useAuth();
   
   const [showWelcome, setShowWelcome] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(1);
@@ -40,6 +42,28 @@ export default function WellbeingAssessmentPage() {
 
   const totalQuestions = 6;
   const progress = (currentQuestion - 1) / totalQuestions * 100;
+
+  // Redirect to sign-in if not authenticated
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      console.log('❌ WellbeingAssessment: User not authenticated, redirecting to sign-in');
+      router.push('/auth/login');
+    }
+  }, [isLoaded, isSignedIn, router]);
+
+  // Show loading while auth state is loading
+  if (!isLoaded) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-gray-500">Loading...</div>
+      </div>
+    );
+  }
+
+  // Redirect if not signed in (defensive check)
+  if (!isSignedIn) {
+    return null;
+  }
 
   const handleAnswer = (questionKey: string, value: any) => {
     setAnswers(prev => ({

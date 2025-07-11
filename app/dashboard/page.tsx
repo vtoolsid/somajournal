@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useUser } from '@clerk/nextjs';
 import { AppLayout } from '@/components/layout/app-layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -49,7 +50,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AreaChart, Area, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis } from 'recharts';
 
 export default function DashboardPage() {
-  const { user, journalEntries } = useAppStore();
+  const { user: storeUser, journalEntries } = useAppStore();
+  const { user: clerkUser } = useUser();
   const router = useRouter();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
@@ -134,10 +136,24 @@ export default function DashboardPage() {
     count: day.count
   })) || [];
 
-  if (!user) {
+  if (!storeUser || !clerkUser) {
     // Let AppLayout handle authentication redirects - don't render custom screen
     return null;
   }
+
+  // Get the user's display name from Clerk (Google account name)
+  const displayName = clerkUser.fullName || clerkUser.firstName || storeUser.name || 'User';
+  
+  console.log('📱 Dashboard: User info', {
+    clerkUser: {
+      fullName: clerkUser.fullName,
+      firstName: clerkUser.firstName,
+      lastName: clerkUser.lastName,
+      emailAddresses: clerkUser.emailAddresses.map(e => e.emailAddress)
+    },
+    storeUser: storeUser,
+    displayName: displayName
+  });
 
   return (
     <AppLayout>
@@ -154,7 +170,7 @@ export default function DashboardPage() {
                   <SomaLogo size="md" className="breathing-element" />
                   <div>
                     <h1 className="text-3xl font-semibold text-gray-800">
-                      Welcome back, <span className="text-green-600">{user.name}</span>
+                      Welcome back, <span className="text-green-600">{displayName}</span>
                     </h1>
                     <p className="text-gray-600">{currentTime.toLocaleDateString('en-US', { 
                       weekday: 'long', 
@@ -425,7 +441,7 @@ export default function DashboardPage() {
                     
                     <div className="text-center pt-2 border-t border-gray-200">
                       <p className="text-sm text-gray-600">
-                        Member since {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'Recently'}
+                        Member since {storeUser.createdAt ? new Date(storeUser.createdAt).toLocaleDateString() : 'Recently'}
                       </p>
                     </div>
 

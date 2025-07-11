@@ -8,12 +8,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { EmotionSummaryTable } from '@/components/wellbeing/emotion-summary-table';
 import { SymptomSummaryTable } from '@/components/wellbeing/symptom-summary-table';
 import { PsychosomaticRecommendations } from '@/components/wellbeing/psychosomatic-recommendations';
-import { ArrowRight, Download, RefreshCw } from 'lucide-react';
+import { ArrowRight, Download } from 'lucide-react';
 
 export default function AssessmentResultsPage() {
   const router = useRouter();
-  const { wellbeingAssessment, resetWellbeingAssessment } = useAppStore();
-  const [showConfetti, setShowConfetti] = useState(true);
+  const { wellbeingAssessment } = useAppStore();
 
   useEffect(() => {
     window.console.log('🎆 Assessment Results Page loaded');
@@ -31,9 +30,6 @@ export default function AssessmentResultsPage() {
       window.console.log('✅ User completed assessment - showing full results');
     }
 
-    // Hide confetti after 3 seconds
-    const timer = setTimeout(() => setShowConfetti(false), 3000);
-    return () => clearTimeout(timer);
   }, [wellbeingAssessment, router]);
 
   if (!wellbeingAssessment) {
@@ -51,27 +47,12 @@ export default function AssessmentResultsPage() {
     URL.revokeObjectURL(url);
   };
 
-  const handleRetake = () => {
-    resetWellbeingAssessment();
-    router.push('/wellbeing-assessment');
-  };
 
   return (
     <div className="space-y-8">
-      {/* Confetti Animation */}
-      {showConfetti && (
-        <div className="fixed inset-0 pointer-events-none z-50">
-          <div className="absolute top-10 left-1/4 text-4xl animate-bounce">🎉</div>
-          <div className="absolute top-20 right-1/4 text-3xl animate-bounce" style={{ animationDelay: '0.5s' }}>✨</div>
-          <div className="absolute top-16 left-1/2 text-3xl animate-bounce" style={{ animationDelay: '1s' }}>🌟</div>
-          <div className="absolute top-24 left-1/3 text-2xl animate-bounce" style={{ animationDelay: '1.5s' }}>💫</div>
-          <div className="absolute top-12 right-1/3 text-2xl animate-bounce" style={{ animationDelay: '2s' }}>🎊</div>
-        </div>
-      )}
 
       {/* Header */}
       <div className="text-center space-y-4">
-        <div className="text-6xl mb-4">🎯</div>
         <h1 className="text-3xl font-bold text-gray-800">Your Wellbeing Assessment Results</h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
           {wellbeingAssessment.skipped 
@@ -97,7 +78,6 @@ export default function AssessmentResultsPage() {
             <Card className="glass-card">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <span className="text-2xl">🧠</span>
                   <span>Emotional State Analysis</span>
                 </CardTitle>
               </CardHeader>
@@ -110,7 +90,6 @@ export default function AssessmentResultsPage() {
             <Card className="glass-card">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <span className="text-2xl">🏥</span>
                   <span>Physical Symptoms Assessment</span>
                 </CardTitle>
               </CardHeader>
@@ -127,7 +106,6 @@ export default function AssessmentResultsPage() {
           <Card className="glass-card">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <span className="text-2xl">💡</span>
                 <span>Personalized Recommendations</span>
               </CardTitle>
             </CardHeader>
@@ -163,14 +141,6 @@ export default function AssessmentResultsPage() {
             </Button>
           )}
           
-          <Button
-            onClick={handleRetake}
-            variant="outline"
-            className="px-6 py-3 flex items-center space-x-2"
-          >
-            <RefreshCw className="w-4 h-4" />
-            <span>Retake Assessment</span>
-          </Button>
         </div>
       </div>
 

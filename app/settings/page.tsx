@@ -23,6 +23,7 @@ import Link from 'next/link';
 import { useSettingsStore } from '@/lib/settings-store';
 import { useAppStore } from '@/lib/store';
 import { useRouter } from 'next/navigation';
+import { useClerk } from '@clerk/nextjs';
 
 const settingsCategories = [
   {
@@ -72,18 +73,23 @@ export default function SettingsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const { theme, locationSharing, emailNotifications, autoSave } = useSettingsStore();
   const { logout } = useAppStore();
+  const { signOut } = useClerk();
   const router = useRouter();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     console.log('🚪 Logout initiated from settings');
     
     try {
+      // Clear local store first
       logout();
-      console.log('✅ State cleared successfully');
-      window.location.href = '/';
-      console.log('🏠 Navigating to home page');
+      console.log('✅ Local state cleared successfully');
+      
+      // Sign out from Clerk (this will trigger proper sign-out flow)
+      await signOut({ redirectUrl: '/' });
+      console.log('✅ Clerk sign-out initiated');
     } catch (error) {
       console.error('❌ Logout error:', error);
+      // Fallback to manual redirect
       window.location.href = '/';
     }
   };

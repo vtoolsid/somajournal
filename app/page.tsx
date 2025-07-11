@@ -29,9 +29,12 @@ import {
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useClerk, useAuth } from '@clerk/nextjs';
 
 export default function Home() {
   const router = useRouter();
+  const { signOut } = useClerk();
+  const { isSignedIn } = useAuth();
   const [showSanskrit, setShowSanskrit] = useState(true);
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -272,19 +275,39 @@ export default function Home() {
             <div className={`flex items-center space-x-4 justify-self-end transition-opacity duration-700 ease-out ${
               isScrolled ? 'opacity-0 pointer-events-none' : 'opacity-100'
             }`}>
-              <Button
-                variant="ghost"
-                onClick={() => router.push('/auth/login')}
-                className="hidden sm:inline-flex text-slate-700 hover:text-slate-900 hover:bg-slate-900/10 rounded-full px-4 py-2 font-medium transition-all duration-200 text-sm"
-              >
-                Sign In
-              </Button>
-              <Button
-                onClick={() => router.push('/auth/signup')}
-                className="relative overflow-hidden bg-white text-slate-900 font-semibold rounded-full transition-colors duration-200 px-4 py-2 text-sm"
-              >
-                <span className="relative z-10">Get Started</span>
-              </Button>
+              {isSignedIn ? (
+                <>
+                  <Button
+                    variant="ghost"
+                    onClick={() => router.push('/dashboard')}
+                    className="hidden sm:inline-flex text-slate-700 hover:text-slate-900 hover:bg-slate-900/10 rounded-full px-4 py-2 font-medium transition-all duration-200 text-sm"
+                  >
+                    Dashboard
+                  </Button>
+                  <Button
+                    onClick={() => signOut({ redirectUrl: '/' })}
+                    className="relative overflow-hidden bg-red-600 hover:bg-red-700 text-white font-semibold rounded-full transition-colors duration-200 px-4 py-2 text-sm"
+                  >
+                    <span className="relative z-10">Test Sign Out</span>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    variant="ghost"
+                    onClick={() => router.push('/auth/login')}
+                    className="hidden sm:inline-flex text-slate-700 hover:text-slate-900 hover:bg-slate-900/10 rounded-full px-4 py-2 font-medium transition-all duration-200 text-sm"
+                  >
+                    Sign In
+                  </Button>
+                  <Button
+                    onClick={() => router.push('/auth/signup')}
+                    className="relative overflow-hidden bg-white text-slate-900 font-semibold rounded-full transition-colors duration-200 px-4 py-2 text-sm"
+                  >
+                    <span className="relative z-10">Get Started</span>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>

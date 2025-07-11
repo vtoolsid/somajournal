@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Enable Server Actions for Clerk authentication
+  experimental: {
+    serverActions: true,
+  },
   // Remove 'export' to enable API routes
   // output: 'export',
   eslint: {
