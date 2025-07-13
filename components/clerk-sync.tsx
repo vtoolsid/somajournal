@@ -8,7 +8,7 @@ import { useSupabaseClient } from '@/lib/supabase';
 export function ClerkSync() {
   const { isLoaded: authLoaded, isSignedIn, getToken } = useAuth();
   const { isLoaded: userLoaded, user } = useUser();
-  const { login, logout, wellbeingAssessment, setWellbeingAssessment } = useAppStore();
+  const { login, logout, wellbeingAssessment, setWellbeingAssessment, hasCompletedWellbeingAssessment } = useAppStore();
   const supabaseClient = useSupabaseClient();
 
   useEffect(() => {
@@ -70,13 +70,18 @@ export function ClerkSync() {
         // Continue without token - will use anon access
       }
 
+      // Get current assessment status from store
+      const currentStore = useAppStore.getState();
+      const hasCompletedAssessment = currentStore.wellbeingAssessment?.completed || false;
+      const assessmentData = currentStore.wellbeingAssessment || {};
+      
       const userData = {
         id: user.id,
         email: user.emailAddresses[0]?.emailAddress || '',
         full_name: user.fullName || user.firstName || 'User',
-        assessment_completed: false,
-        assessment_progress: {},
-        assessment_data: {},
+        assessment_completed: hasCompletedAssessment,
+        assessment_progress: assessmentData.progress || {},
+        assessment_data: assessmentData,
       };
 
       console.log('🔄 ClerkSync: Syncing user to Supabase', userData);

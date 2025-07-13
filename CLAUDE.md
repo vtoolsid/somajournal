@@ -46,13 +46,26 @@ git lfs pull          # Download large model files
 git lfs ls-files      # View LFS-tracked files
 ```
 
+### Authentication & Database Setup
+```bash
+# Supabase Database Schema (run in Supabase SQL Editor)
+# Copy contents of supabase/schema.sql and execute
+
+# Clerk-Supabase Integration Setup
+# 1. Create JWT template named "supabase" in Clerk dashboard
+# 2. Configure with proper claims for RLS policies
+# 3. Add Supabase JWT secret as signing key
+```
+
 ## Architecture Overview
 
-This is a **Next.js 13.5.1** wellness journaling application with integrated **BERT emotion analysis** built with:
+This is a **Next.js 13.5.1** wellness journaling application with integrated **BERT emotion analysis** and **Clerk authentication** built with:
 
 - **Frontend**: Next.js (App Router) with TypeScript, Radix UI, Tailwind CSS
+- **Authentication**: Clerk with catch-all routes for sign-in/sign-up
+- **Database**: Supabase with Row Level Security (RLS) integration
 - **Backend**: Python Flask API serving trained BERT emotion classifier
-- **State Management**: Zustand with localStorage persistence
+- **State Management**: Zustand with localStorage persistence + Supabase sync
 - **Model**: Fine-tuned BERT on 58k GoEmotions dataset (28 emotions, 62% precision)
 - **Storage**: Git LFS for large model files (418MB)
 
@@ -85,16 +98,25 @@ Journal Text → Real-time Preview → Next.js API → Python Flask → Adaptive
          Live Feedback                                                     Full Analysis
 ```
 
+**Authentication Flow**:
+- `middleware.ts`: Clerk middleware protecting routes with public route exceptions
+- `components/clerk-sync.tsx`: Syncs Clerk user data to Zustand store and Supabase
+- `components/layout/app-layout.tsx`: Smart routing based on auth + assessment completion
+- Catch-all routes: `/app/auth/login/[[...rest]]/` and `/app/auth/signup/[[...rest]]/`
+
 **State Management Flow**:
-- `lib/store.ts`: Zustand store with interfaces for User, JournalEntry, MoodEntry
-- `lib/mock-data.ts`: Contains `analyzeJournalEntry()` function (now calls BERT API)
-- Journal entries store both emotions (confidence scores) and symptoms (boolean flags)
-- Automatic persistence to localStorage with optimistic updates
+- `lib/store.ts`: Zustand store with interfaces for User, JournalEntry, MoodEntry, WellbeingAssessment
+- `lib/supabase.ts`: Clerk-integrated Supabase client with singleton pattern
+- `lib/mock-data.ts`: Contains `analyzeJournalEntry()` function (calls BERT API)
+- Dual persistence: localStorage (immediate) + Supabase (authenticated users)
+- Assessment progress stored in both local state and database
 
 **Component Architecture**:
 - `/app/journal/page.tsx`: Main journal interface with real-time emotion preview
+- `/app/wellbeing-assessment/page.tsx`: Multi-step assessment with progress tracking
+- `/app/dashboard/page.tsx`: Main authenticated user dashboard
 - `/components/ui/`: shadcn/ui components with wellness-specific extensions
-- `/components/layout/`: AppLayout with authentication protection
+- `/components/layout/`: AppLayout with authentication protection and smart routing
 - Custom wellness components: KarmicAura, MandalaProgress, FloatingParticles
 
 ### BERT Model Integration
@@ -116,6 +138,14 @@ Journal Text → Real-time Preview → Next.js API → Python Flask → Adaptive
 
 **Core Interfaces** (defined in `lib/store.ts`):
 ```typescript
+interface User {
+  id: string;           // Clerk user ID
+  email: string;
+  name: string;
+  timezone: string;
+  createdAt: Date;
+}
+
 interface JournalEntry {
   emotions: Record<string, number>;      // BERT confidence scores
   symptoms: Record<string, boolean>;     // Physical symptom mapping
@@ -125,6 +155,16 @@ interface JournalEntry {
     recommended_approach: string;
     threshold_used: number;
   };
+  psychosomatic_analysis?: any;          // OpenAI-powered insights
+}
+
+interface WellbeingAssessment {
+  // DEQ (Difficulties in Emotion Regulation) scores
+  deq_scores: Record<string, number>;
+  // SSS (Somatic Symptom Scale) scores  
+  sss_scores: Record<string, number>;
+  completed: boolean;
+  completedAt?: Date;
 }
 ```
 
@@ -132,13 +172,22 @@ interface JournalEntry {
 
 **Chakra Integration**: Emotions categorized by energy centers for holistic wellness tracking.
 
+**Assessment Integration**: DEQ and SSS standardized questionnaires for baseline wellness measurement.
+
 ### Development Workflow
 
 **Standard Development**:
 1. Run `npm run dev:full` to start both servers
-2. Navigate to `/journal` route for emotion analysis testing
-3. Type varying text lengths to see adaptive behavior
-4. Submit entries to view full BERT analysis results
+2. Navigate to `/` for home page with auth integration
+3. Test auth flow: Sign up → Assessment → Dashboard → Journal
+4. Type varying text lengths in journal to see adaptive BERT behavior
+5. Submit entries to view full analysis results
+
+**Authentication Testing**:
+- New users: Sign up → Redirected to wellbeing assessment
+- Existing users: Sign in → Dashboard (or assessment if incomplete)
+- Sign out: Settings page or test button on home page
+- Protected routes: All pages except `/`, `/auth/*`, API routes
 
 **Python Model Development**:
 - `training/scripts/adaptive_classifier.py`: Core adaptive logic
@@ -150,6 +199,7 @@ interface JournalEntry {
 - `app/api/analyze-emotion/route.ts`: Proxy to Python with fallback
 - `lib/mock-data.ts`: `analyzeJournalEntry()` async function
 - Real-time preview with debounced API calls (500ms)
+- Supabase sync for authenticated users with fallback to localStorage
 
 ### Wellness-Specific Features
 
@@ -210,3 +260,29 @@ interface JournalEntry {
 - All transitions use `ease-out` timing for natural feel
 - Synchronized durations (700ms) prevent layout conflicts
 - Initial scroll position check prevents flash on page load
+
+## Critical Implementation Notes
+
+### Authentication Architecture
+- **Clerk Integration**: Uses catch-all routes `[[...rest]]` for sign-in/sign-up components
+- **Smart Routing**: AppLayout handles user redirection based on auth + assessment status
+- **Dual Persistence**: Zustand store syncs to Supabase for authenticated users
+- **Graceful Fallbacks**: App works with localStorage when Supabase JWT template not configured
+
+### Database Integration Pattern
+- **RLS Policies**: Supabase Row Level Security uses `auth.jwt() ->> 'sub'` for user isolation
+- **JWT Template**: Must be named exactly "supabase" in Clerk dashboard
+- **Sync Strategy**: ClerkSync component handles real-time user data synchronization
+- **Error Handling**: Comprehensive fallbacks for missing JWT templates or DB connection issues
+
+### Assessment Flow
+- **Mandatory Completion**: New users must complete wellbeing assessment before accessing main app
+- **Progress Tracking**: Assessment progress saved to both localStorage and Supabase
+- **Smart Resume**: Users can resume incomplete assessments from where they left off
+- **Baseline Establishment**: DEQ and SSS scores provide clinical-grade wellness baselines
+
+### BERT Model Deployment
+- **Dual-Server Requirement**: Python Flask server (port 8000) must run alongside Next.js (port 3000)
+- **Git LFS Dependency**: Model files (418MB) require `git lfs pull` before first run
+- **Graceful Degradation**: Falls back to keyword analysis when Python server unavailable
+- **Real-time Analysis**: Debounced preview (500ms) + full analysis on submission

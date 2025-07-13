@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/lib/store';
-import { useAuth } from '@clerk/nextjs';
+import { useAuth, useUser } from '@clerk/nextjs';
+import { useAssessmentSync } from '@/lib/supabase-utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ProgressBar } from '@/components/wellbeing/progress-bar';
@@ -34,6 +35,8 @@ export default function WellbeingAssessmentPage() {
   const router = useRouter();
   const { setWellbeingAssessment } = useAppStore();
   const { isSignedIn, isLoaded } = useAuth();
+  const { user } = useUser();
+  const { syncAssessment } = useAssessmentSync();
   
   const [showWelcome, setShowWelcome] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(1);
@@ -119,12 +122,24 @@ export default function WellbeingAssessmentPage() {
         emotionScores,
         physicalBurden,
         completedAt: new Date(),
+        completed: true,
         skipped: false,
         version: '1.0'
       };
 
       // Save to store
       setWellbeingAssessment(assessment);
+
+      // Sync to Supabase if user is authenticated
+      if (user) {
+        console.log('🔄 Syncing assessment to Supabase...');
+        const syncSuccess = await syncAssessment(assessment, user.id);
+        if (syncSuccess) {
+          console.log('✅ Assessment synced to Supabase successfully');
+        } else {
+          console.warn('⚠️ Failed to sync assessment to Supabase, continuing with local storage');
+        }
+      }
 
       // Navigate to results
       router.push('/wellbeing-assessment/results');

@@ -15,9 +15,11 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { BreathingLoader } from '@/components/ui/breathing-loader';
 import { FloatingParticles } from '@/components/ui/floating-particles';
 import { PsychosomaticInsights } from '@/components/ui/psychosomatic-insights';
+import { PsychosomaticBodyMap } from '@/components/wellness/psychosomatic-body-map';
 import { useAppStore } from '@/lib/store';
 import { useSettingsStore } from '@/lib/settings-store';
 import { mockJournalEntries, analyzeJournalEntry } from '@/lib/mock-data';
+import { mapEmotionsToBody, generateSymptomSuggestions } from '@/lib/wellness/emotion-body-mapping';
 import { 
   BookOpen, 
   Heart,
@@ -1180,6 +1182,19 @@ export default function JournalPage() {
 
                               </CardContent>
                               </Card>
+                            </div>
+
+                            {/* Psychosomatic Body Map */}
+                            <div className="mt-6">
+                              <PsychosomaticBodyMap
+                                emotions={analysis.emotions || {}}
+                                symptoms={analysis.symptoms || {}}
+                                onRegionClick={(region, data) => {
+                                  console.log('Body region clicked:', region, data);
+                                }}
+                                className="max-w-2xl mx-auto"
+                                interactive={true}
+                              />
                             </div>
 
                             {/* View Detailed Analysis Button */}

@@ -30,6 +30,14 @@ export interface JournalEntry {
   psychosomatic_analysis?: any;
   wellness_recommendations?: any;
   prototype_mode?: boolean;
+  // Body map data
+  bodyMap?: Record<string, {
+    intensity: number;
+    primaryEmotions: string[];
+    symptoms: string[];
+    colorHex: string;
+    description: string;
+  }>;
 }
 
 export interface Emotion {
@@ -87,6 +95,7 @@ export interface WellbeingAssessment {
   
   // Metadata
   completedAt: Date;
+  completed: boolean; // Explicit completion flag for easier checking
   skipped: boolean;
   version: string; // Assessment version for future updates
 }
@@ -204,8 +213,12 @@ export const useAppStore = create<AppState>()(
       setWellbeingAssessment: (assessment) => {
         console.log('📋 Store: Wellbeing assessment completed');
         console.log('✅ Setting hasCompletedWellbeingAssessment to true');
+        const completedAssessment = {
+          ...assessment,
+          completed: true
+        };
         set({ 
-          wellbeingAssessment: assessment,
+          wellbeingAssessment: completedAssessment,
           hasCompletedWellbeingAssessment: true 
         });
       },
@@ -221,6 +234,7 @@ export const useAppStore = create<AppState>()(
             emotionScores: { happiness: 0, sadness: 0, anger: 0, fear: 0, anxiety: 0, disgust: 0, relaxation: 0, desire: 0 },
             physicalBurden: { totalScore: 5, category: 'minimal', flaggedSymptoms: [] },
             completedAt: new Date(),
+            completed: true,
             skipped: true,
             version: '1.0'
           }

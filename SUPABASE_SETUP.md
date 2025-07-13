@@ -21,7 +21,7 @@ This will create:
 3. Add your Supabase Project URL: `https://idionamupbxukuoitduz.supabase.co`
 4. Click **Activate Supabase Integration**
 
-This creates the JWT template that allows Clerk tokens to work with Supabase.
+This creates the JWT template that allows Clerk tokens to work with Supabase.1
 
 ### In Supabase Dashboard:
 1. Go to **Authentication** → **Providers**

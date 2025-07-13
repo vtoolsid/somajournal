@@ -1,4 +1,5 @@
 import { JournalEntry, MoodEntry, Emotion } from './store';
+import { mapEmotionsToBody, generateSymptomSuggestions } from './wellness/emotion-body-mapping';
 
 export const mockJournalEntries: JournalEntry[] = [
   {
@@ -421,9 +422,15 @@ export const analyzeJournalEntry = async (content: string) => {
     const symptoms = analysis.symptoms || {};
     console.log('🏥 Processed symptoms:', symptoms);
 
+    // Generate body map data from emotions
+    const bodyMap = mapEmotionsToBody(emotions);
+    const suggestedSymptoms = generateSymptomSuggestions(bodyMap);
+    console.log('🗺️ Generated body map data:', bodyMap);
+
     const result = {
       emotions,
-      symptoms,
+      symptoms: { ...symptoms, ...suggestedSymptoms },
+      bodyMap,
       // Additional metadata from adaptive analysis
       analysis: analysis.analysis,
       characteristics: analysis.characteristics,
@@ -482,9 +489,14 @@ const fallbackAnalysis = (content: string) => {
     symptoms[symptom] = words.some(word => word.includes(symptom));
   });
   
+  // Generate body map data from emotions (fallback)
+  const bodyMap = mapEmotionsToBody(emotions);
+  const suggestedSymptoms = generateSymptomSuggestions(bodyMap);
+  
   return {
     emotions,
-    symptoms,
+    symptoms: { ...symptoms, ...suggestedSymptoms },
+    bodyMap,
     analysis: {
       text_type: words.length < 20 ? 'short_entry' : 'medium_entry',
       emotional_richness: 'low',

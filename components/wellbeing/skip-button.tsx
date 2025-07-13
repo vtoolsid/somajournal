@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
+import { useAuth, useUser } from '@clerk/nextjs';
+import { useAssessmentSync } from '@/lib/supabase-utils';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,7 +21,9 @@ import { SkipForward } from 'lucide-react';
 
 export function SkipButton() {
   const router = useRouter();
-  const { skipWellbeingAssessment } = useAppStore();
+  const { skipWellbeingAssessment, wellbeingAssessment } = useAppStore();
+  const { user } = useUser();
+  const { syncAssessment } = useAssessmentSync();
   const [isSkipping, setIsSkipping] = useState(false);
 
   useEffect(() => {
@@ -34,6 +38,17 @@ export function SkipButton() {
       // Mark assessment as skipped in store
       window.console.log('📝 Calling skipWellbeingAssessment()');
       skipWellbeingAssessment();
+      
+      // Sync to Supabase if user is authenticated
+      if (user && wellbeingAssessment) {
+        window.console.log('🔄 Syncing skipped assessment to Supabase...');
+        const syncSuccess = await syncAssessment(wellbeingAssessment, user.id);
+        if (syncSuccess) {
+          window.console.log('✅ Skipped assessment synced to Supabase successfully');
+        } else {
+          window.console.warn('⚠️ Failed to sync skipped assessment to Supabase, continuing with local storage');
+        }
+      }
       
       // Navigate to results page
       window.console.log('🚀 Navigating to results page');
