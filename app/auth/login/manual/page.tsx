@@ -31,7 +31,7 @@ export default function ManualLoginPage() {
       });
 
       if (result?.status === 'complete') {
-        await setActive({ session: result.createdSessionId });
+        await setActive?.({ session: result.createdSessionId });
         console.log('🔐 User sign in completed, redirecting to wellbeing assessment');
         router.push('/wellbeing-assessment');
       } else {
