@@ -24,7 +24,7 @@ export async function syncAssessmentToSupabase(
     const updateData = {
       assessment_completed: assessment.completed || false,
       assessment_data: assessment,
-      assessment_progress: assessment.progress || {},
+      assessment_progress: (assessment as any).progress || {},
       updated_at: new Date().toISOString()
     };
     

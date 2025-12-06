@@ -97,7 +97,7 @@ export function SymptomSummaryTable({ physicalSymptoms, physicalBurden }: Sympto
               </div>
             </div>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">{scaleLabels[symptom.score]}</span>
+              <span className="text-gray-600">{scaleLabels[symptom.score as keyof typeof scaleLabels]}</span>
               <Progress value={(symptom.score / 5) * 100} className="w-20 h-2" />
             </div>
           </Card>

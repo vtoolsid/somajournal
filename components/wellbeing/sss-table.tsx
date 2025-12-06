@@ -150,7 +150,7 @@ export function SSSTable({ onAnswer, selectedSymptoms }: SSSTableProps) {
             <div key={key} className="flex justify-between">
               <span>{symptomLabels[key as keyof SSSSymptoms]}:</span>
               <span className={`font-medium ${getScoreColor(value)}`}>
-                {getScoreEmoji(value)} {value} - {scaleLabels[value]}
+                {getScoreEmoji(value)} {value} - {scaleLabels[value as keyof typeof scaleLabels]}
               </span>
             </div>
           ))}

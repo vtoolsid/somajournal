@@ -141,16 +141,19 @@ export function PsychosomaticBodyMap({
     setHighlightedMuscles(muscleIntensities);
   }, [emotions]);
 
-  const handleClick = (muscle: { name: string; pathData: string }) => {
+  const handleClick = (muscle: any) => {
     if (!interactive) return;
-    
-    const regionData = Object.values(BODY_REGIONS).find(region => 
-      region.muscle === muscle.name
+
+    const muscleName = muscle?.muscle || muscle?.name;
+    if (!muscleName) return;
+
+    const regionData = Object.values(BODY_REGIONS).find(region =>
+      region.muscle === muscleName
     );
-    
+
     if (regionData) {
-      setSelectedRegion(muscle.name);
-      onRegionClick?.(muscle.name, regionData);
+      setSelectedRegion(muscleName);
+      onRegionClick?.(muscleName, regionData);
     }
   };
 
@@ -196,17 +199,14 @@ export function PsychosomaticBodyMap({
             <Model
               data={Object.keys(highlightedMuscles).map(muscle => ({
                 name: muscle,
-                color: highlightedMuscles[muscle] || 'rgba(229, 231, 235, 0.3)'
+                muscles: [muscle] as any
               }))}
               onClick={handleClick}
-              highlightedColors={highlightedMuscles}
               style={{
                 width: '100%',
                 maxWidth: '300px',
                 height: 'auto'
               }}
-              aria-label="Interactive body map showing emotion-related physical sensations"
-              role="img"
             />
             
             {/* Overlay for selected region info */}

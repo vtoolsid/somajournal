@@ -87,14 +87,14 @@ export function calculateDEQScores(responses: DEQResponses): EmotionScores {
   const q1Key = `q1_feeling_${responses.q1_feeling}`;
   const q1Weights = scoringWeights[q1Key as keyof typeof scoringWeights] || {};
   Object.entries(q1Weights).forEach(([emotion, weight]) => {
-    rawScores[emotion as keyof EmotionScores] += weight;
+    rawScores[emotion as keyof EmotionScores] += weight as number;
   });
 
   // Process Q2: Response to stress/challenges
   const q2Key = `q2_stress_response_${responses.q2_stress_response}`;
   const q2Weights = scoringWeights[q2Key as keyof typeof scoringWeights] || {};
   Object.entries(q2Weights).forEach(([emotion, weight]) => {
-    rawScores[emotion as keyof EmotionScores] += weight;
+    rawScores[emotion as keyof EmotionScores] += weight as number;
   });
 
   // Process Q3: Physical sensations (multiple selection)
@@ -102,7 +102,7 @@ export function calculateDEQScores(responses: DEQResponses): EmotionScores {
     const q3Key = `q3_physical_sensations_${sensation}`;
     const q3Weights = scoringWeights[q3Key as keyof typeof scoringWeights] || {};
     Object.entries(q3Weights).forEach(([emotion, weight]) => {
-      rawScores[emotion as keyof EmotionScores] += weight;
+      rawScores[emotion as keyof EmotionScores] += weight as number;
     });
   });
 
@@ -110,14 +110,14 @@ export function calculateDEQScores(responses: DEQResponses): EmotionScores {
   const q4Key = `q4_ease_${responses.q4_ease}`;
   const q4Weights = scoringWeights[q4Key as keyof typeof scoringWeights] || {};
   Object.entries(q4Weights).forEach(([emotion, weight]) => {
-    rawScores[emotion as keyof EmotionScores] += weight;
+    rawScores[emotion as keyof EmotionScores] += weight as number;
   });
 
   // Process Q5: What you're drawn to/wanting
   const q5Key = `q5_desires_${responses.q5_desires}`;
   const q5Weights = scoringWeights[q5Key as keyof typeof scoringWeights] || {};
   Object.entries(q5Weights).forEach(([emotion, weight]) => {
-    rawScores[emotion as keyof EmotionScores] += weight;
+    rawScores[emotion as keyof EmotionScores] += weight as number;
   });
 
   // Normalize to 0-100 scale

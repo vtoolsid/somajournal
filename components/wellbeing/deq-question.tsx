@@ -82,7 +82,7 @@ export function DEQQuestion({
               <div className="flex items-center space-x-3">
                 <Checkbox
                   checked={isSelected}
-                  onChange={(checked) => handleMultipleSelection(option.value, checked)}
+                  onCheckedChange={(checked) => handleMultipleSelection(option.value, checked as boolean)}
                   className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
                 />
                 <div className="flex items-center space-x-3 flex-1">

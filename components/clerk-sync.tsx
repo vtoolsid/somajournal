@@ -33,7 +33,7 @@ export function ClerkSync() {
         email: user.emailAddresses[0]?.emailAddress || '',
         name: user.fullName || user.firstName || 'User',
         timezone: user.unsafeMetadata?.timezone as string || 'UTC',
-        createdAt: new Date(user.createdAt),
+        createdAt: user.createdAt ? new Date(user.createdAt) : new Date(),
       };
 
       console.log('🔄 ClerkSync: Syncing user to Zustand store', appUser);
@@ -74,13 +74,13 @@ export function ClerkSync() {
       const currentStore = useAppStore.getState();
       const hasCompletedAssessment = currentStore.wellbeingAssessment?.completed || false;
       const assessmentData = currentStore.wellbeingAssessment || {};
-      
+
       const userData = {
         id: user.id,
         email: user.emailAddresses[0]?.emailAddress || '',
         full_name: user.fullName || user.firstName || 'User',
         assessment_completed: hasCompletedAssessment,
-        assessment_progress: assessmentData.progress || {},
+        assessment_progress: (assessmentData as any).progress || {},
         assessment_data: assessmentData,
       };
 

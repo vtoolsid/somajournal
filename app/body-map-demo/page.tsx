@@ -17,30 +17,30 @@ const DEMO_EMOTIONS: Record<string, number> = {
   'frustration': 0.4
 };
 
-const SAMPLE_JOURNAL_ENTRIES = [
+const SAMPLE_JOURNAL_ENTRIES: Array<{ title: string; emotions: Record<string, number>; text: string }> = [
   {
     title: "Stressful Day at Work",
-    emotions: { 'stress': 0.8, 'overwhelm': 0.6, 'frustration': 0.4 },
+    emotions: { 'stress': 0.8, 'overwhelm': 0.6, 'frustration': 0.4 } as Record<string, number>,
     text: "Had a really overwhelming day with back-to-back meetings. Feeling the weight on my shoulders."
   },
   {
     title: "Feeling Anxious",
-    emotions: { 'anxiety': 0.7, 'worry': 0.5, 'fear': 0.3 },
+    emotions: { 'anxiety': 0.7, 'worry': 0.5, 'fear': 0.3 } as Record<string, number>,
     text: "Can't shake this anxious feeling in my stomach. Keep thinking about tomorrow's presentation."
   },
   {
     title: "Sad Evening",
-    emotions: { 'sadness': 0.6, 'loneliness': 0.4, 'grief': 0.3 },
+    emotions: { 'sadness': 0.6, 'loneliness': 0.4, 'grief': 0.3 } as Record<string, number>,
     text: "Missing my family tonight. Feel a heaviness in my chest and heart area."
   },
   {
     title: "Angry About Traffic",
-    emotions: { 'anger': 0.8, 'frustration': 0.9, 'irritation': 0.6 },
+    emotions: { 'anger': 0.8, 'frustration': 0.9, 'irritation': 0.6 } as Record<string, number>,
     text: "Stuck in traffic for an hour! My jaw is so tense and I can feel the anger in my neck and shoulders."
   },
   {
     title: "Joyful Moment",
-    emotions: { 'joy': 0.8, 'love': 0.6, 'excitement': 0.5 },
+    emotions: { 'joy': 0.8, 'love': 0.6, 'excitement': 0.5 } as Record<string, number>,
     text: "Such a wonderful day with friends! My heart feels so full and I'm practically glowing with happiness."
   }
 ];
