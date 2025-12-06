@@ -10,7 +10,7 @@ import { Slider } from '@/components/ui/slider';
 import { Heart, Brain, Activity, Sparkles } from 'lucide-react';
 
 // Sample emotion data for demonstration
-const DEMO_EMOTIONS = {
+const DEMO_EMOTIONS: Record<string, number> = {
   'stress': 0.7,
   'anxiety': 0.5,
   'sadness': 0.3,
@@ -46,7 +46,7 @@ const SAMPLE_JOURNAL_ENTRIES = [
 ];
 
 export default function BodyMapDemo() {
-  const [currentEmotions, setCurrentEmotions] = useState(DEMO_EMOTIONS);
+  const [currentEmotions, setCurrentEmotions] = useState<Record<string, number>>(DEMO_EMOTIONS);
   const [selectedEntry, setSelectedEntry] = useState(0);
   const [bodyData, setBodyData] = useState({});
   const [symptoms, setSymptoms] = useState({});
