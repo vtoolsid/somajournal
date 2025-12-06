@@ -26,6 +26,24 @@ const nextConfig = {
         /webpack\.cache\.PackFileCacheStrategy/,
       ];
     }
+
+    // Ignore optional WebSocket dependencies for Vercel deployment
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        bufferutil: false,
+        'utf-8-validate': false,
+      };
+    }
+
+    // Suppress WebSocket-related warnings
+    config.ignoreWarnings = [
+      ...(config.ignoreWarnings || []),
+      /Critical dependency: the request of a dependency is an expression/,
+      /Can't resolve 'bufferutil'/,
+      /Can't resolve 'utf-8-validate'/,
+    ];
+
     return config;
   },
 };
